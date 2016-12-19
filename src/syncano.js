@@ -1,32 +1,122 @@
-const Syncano = require("syncano");
+const Syncano = require("syncano")
 
-let connection = Syncano({
-  // accountKey: "",
-  // defaults: {
-  //   instanceName: ""
-  // }
-});
-
-let DataObject = connection.DataObject;
+let { DataObject } = Syncano({
+  accountKey: "",
+  defaults: {
+    instanceName: ""
+  }
+})
 
 class Data {
-  constructor() {
-    this.instance = 'company-api'
-    this.call = DataObject.please()
+  get query() {
+    return this._query()
   }
-  composeParams() {
-    return {className: this.className}
+  
+  set query(query) {
+    this._query = query
   }
+  
+  call(fn, paramteres) {
+    this.query = this.query[fn].bind(this.query, paramteres)
+    
+    return this
+  }
+  
   list() {
-    return this.call.list(this.composeParams())
+    return this.query.list().raw()
+  }
+  
+  first() {
+    return this.query
+      .pageSize(1)
+      .list()
+      .raw()
+      .then(({ objects }) => objects[0] || null)
+  }
+  
+  firstOrFail() {
+    return new Promise((resolve, reject) => {
+      this
+        .first()
+        .then(object => object ? resolve(object) : reject(new NotFoundError))
+    })
+  }
+  
+  find(ids) {
+    if (Array.isArray(ids)) {
+      return this.where('id', 'in', ids).list()
+    }
+    
+    return this.where('id', 'eq', ids).first()
+  }
+  
+  findOrFail(ids) {
+    return new Promise((resolve, reject) => {
+      this
+        .find(ids)
+        .then(response => {
+          const shouldThrow = Array.isArray(ids) ? !response.objects.length : response;
+          
+          return shouldThrow ? resolve(response) : reject(new NotFoundError)
+        })
+    })
+  }
+  
+  take(count) {
+    return this.call('pageSize', count)
+  }
+  
+  filter(filters) {
+    return this.call('filter', filters)
+  }
+  
+  orderBy(column, direction = 'asc') {
+    direction = direction.toLowerCase()
+    direction = direction === 'desc' ? '-' : ''
+    
+    return this.call('orderBy', `${direction}${column}`)
+  }
+  
+  where(column, operator, value) {
+    const whereOperator = value ? `_${operator}` : '_eq'
+    const whereValue = value === undefined ? operator : value
+    
+    const currentQuery = JSON.parse(this.query.query.query || '{}')
+    const nextQuery = { [column]: { [whereOperator]: whereValue } }
+    
+    const lookup = Object.assign({}, currentQuery, nextQuery)
+    
+    return this.call('filter', lookup)
   }
 }
 
-let data = new Proxy(new Data(), {
-    get: function(target, property) {
-        target.className = property;
-        return target;
-    }
-});
+function NotFoundError(message = 'No results for given query.') {
+  this.stack = (new Error()).stack
+  this.name = 'NotFoundError'
+  this.message = message
+}
 
-export { Data };
+NotFoundError.prototype = Error.prototype
+
+let data = new Proxy(new Data(), {
+  get: function(target, property) {
+    target._query = DataObject.please.bind(DataObject, { className: property })
+    
+    return target
+  }
+})
+
+data.tag
+  // .orderBy('name', 'desc')
+  // .where('name', 'in', ['react', 'css'])
+  // .take(50)
+  // .list()
+  .findOrFail(4)
+  .then((response) => {
+    console.log(response, 'response') // eslint-disable-line
+  })
+  .catch(err => {
+    console.log(err.message) // eslint-disable-line
+  })
+
+export { Data }
