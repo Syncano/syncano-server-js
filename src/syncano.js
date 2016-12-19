@@ -23,7 +23,36 @@ class Data {
   }
   
   list() {
-    return this.query.list().raw()
+    const pageSize = this.query.query.page_size || 0
+    let result = []
+    
+    return new Promise((resolve, reject) => {
+      function saveAndLoadNext(response) {
+        result = result.concat(response)
+        
+        const loadNext = 
+          (pageSize === 0 || pageSize > result.length)
+          && response.hasNext()
+
+        if (loadNext) {
+          response
+            .next()
+            .then(saveAndLoadNext)
+            .catch(err => reject(err))
+        } else {
+          if (pageSize !== 0) {
+            result = result.slice(0, pageSize)
+          }
+          
+          resolve(result)
+        }
+      }
+      
+      this.query
+        .list()
+        .then(saveAndLoadNext)
+        .catch(err => reject(err))
+    });
   }
   
   first() {
@@ -62,30 +91,6 @@ class Data {
     })
   }
   
-  all() {
-    let result = []
-    
-    return new Promise((resolve, reject) => {
-      function saveAndLoadNext(response) {
-        result = result.concat(response)
-        
-        if(response.hasNext()) {
-          response
-            .next()
-            .then(saveAndLoadNext)
-            .catch(err => reject(err))
-        } else {
-          resolve(result)
-        }
-      }
-      
-      this.query
-        .list()
-        .then(saveAndLoadNext)
-        .catch(err => reject(err))
-    });
-  }
-  
   take(count) {
     return this.call('pageSize', count)
   }
@@ -122,7 +127,7 @@ function NotFoundError(message = 'No results for given query.') {
 
 NotFoundError.prototype = Error.prototype
 
-let data = new Proxy(new Data(), {
+const data = new Proxy(new Data(), {
   get: function(target, property) {
     target._query = DataObject.please.bind(DataObject, { className: property })
     
@@ -131,11 +136,8 @@ let data = new Proxy(new Data(), {
 })
 
 data.users_base
-  // .orderBy('name', 'desc')
-  // .where('name', 'in', ['react', 'css'])
-  // .take(50)
-  // .list()
-  .all()
+  .take(199)
+  .list()
   .then((response) => {
     console.log(response.length, 'response') // eslint-disable-line
   })
