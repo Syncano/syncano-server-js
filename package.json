@@ -1,20 +1,11 @@
 {
-  "name": "syncano",
-  "version": "1.0.28",
-  "description": "A library to intereact with the Syncano API.",
+  "name": "syncano-server",
+  "version": "0.0.1",
+  "description": "A library to intereact with the Syncano API on a server side (mainly inside Syncano Scripts)",
   "main": "lib/syncano.js",
-  "author": "Kelly Andrews",
-  "contributors": [
-    {
-      "name": "Jakub Bilko",
-      "email": "jakub.bilko@syncano.com"
-    },
-    {
-      "name": "Daniel Kopka",
-      "email": "daniel.kopka@syncano.com"
-    }
-  ],
-  "license": "ISC",
+  "author": "Syncano Inc.",
+  "contributors": [],
+  "license": "MIT",
   "scripts": {
     "clean": "npm-run-all clean:*",
     "clean:lib": "rimraf ./lib",
@@ -62,6 +53,7 @@
     "promise-spread": "^0.1.0",
     "stampit": "^2.1.1",
     "superagent": "^1.7.2",
+    "syncano": "^1.0.28",
     "tiny-promisify": "^0.1.1",
     "validate.js": "^0.9.0"
   },
