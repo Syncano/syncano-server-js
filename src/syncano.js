@@ -1,9 +1,11 @@
 const Syncano = require("syncano")
 
 let { DataObject } = Syncano({
-  accountKey: "",
+  accountKey: "56a4c523070fe893dff387f5a7d7be876570cb99",
+  // accountKey: "36e6517904f35ac5ab2f02b3f28a841ffa7b996f",
   defaults: {
-    instanceName: ""
+    instanceName: "silent-rain-3110"
+    // instanceName: "validator-test-env"
   }
 })
 
