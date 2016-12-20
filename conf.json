@@ -10,7 +10,7 @@
     "dateFormat": "ddd MMM Do YYYY",
     "outputSourceFiles": true,
     "outputSourcePath": true,
-    "systemName": "Syncano",
+    "systemName": "syncano-server-js",
     "footer": "",
     "copyright": "Syncano",
     "navType": "vertical",

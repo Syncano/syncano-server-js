@@ -1,12 +1,9 @@
-const Syncano = require("syncano")
-
-let { DataObject } = Syncano({
-  accountKey: "",
-  defaults: {
-    instanceName: ""
-  }
-})
-
+/**
+ * Syncano ORM
+ * @constructor
+ * @type {Class}
+ * @property {Function} query Instance of syncano DataObject
+ */
 class Data {
   get query() {
     return this._query()
@@ -24,6 +21,14 @@ class Data {
 
   /**
    * List objects matching query.
+
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * // Get all users
+   * const users = await data.users.list()
+   * @example {@lang javascript}
+   * // Get 10 users
+   * const users = await data.users.take(10).list()
    */
   list() {
     const pageSize = this.query.query.page_size || 0
@@ -60,6 +65,10 @@ class Data {
 
   /**
    * Get first element matching query or return null.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.where('name', 'John').first()
    */
   first() {
     return this.query
@@ -71,6 +80,10 @@ class Data {
 
   /**
    * Get first element matching query or throw error.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.where('name', 'John').firstOrFail()
    */
   firstOrFail() {
     return new Promise((resolve, reject) => {
@@ -82,6 +95,12 @@ class Data {
 
   /**
    * Get single object by id or objects list if ids passed as array.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.find(4)
+   * @example {@lang javascript}
+   * const users = await data.users.find([20, 99, 125])
    */
   find(ids) {
     if (Array.isArray(ids)) {
@@ -93,6 +112,12 @@ class Data {
 
   /**
    * Same as #find method but throws error for no results.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.find(4)
+   * @example {@lang javascript}
+   * const users = await data.users.find([20, 99, 125])
    */
   findOrFail(ids) {
     return new Promise((resolve, reject) => {
@@ -108,6 +133,10 @@ class Data {
 
   /**
    * Number of objects to get.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.take(500).list()
    */
   take(count) {
     return this.call('pageSize', count)
@@ -115,6 +144,12 @@ class Data {
 
   /**
    * Filter objects using MongoDB style query.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.filter({
+   *   name: { _eq: 'John' }
+   * }).list()
    */
   filter(filters) {
     return this.call('filter', filters)
@@ -122,6 +157,10 @@ class Data {
 
   /**
    * Set order of fetched objects.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.orderBy('created_at', 'DESC').list()
    */
   orderBy(column, direction = 'asc') {
     direction = direction.toLowerCase()
@@ -132,6 +171,14 @@ class Data {
 
   /**
    * Filter rows.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.where('name', 'eq' 'John').list()
+   * @example {@lang javascript}
+   * const users = await data.users.where('name', 'John').list()
+   * @example {@lang javascript}
+   * const users = await data.users.where('created_at', 'gt' '13-02-2016').list()
    */
   where(column, operator, value) {
     const whereOperator = value ? `_${operator}` : '_eq'
@@ -145,32 +192,30 @@ class Data {
     return this.call('filter', lookup)
   }
 
+  /**
+   * Create new object.
+   *
+   * @returns {Promise}
+   * @example {@lang javascript}
+   * const users = await data.users.create({
+   *   name: 'John Doe',
+   *   email: 'john.doe@example.com'
+   *   username: 'john.doe'
+   * })
+   */
   create(object) {
     return this.query.create(object)
   }
 }
 
-function NotFoundError(message = 'No results for given query.') {
-  this.stack = (new Error()).stack
-  this.name = 'NotFoundError'
-  this.message = message
+export default function connect(instance) {
+  const { DataObject } = instance
+
+  return new Proxy(new Data(), {
+    get: function(target, property) {
+      target._query = instance.DataObject.please.bind(DataObject, { className: property })
+
+      return target
+    }
+  })
 }
-
-NotFoundError.prototype = Error.prototype
-
-const data = new Proxy(new Data(), {
-  get: function(target, property) {
-    target._query = DataObject.please.bind(DataObject, { className: property })
-
-    return target
-  }
-})
-
-data.tag
-  .create({ name: 'riot' })
-  .then((response) => {
-    console.log(response, 'response') // eslint-disable-line
-  })
-  .catch(err => {
-    console.log(err.message) // eslint-disable-line
-  })
