@@ -4,6 +4,7 @@ coverage
 .idea
 /lib
 /dist
+/example
 npm-debug.log
 docs
 *.sublime-*

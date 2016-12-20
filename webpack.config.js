@@ -8,7 +8,7 @@ module.exports = [
     debug: false,
     profile: false,
     devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'syncano.js'),
+    entry: path.join(__dirname, 'src', 'index.js'),
     target: 'web',
     output: {
       path: path.join(__dirname, 'dist'),
@@ -30,7 +30,7 @@ module.exports = [
     debug: false,
     profile: false,
     devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'syncano.js'),
+    entry: path.join(__dirname, 'src', 'index.js'),
     target: 'web',
     output: {
       path: path.join(__dirname, 'dist'),

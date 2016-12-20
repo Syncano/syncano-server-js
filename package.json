@@ -19,7 +19,7 @@
     "build": "npm-run-all build:*",
     "build:lib": "babel src --out-dir lib",
     "build:dist": "webpack",
-    "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src -u ./tutorials",
+    "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src",
     "lint": "eslint src/** test/** *.config.js",
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
