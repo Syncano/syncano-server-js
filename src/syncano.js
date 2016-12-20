@@ -1,11 +1,9 @@
 const Syncano = require("syncano")
 
 let { DataObject } = Syncano({
-  accountKey: "56a4c523070fe893dff387f5a7d7be876570cb99",
-  // accountKey: "36e6517904f35ac5ab2f02b3f28a841ffa7b996f",
+  accountKey: "",
   defaults: {
-    instanceName: "silent-rain-3110"
-    // instanceName: "validator-test-env"
+    instanceName: ""
   }
 })
 
@@ -24,6 +22,9 @@ class Data {
     return this
   }
 
+  /**
+   * List objects matching query.
+   */
   list() {
     const pageSize = this.query.query.page_size || 0
     let result = []
@@ -57,6 +58,9 @@ class Data {
     });
   }
 
+  /**
+   * Get first element matching query or return null.
+   */
   first() {
     return this.query
       .pageSize(1)
@@ -65,6 +69,9 @@ class Data {
       .then(({ objects }) => objects[0] || null)
   }
 
+  /**
+   * Get first element matching query or throw error.
+   */
   firstOrFail() {
     return new Promise((resolve, reject) => {
       this
@@ -73,6 +80,9 @@ class Data {
     })
   }
 
+  /**
+   * Get single object by id or objects list if ids passed as array.
+   */
   find(ids) {
     if (Array.isArray(ids)) {
       return this.where('id', 'in', ids).list()
@@ -81,6 +91,9 @@ class Data {
     return this.where('id', 'eq', ids).first()
   }
 
+  /**
+   * Same as #find method but throws error for no results.
+   */
   findOrFail(ids) {
     return new Promise((resolve, reject) => {
       this
@@ -93,14 +106,23 @@ class Data {
     })
   }
 
+  /**
+   * Number of objects to get.
+   */
   take(count) {
     return this.call('pageSize', count)
   }
 
+  /**
+   * Filter objects using MongoDB style query.
+   */
   filter(filters) {
     return this.call('filter', filters)
   }
 
+  /**
+   * Set order of fetched objects.
+   */
   orderBy(column, direction = 'asc') {
     direction = direction.toLowerCase()
     direction = direction === 'desc' ? '-' : ''
@@ -108,6 +130,9 @@ class Data {
     return this.call('orderBy', `${direction}${column}`)
   }
 
+  /**
+   * Filter rows.
+   */
   where(column, operator, value) {
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
@@ -118,6 +143,10 @@ class Data {
     const lookup = Object.assign({}, currentQuery, nextQuery)
 
     return this.call('filter', lookup)
+  }
+
+  create(object) {
+    return this.query.create(object)
   }
 }
 
@@ -137,11 +166,10 @@ const data = new Proxy(new Data(), {
   }
 })
 
-data.users_base
-  .take(199)
-  .list()
+data.tag
+  .create({ name: 'riot' })
   .then((response) => {
-    console.log(response.length, 'response') // eslint-disable-line
+    console.log(response, 'response') // eslint-disable-line
   })
   .catch(err => {
     console.log(err.message) // eslint-disable-line
