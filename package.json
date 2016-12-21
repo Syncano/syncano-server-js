@@ -23,13 +23,14 @@
     "lint": "eslint src/** test/** *.config.js",
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
-    "test:lib": "mocha 'test/lib/**/*.js' --compilers js:babel-register",
+    "test:lib": "mocha test/lib/**/*.js --compilers js:babel-register",
     "test:dist": "karma start karma.config.js",
-    "test:integration": "mocha 'test/integration/**/*.js' --compilers js:babel-register",
+    "test:integration": "mocha test/integration/**/*.js --compilers js:babel-register",
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "watch": "npm-run-all --parallel watch:*",
     "watch:lint": "esw src/** test/** --watch --format simple-detail",
     "watch:lib": "npm run build:lib -- --watch",
+    "watch:lib:test": "mocha --watch test/lib/**/*.js --compilers js:babel-register",
     "watch:dist": "npm run build:dist -- --watch",
     "release": "npm-run-all release:*",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
@@ -43,19 +44,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Syncano/syncano-js.git"
+    "url": "https://github.com/Syncano/syncano-server-js.git"
   },
   "dependencies": {
     "bluebird": "^3.2.2",
     "lodash": "^4.6.1",
-    "moment": "^2.13.0",
-    "promise-map-series": "^0.2.2",
-    "promise-spread": "^0.1.0",
-    "stampit": "^2.1.1",
     "superagent": "^1.7.2",
-    "syncano": "^1.0.28",
-    "tiny-promisify": "^0.1.1",
-    "validate.js": "^0.9.0"
+    "syncano": "^1.0.28"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
