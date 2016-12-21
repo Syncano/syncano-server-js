@@ -67,9 +67,7 @@ class Data {
           if (pageSize !== 0) {
             result = result.slice(0, pageSize)
           }
-
           const data = new Collection(result)
-
           resolve(data.raw())
         }
       }
@@ -133,9 +131,9 @@ class Data {
    *
    * @returns {Promise}
    * @example {@lang javascript}
-   * const users = await data.users.find(4)
+   * const users = await data.users.findOrFail(4)
    * @example {@lang javascript}
-   * const users = await data.users.find([20, 99, 125])
+   * const users = await data.users.findOrFail([20, 99, 125])
    */
   findOrFail(ids) {
     return new Promise((resolve, reject) => {
@@ -225,6 +223,28 @@ class Data {
     return this.query.create(object)
   }
 }
+
+// can.middleware.js
+// import { Can } from 'syncano-helpers'
+// import permissions from './permissions'
+//
+// const permissions = {
+//   'create/bid': (user, orderId) => new Promise((resolve, reject) => {
+//     data.orders.find(orderId).then(order => {
+//       [order.blacklisted.contains(user.id) ? 'reject' : 'resolve']()
+//     })
+//   })
+// }
+//
+// export default new Can(permissions)
+// /// end can.middleware.js
+//
+// import can from 'can'
+//
+// can('update/post', 30)
+//   .then(() => {
+//     data.posts.update({})
+//   })
 
 export default function connect(instance) {
   const { DataObject } = instance
