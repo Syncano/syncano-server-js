@@ -5,6 +5,8 @@
  * @property {Function} query Instance of syncano DataObject
  */
 
+import { NotFoundError } from './errors'
+
 class Collection {
    constructor(data) {
      this.data = data
@@ -141,8 +143,10 @@ class Data {
         .find(ids)
         .then(response => {
           const shouldThrow = Array.isArray(ids) ? !response.objects.length : response;
-
           return shouldThrow ? resolve(response) : reject(new NotFoundError)
+        })
+        .catch(() => {
+          reject(new NotFoundError)
         })
     })
   }
