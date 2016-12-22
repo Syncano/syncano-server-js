@@ -1,7 +1,7 @@
 import nock from 'nock';
 import should from 'should/as-function';
-import Syncano from 'syncano'
-import SyncanoORM from '../../src';
+import Syncano from '../../src/syncano'
+import SyncanoORM from '../../src/orm';
 
 import { NotFoundError } from '../../src/errors';
 
@@ -49,7 +49,7 @@ describe('Data', function() {
     });
 
     it('should be able to fetch objects list', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({ page_size: 10 })
         .reply(200, {
           objects: [ { name: 'John Doe', id: 3 } ],
@@ -64,7 +64,7 @@ describe('Data', function() {
     });
 
     it('should return [] when no objects were not found', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({ page_size: 5 })
         .reply(200, { objects: [], next: null });
 
@@ -80,7 +80,7 @@ describe('Data', function() {
     });
 
     it('should be able to fetch single object', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({ page_size: 1 })
         .reply(200, { objects: [{ name: 'John Doe', id: 3 }] });
 
@@ -92,7 +92,7 @@ describe('Data', function() {
     });
 
     it('should return null when object was not found', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({ page_size: 1 })
         .reply(200, { objects: [] });
 
@@ -106,11 +106,11 @@ describe('Data', function() {
     });
 
     it('should be able to fetch single object', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({ page_size: 1 })
         .reply(200, { objects: [{ name: 'John Doe', id: 3 }] });
 
-      data.users.first().then(object => {
+      data.users.firstOrFail().then(object => {
         should(object).be.Object()
         should(object).have.property('name').which.is.String();
         should(object).have.property('id').which.is.Number();
@@ -118,11 +118,11 @@ describe('Data', function() {
     });
 
     it('should throw error when object was not found', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({ page_size: 1 })
         .reply(404);
 
-      should(data.users.first()).rejectedWith(NotFoundError)
+      should(data.users.firstOrFail()).rejectedWith(NotFoundError)
     });
   });
 
@@ -132,7 +132,7 @@ describe('Data', function() {
     });
 
     it('should be able to fetch single object', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({ id: { _eq: 7 }}),
           page_size: 1
@@ -147,7 +147,7 @@ describe('Data', function() {
     });
 
     it('should be able to fetch objects list', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({ id: { _in: [7, 8] }})
         })
@@ -166,7 +166,7 @@ describe('Data', function() {
     });
 
     it('should return null when object was not found', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({ id: { _eq: 5 }}),
           page_size: 1
@@ -177,7 +177,7 @@ describe('Data', function() {
     });
 
     it('should return [] when no objects were found', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({ id: { _in: [7, 8] }})
         })
@@ -193,7 +193,7 @@ describe('Data', function() {
     });
 
     it('should be able to fetch single object', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({ id: { _eq: 7 }}),
           page_size: 1
@@ -208,7 +208,7 @@ describe('Data', function() {
     });
 
     it('should be able to fetch objects list', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({ id: { _in: [7, 8] }})
         })
@@ -227,7 +227,7 @@ describe('Data', function() {
     });
 
     it('should throw error when object was not found', function() {
-      api.get(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           page_size: 1,
           query: JSON.stringify({ id: { _eq: 5 }})
@@ -295,7 +295,7 @@ describe('Data', function() {
     it('should be able to create object', function() {
       const user = { name: 'John' }
 
-      api.post(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+      api.post(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query(user)
         .reply(200, user);
 

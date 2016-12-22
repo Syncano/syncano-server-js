@@ -1,6 +1,6 @@
 {
   "name": "syncano-server",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A library to intereact with the Syncano API on a server side (mainly inside Syncano Scripts)",
   "main": "lib/syncano.js",
   "author": "Syncano Inc.",
@@ -19,7 +19,7 @@
     "build": "npm-run-all build:*",
     "build:lib": "babel src --out-dir lib",
     "build:dist": "webpack",
-    "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src",
+    "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src -u ./tutorials",
     "lint": "eslint src/** test/** *.config.js",
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
@@ -49,8 +49,13 @@
   "dependencies": {
     "bluebird": "^3.2.2",
     "lodash": "^4.6.1",
+    "moment": "^2.13.0",
+    "promise-map-series": "^0.2.2",
+    "promise-spread": "^0.1.0",
+    "stampit": "^2.1.1",
     "superagent": "^1.7.2",
-    "syncano": "^1.0.28"
+    "tiny-promisify": "^0.1.1",
+    "validate.js": "^0.9.0"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
@@ -89,7 +94,7 @@
     "rimraf": "^2.5.1",
     "should": "^8.2.2",
     "sinon": "^1.17.3",
-    "stripe": "^4.7.0",
+    "stripe": "^4.12.0",
     "webpack": "^1.12.13"
   },
   "babel": {
