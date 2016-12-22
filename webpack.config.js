@@ -13,7 +13,7 @@ module.exports = [
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'syncano-server.js',
-      library: 'Syncano-server'
+      library: 'SyncanoServer'
     },
     module: {
       loaders: [
@@ -35,7 +35,7 @@ module.exports = [
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'syncano-server.min.js',
-      library: 'Syncano-server'
+      library: 'SyncanoServer'
     },
     module: {
       loaders: [
