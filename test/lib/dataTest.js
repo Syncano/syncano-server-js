@@ -189,7 +189,7 @@ describe('Data', function() {
 
   describe('#findOrFail()', function() {
     it('should be a method of the model', function() {
-      should(data.users).have.property('find').which.is.Function();
+      should(data.users).have.property('findOrFail').which.is.Function();
     });
 
     it('should be able to fetch single object', function() {
@@ -235,6 +235,74 @@ describe('Data', function() {
         .reply(404);
 
       should(data.users.findOrFail(5)).rejectedWith(NotFoundError)
+    });
+  });
+
+  describe('#take()', function() {
+    it('should be a method of the model', function() {
+      should(data.users).have.property('take').which.is.Function();
+    });
+
+    it('should add page_size parameter to the query', function() {
+      const query = data.users.take(7)
+
+      should(query).have.propertyByPath('query', 'query', 'page_size').which.is.equal(7)
+    });
+  });
+
+  describe('#filter()', function() {
+    it('should be a method of the model', function() {
+      should(data.users).have.property('filter').which.is.Function();
+    });
+
+    it('should add filter parameter to the query', function() {
+      const filter = { name: { _eq: 3 } }
+      const query = data.users.filter(filter)
+
+      should(query).have.propertyByPath('query', 'query', 'query').equal(JSON.stringify(filter));
+    });
+  });
+
+  describe('#orderBy()', function() {
+    it('should be a method of the model', function() {
+      should(data.users).have.property('orderBy').which.is.Function();
+    });
+
+    it('should add order_by parameter to the query', function() {
+      const query = data.users.orderBy('name', 'DESC')
+
+      should(query).have.propertyByPath('query', 'query', 'order_by').equal('-name')
+    });
+  });
+
+  describe('#where()', function() {
+    it('should be a method of the model', function() {
+      should(data.users).have.property('where').which.is.Function();
+    });
+
+    it('should add query parameter to the query', function() {
+      const query = data.users.where('name', 'John')
+
+      should(query).have.propertyByPath('query', 'query', 'query').which.is.String()
+    });
+  });
+
+  describe('#create()', function() {
+    it('should be a method of the model', function() {
+      should(data.users).have.property('create').which.is.Function();
+    });
+
+    it('should be able to create object', function() {
+      const user = { name: 'John' }
+
+      api.post(`/v1.1/instances/${instanceName}/classes/users/objects/`, '*')
+        .query(user)
+        .reply(200, user);
+
+      data.users.create(user).then(object => {
+        should(object).be.Object()
+        should(object).have.property('name').equal('John');
+      })
     });
   });
 });
