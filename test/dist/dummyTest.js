@@ -1,3 +1,3 @@
-describe('dummy', () => {
-  it('should be dummy', () => {});
+describe('dummy', function () {
+  it('should be dummy', function () {});
 });
