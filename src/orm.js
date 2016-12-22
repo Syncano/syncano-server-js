@@ -231,28 +231,6 @@ class Data {
   }
 }
 
-// can.middleware.js
-// import { Can } from 'syncano-helpers'
-// import permissions from './permissions'
-//
-// const permissions = {
-//   'create/bid': (user, orderId) => new Promise((resolve, reject) => {
-//     data.orders.find(orderId).then(order => {
-//       [order.blacklisted.contains(user.id) ? 'reject' : 'resolve']()
-//     })
-//   })
-// }
-//
-// export default new Can(permissions)
-// /// end can.middleware.js
-//
-// import can from 'can'
-//
-// can('update/post', 30)
-//   .then(() => {
-//     data.posts.update({})
-//   })
-
 export default function connect(instance) {
   const { DataObject } = instance
 
