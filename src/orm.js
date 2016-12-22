@@ -108,6 +108,9 @@ class Data {
       this
         .first()
         .then(object => object ? resolve(object) : reject(new NotFoundError))
+        .catch(() => {
+          reject(new NotFoundError)
+        })
     })
   }
 

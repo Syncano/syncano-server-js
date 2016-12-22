@@ -8,12 +8,12 @@ module.exports = [
     debug: false,
     profile: false,
     devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'index.js'),
+    entry: path.join(__dirname, 'src', 'orm.js'),
     target: 'web',
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: 'syncano.js',
-      library: 'Syncano'
+      filename: 'syncano-server.js',
+      library: 'Syncano-server'
     },
     module: {
       loaders: [
@@ -30,7 +30,7 @@ module.exports = [
     debug: false,
     profile: false,
     devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'index.js'),
+    entry: path.join(__dirname, 'src', 'orm.js'),
     target: 'web',
     output: {
       path: path.join(__dirname, 'dist'),
@@ -59,6 +59,36 @@ module.exports = [
           comments: false
         }
       })
+    ]
+  },
+  {
+    name: 'fuse-package',
+    debug: false,
+    profile: false,
+    devtool: 'source-map',
+    entry: path.join(__dirname, 'src', 'orm.js'),
+    target: 'web',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'syncano-server.fuse.js',
+      libraryTarget: 'commonjs2'
+    },
+    module: {
+      loaders: [
+        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+        { test: /\.json$/, loader: 'json-loader'}
+      ]
+    },
+    resolve: {
+      alias: {
+        'bluebird': path.join(__dirname, 'src/promise.js')
+      },
+      modulesDirectories: ['node_modules'],
+      extensions: ['', '.js', '.json']
+    },
+    plugins: [
+      new webpack.optimize.OccurenceOrderPlugin(true),
+      new webpack.optimize.DedupePlugin()
     ]
   }
 ]
