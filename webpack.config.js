@@ -1,6 +1,5 @@
-var path = require('path');
-var webpack = require('webpack');
-
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = [
   {
@@ -81,7 +80,7 @@ module.exports = [
     },
     resolve: {
       alias: {
-        'bluebird': path.join(__dirname, 'src/promise.js')
+        bluebird: path.join(__dirname, 'src/promise.js')
       },
       modulesDirectories: ['node_modules'],
       extensions: ['', '.js', '.json']

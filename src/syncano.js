@@ -1,11 +1,11 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import Promise from 'bluebird';
-import models from './models';
-import Account from './account';
-import Pinger from './pinger';
-import SyncanoFile from './file';
-import BatchManager from './batchmanager';
+import stampit from 'stampit'
+import _ from 'lodash'
+import Promise from 'bluebird'
+import models from './models'
+import Account from './account'
+import Pinger from './pinger'
+import SyncanoFile from './file'
+import BatchManager from './batchmanager'
 
 /**
  * Main Syncano object.
@@ -29,14 +29,14 @@ import BatchManager from './batchmanager';
  */
 const Syncano = stampit()
   // We need function here, do not use arrow syntax!
-  .init(function() {
-    this.Account = Account.setConfig(this)();
-    this.Monitor = Pinger.setConfig(this)();
-    this.BatchManager = BatchManager.setConfig(this);
+  .init(function () {
+    this.Account = Account.setConfig(this)()
+    this.Monitor = Pinger.setConfig(this)()
+    this.BatchManager = BatchManager.setConfig(this)
 
     _.forEach(models, (model, name) => {
-      this[name] = model.setConfig(this);
-    });
+      this[name] = model.setConfig(this)
+    })
   })
   .refs({
     baseUrl: 'https://api.syncano.io',
@@ -65,12 +65,15 @@ const Syncano = stampit()
 
     */
     setInstanceName(instanceName) {
-      if(_.isEmpty(instanceName)) this.defaults.instanceName = null;
-      else {
-        if(!_.isString(instanceName)) return Promise.reject(new Error('Instance name must be a string.'));
-        this.defaults.instanceName = instanceName;
+      if (_.isEmpty(instanceName)) {
+        this.defaults.instanceName = null
+      } else {
+        if (!_.isString(instanceName)) {
+          return Promise.reject(new Error('Instance name must be a string.'))
+        }
+        this.defaults.instanceName = instanceName
       }
-      return this;
+      return this
     },
 
     /**
@@ -84,8 +87,8 @@ const Syncano = stampit()
      * @returns {Syncano}
      */
     onProgress(callback) {
-      this.progressCallback = callback;
-      return this;
+      this.progressCallback = callback
+      return this
     },
 
     /**
@@ -102,7 +105,7 @@ const Syncano = stampit()
 
     */
     getInstanceName() {
-      return this.defaults.instanceName;
+      return this.defaults.instanceName
     },
 
     /**
@@ -122,9 +125,11 @@ const Syncano = stampit()
 
     */
     setBaseUrl(baseUrl) {
-      if(_.isEmpty(baseUrl)) return Promise.reject(new Error('Base URL is required.'));
-      this.baseUrl = baseUrl;
-      return this;
+      if (_.isEmpty(baseUrl)) {
+        return Promise.reject(new Error('Base URL is required.'))
+      }
+      this.baseUrl = baseUrl
+      return this
     },
 
     /**
@@ -141,7 +146,7 @@ const Syncano = stampit()
 
     */
     getBaseUrl() {
-      return this.baseUrl;
+      return this.baseUrl
     },
 
     /**
@@ -160,8 +165,8 @@ const Syncano = stampit()
 
     */
     setAccountKey(accountKey) {
-      this.accountKey = accountKey;
-      return this;
+      this.accountKey = accountKey
+      return this
     },
 
     /**
@@ -178,7 +183,7 @@ const Syncano = stampit()
 
     */
     getAccountKey() {
-      return this.accountKey;
+      return this.accountKey
     },
 
     /**
@@ -197,8 +202,8 @@ const Syncano = stampit()
 
     */
     setUserKey(userKey) {
-      this.userKey = userKey;
-      return this;
+      this.userKey = userKey
+      return this
     },
 
     /**
@@ -215,7 +220,7 @@ const Syncano = stampit()
 
     */
     getUserKey() {
-      return this.userKey;
+      return this.userKey
     },
 
     /**
@@ -234,8 +239,8 @@ const Syncano = stampit()
 
     */
     setApiKey(apiKey) {
-      this.apiKey = apiKey;
-      return this;
+      this.apiKey = apiKey
+      return this
     },
 
     /**
@@ -252,7 +257,7 @@ const Syncano = stampit()
 
     */
     getApiKey() {
-      return this.apiKey;
+      return this.apiKey
     },
 
     /**
@@ -271,8 +276,8 @@ const Syncano = stampit()
 
     */
     setSocialToken(socialToken) {
-      this.socialToken = socialToken;
-      return this;
+      this.socialToken = socialToken
+      return this
     },
 
     /**
@@ -289,18 +294,18 @@ const Syncano = stampit()
 
     */
     getSocialToken() {
-      return this.socialToken;
+      return this.socialToken
     },
 
     file(content) {
-        return new SyncanoFile(content);
+      return new SyncanoFile(content)
     }
   }).static({
 
     file(content) {
-        return new SyncanoFile(content);
+      return new SyncanoFile(content)
     }
 
-  });
+  })
 
-export default Syncano;
+export default Syncano

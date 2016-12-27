@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, Create, BulkCreate, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const GCMDeviceQuerySet = stampit().compose(
   BaseQuerySet,
@@ -16,31 +16,31 @@ const GCMDeviceQuerySet = stampit().compose(
 ).methods({
 
   sendMessage(properties = {}, content = {}) {
-    const {GCMMessage} = this.getConfig();
-    return GCMMessage.please().sendToDevice(_.assign({}, this.properties, properties), content);
+    const {GCMMessage} = this.getConfig()
+    return GCMMessage.please().sendToDevice(_.assign({}, this.properties, properties), content)
   },
 
   sendMessages(properties = {}, content = {}) {
-    const {GCMMessage} = this.getConfig();
+    const {GCMMessage} = this.getConfig()
     return GCMMessage.please().sendToDevices(_.assign({}, this.properties, properties), content)
   }
 
-});
+})
 
 const GCMDeviceMeta = Meta({
   name: 'gcmdevice',
   pluralName: 'gcmdevices',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/push_notifications/gcm/devices/{registration_id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/push_notifications/gcm/devices/{registration_id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/push_notifications/gcm/devices/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/push_notifications/gcm/devices/'
     }
   }
-});
+})
 
 const GCMDevicConstraints = {
   instanceName: {
@@ -65,7 +65,7 @@ const GCMDevicConstraints = {
   is_active: {
     boolean: true
   }
-};
+}
 
 /**
  * OO wrapper around instance GCM devices {@link # endpoint}.
@@ -87,6 +87,6 @@ const GCMDevice = stampit()
   .compose(Model)
   .setMeta(GCMDeviceMeta)
   .setQuerySet(GCMDeviceQuerySet)
-  .setConstraints(GCMDevicConstraints);
+  .setConstraints(GCMDevicConstraints)
 
-export default GCMDevice;
+export default GCMDevice

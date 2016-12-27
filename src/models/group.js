@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import _ from 'lodash';
-import QuerySet from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import QuerySet from '../querySet'
+import {Meta, Model} from './base'
 
 const GroupQuerySet = stampit().compose(QuerySet).methods({
   /**
@@ -17,9 +17,9 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   * Grop.please().users({ id: 1, instanceName: 'test-one'}).then(function(users) {});
   */
   users(properties = {}) {
-    const {User} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return User.please().groupUsers(this.properties);
+    const {User} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return User.please().groupUsers(this.properties)
   },
   /**
   * Adds user to group.
@@ -35,9 +35,9 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   * Grop.please().addUser({ id: 1, instanceName: 'test-one'}, { user: 1 }).then(function(response) {});
   */
   addUser(properties = {}, user = {}) {
-    const {User} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return User.please().addUserToGroup(this.properties, user);
+    const {User} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return User.please().addUserToGroup(this.properties, user)
   },
   /**
   * Deletes user from group.
@@ -53,9 +53,9 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   * Grop.please().deleteUser({ id: 1, instanceName: 'test-one'}, { user: 1 }).then(function(response) {});
   */
   deleteUser(properties = {}, user = {}) {
-    const {User} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return User.please().deleteUserFromGroup(this.properties, user);
+    const {User} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return User.please().deleteUserFromGroup(this.properties, user)
   },
   /**
   * Fetches details of a user belonging to a group.
@@ -70,77 +70,77 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   * Group.please().getUserDetails({ user: 1}).then(function(response) {});
   */
   getUserDetails(properties = {}, user = {}) {
-    const {User} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return User.please().getDetails(this.properties, user);
+    const {User} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return User.please().getDetails(this.properties, user)
   },
 
   getUserGroups(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'GET';
-    this.endpoint = 'userGroups';
+    this.method = 'GET'
+    this.endpoint = 'userGroups'
 
-    return this.then((response) => this.model.please().asResultSet(response, 'group', properties));
+    return this.then(response => this.model.please().asResultSet(response, 'group', properties))
   },
 
   getUserGroup(properties = {}, group = {}) {
-    this.properties = _.assign({}, this.properties, properties, group);
+    this.properties = _.assign({}, this.properties, properties, group)
 
-    this.method = 'GET';
-    this.endpoint = 'userGroup';
+    this.method = 'GET'
+    this.endpoint = 'userGroup'
 
-    return this.then((response) => {
-      return this.model.fromJSON(response.group, this.properties);
-    });
+    return this.then(response => {
+      return this.model.fromJSON(response.group, this.properties)
+    })
   },
 
   addUserGroup(properties = {}, group = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = group;
-    this.method = 'POST';
-    this.endpoint = 'userGroups';
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = group
+    this.method = 'POST'
+    this.endpoint = 'userGroups'
 
-    return this.then((response) => {
-      return this.model.fromJSON(response.group, this.properties);
-    });
+    return this.then(response => {
+      return this.model.fromJSON(response.group, this.properties)
+    })
   },
 
   deleteUserGroup(properties = {}, group = {}) {
-    this.properties = _.assign({}, this.properties, properties, group);
+    this.properties = _.assign({}, this.properties, properties, group)
 
-    this.method = 'DELETE';
-    this.endpoint = 'userGroup';
+    this.method = 'DELETE'
+    this.endpoint = 'userGroup'
 
-    return this.then((response) => {
-      return this.model.fromJSON(response.group, this.properties);
-    });
+    return this.then(response => {
+      return this.model.fromJSON(response.group, this.properties)
+    })
   }
 
-});
+})
 
 const GroupMeta = Meta({
   name: 'group',
   pluralName: 'groups',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/groups/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/groups/{id}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/groups/'
+    list: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/groups/'
     },
-    'userGroups': {
-      'methods': ['get', 'post'],
-      'path': '/v2/instances/{instanceName}/users/{user}/groups/'
+    userGroups: {
+      methods: ['get', 'post'],
+      path: '/v2/instances/{instanceName}/users/{user}/groups/'
     },
-    'userGroup': {
-      'methods': ['get', 'delete'],
-      'path': '/v2/instances/{instanceName}/users/{user}/groups/{id}/'
+    userGroup: {
+      methods: ['get', 'delete'],
+      path: '/v2/instances/{instanceName}/users/{user}/groups/{id}/'
     }
   }
-});
+})
 
 const GroupConstraints = {
   instanceName: {
@@ -156,8 +156,7 @@ const GroupConstraints = {
   description: {
     string: true
   }
-};
-
+}
 
 /**
  * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/groups endpoint}.
@@ -191,8 +190,8 @@ const Group = stampit()
     * Group.users().then(function(users) {});
     */
     users() {
-      const {User} = this.getConfig();
-      return User.please().groupUsers({ id: this.id, instanceName: this.instanceName});
+      const {User} = this.getConfig()
+      return User.please().groupUsers({ id: this.id, instanceName: this.instanceName})
     },
     /**
     * Add user to group.
@@ -206,8 +205,8 @@ const Group = stampit()
     * Group.addUser({ user: 1}).then(function(response) {});
     */
     addUser(user = {}) {
-      const {User} = this.getConfig();
-      return User.please().addUserToGroup({ id: this.id, instanceName: this.instanceName}, user);
+      const {User} = this.getConfig()
+      return User.please().addUserToGroup({ id: this.id, instanceName: this.instanceName}, user)
     },
     /**
     * Delete user from group.
@@ -221,8 +220,8 @@ const Group = stampit()
     * Group.deleteUser({ user: 1}).then(function(response) {});
     */
     deleteUser(user = {}) {
-      const {User} = this.getConfig();
-      return User.please().deleteUserFromGroup({ id: this.id, instanceName: this.instanceName}, user);
+      const {User} = this.getConfig()
+      return User.please().deleteUserFromGroup({ id: this.id, instanceName: this.instanceName}, user)
     },
     /**
     * Fetches details of a user belonging to a group.
@@ -236,9 +235,9 @@ const Group = stampit()
     * Group.getUserDetails({ user: 1}).then(function(response) {});
     */
     getUserDetails(user = {}) {
-      const {User} = this.getConfig();
-      return User.please().getDetails({ id: this.id, instanceName: this.instanceName}, user);
+      const {User} = this.getConfig()
+      return User.please().getDetails({ id: this.id, instanceName: this.instanceName}, user)
     }
-  });
+  })
 
-export default Group;
+export default Group

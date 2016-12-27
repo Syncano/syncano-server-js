@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, Create, BulkCreate, Delete, Get, Update, UpdateOrCreate, GetOrCreate, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const APNSDeviceQuerySet = stampit().compose(
   BaseQuerySet,
@@ -16,31 +16,31 @@ const APNSDeviceQuerySet = stampit().compose(
 ).methods({
 
   sendMessage(properties = {}, content = {}) {
-    const {APNSMessage} = this.getConfig();
-    return APNSMessage.please().sendToDevice(_.assign({}, this.properties, properties), content);
+    const {APNSMessage} = this.getConfig()
+    return APNSMessage.please().sendToDevice(_.assign({}, this.properties, properties), content)
   },
 
   sendMessages(properties = {}, content = {}) {
-    const {APNSMessage} = this.getConfig();
+    const {APNSMessage} = this.getConfig()
     return APNSMessage.please().sendToDevices(_.assign({}, this.properties, properties), content)
   }
 
-});
+})
 
 const APNSDeviceMeta = Meta({
   name: 'apnsdevice',
   pluralName: 'apnsdevices',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/push_notifications/apns/devices/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/push_notifications/apns/devices/'
     }
   }
-});
+})
 
 const APNSDeviceConstraints = {
   instanceName: {
@@ -65,7 +65,7 @@ const APNSDeviceConstraints = {
   is_active: {
     boolean: true
   }
-};
+}
 
 /**
  * OO wrapper around instance APNS devices {@link # endpoint}.
@@ -87,6 +87,6 @@ const APNSDevice = stampit()
   .compose(Model)
   .setMeta(APNSDeviceMeta)
   .setQuerySet(APNSDeviceQuerySet)
-  .setConstraints(APNSDeviceConstraints);
+  .setConstraints(APNSDeviceConstraints)
 
-export default APNSDevice;
+export default APNSDevice

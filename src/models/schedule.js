@@ -1,22 +1,21 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
+import stampit from 'stampit'
+import {Meta, Model} from './base'
 
 const ScheduleMeta = Meta({
   name: 'schedule',
   pluralName: 'schedules',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/schedules/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/schedules/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/schedules/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/schedules/'
     }
   },
-  relatedModels: [ 'ScheduleTrace' ]
-});
-
+  relatedModels: ['ScheduleTrace']
+})
 
 const ScheduleConstraints = {
   instanceName: {
@@ -45,7 +44,7 @@ const ScheduleConstraints = {
     presence: true,
     numericality: true
   }
-};
+}
 
 /**
  * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/codebox-schedules-list endpoint}.
@@ -67,6 +66,6 @@ const ScheduleConstraints = {
 const Schedule = stampit()
   .compose(Model)
   .setMeta(ScheduleMeta)
-  .setConstraints(ScheduleConstraints);
+  .setConstraints(ScheduleConstraints)
 
-export default Schedule;
+export default Schedule

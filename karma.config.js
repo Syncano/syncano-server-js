@@ -1,20 +1,20 @@
-var webpackConfig = require('./webpack.config.js');
+const webpackConfig = require('./webpack.config.js')
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     files: [
         // all files ending in "_test"
-        'test/dist/polyfill.js',
-        'test/dist/*Test.js',
-        'test/dist/**/*Test.js'
+      'test/dist/polyfill.js',
+      'test/dist/*Test.js',
+      'test/dist/**/*Test.js'
         // each file acts as entry point for the webpack configuration
     ],
 
     preprocessors: {
         // add webpack as preprocessor
-        'test/dist/*Test.js': ['webpack'],
-        'test/dist/**/*Test.js': ['webpack']
+      'test/dist/*Test.js': ['webpack'],
+      'test/dist/**/*Test.js': ['webpack']
     },
 
     browsers: ['PhantomJS'],
@@ -40,5 +40,5 @@ module.exports = function(config) {
       'karma-webpack',
       'karma-phantomjs-launcher'
     ]
-  });
-};
+  })
+}

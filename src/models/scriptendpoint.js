@@ -1,8 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import QuerySet from '../querySet';
-
+import stampit from 'stampit'
+import _ from 'lodash'
+import QuerySet from '../querySet'
+import {Meta, Model} from './base'
 
 const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
 
@@ -21,42 +20,42 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
 
   */
   run(properties = {}, payload = {}) {
-    const {ScriptEndpointTrace} = this.getConfig();
+    const {ScriptEndpointTrace} = this.getConfig()
 
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'run';
-    this.payload = payload;
-    this._serialize = false;
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
+    this.endpoint = 'run'
+    this.payload = payload
+    this._serialize = false
 
-    return this.then((trace) => {
+    return this.then(trace => {
       return ScriptEndpointTrace.fromJSON(trace, {
         instanceName: this.properties.instanceName,
         webhookName: this.properties.name
-      });
-    });
+      })
+    })
   }
-});
+})
 
 const ScriptEndpointMeta = Meta({
   name: 'scriptendpoint',
   pluralName: 'scriptendpoints',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/endpoints/scripts/{name}/edit/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/endpoints/scripts/{name}/edit/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/endpoints/scripts/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/endpoints/scripts/'
     },
-    'run': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/endpoints/scripts/{name}/'
+    run: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/endpoints/scripts/{name}/'
     }
   },
   relatedModels: ['ScriptEndpointTrace']
-});
+})
 
 const ScriptEndpointConstraints = {
   instanceName: {
@@ -82,7 +81,7 @@ const ScriptEndpointConstraints = {
     presence: true,
     numericality: true
   }
-};
+}
 
 /**
  * OO wrapper around instance webhooks {@link # endpoint}.
@@ -120,20 +119,22 @@ const ScriptEndpoint = stampit()
       });
     */
     run(payload = {}, cache_key) {
-      const {ScriptEndpointTrace} = this.getConfig();
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('run', this);
+      const {ScriptEndpointTrace} = this.getConfig()
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('run', this)
 
-      if(!_.isEmpty(cache_key)) _.assign(payload, { query: {cache_key} })
+      if (!_.isEmpty(cache_key)) {
+        _.assign(payload, { query: {cache_key} })
+      }
 
       return this.makeRequest('POST', path, {payload})
-        .then((body) => {
+        .then(body => {
           return ScriptEndpointTrace.fromJSON(body, {
             instanceName: this.instanceName,
             webhookName: this.name
-          });
-        });
+          })
+        })
     }
-  });
+  })
 
-export default ScriptEndpoint;
+export default ScriptEndpoint

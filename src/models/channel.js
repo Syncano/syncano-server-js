@@ -1,175 +1,9 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import Request from '../request';
-import {EventEmittable} from '../utils';
-import _ from 'lodash';
-import QuerySet from '../querySet';
-
-const ChannelQuerySet = stampit().compose(QuerySet).methods({
-
-  /**
-    * Publishes to a channel.
-
-    * @ignore
-    * @memberOf QuerySet
-    * @instance
-
-    * @param {Object} channel
-    * @param {Object} message
-    * @param {String} [room = null]
-    * @returns {QuerySet}
-
-    * @example {@lang javascript}
-    * Channel.please().publish({ instanceName: 'test-instace', name: 'test-class' }, { content: 'my message'});
-
-    */
-
-  publish(properties, message, room = null) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = {payload: JSON.stringify(message)};
-
-    if (room) {
-      this.payload.room = room;
-    }
-
-    this.method = 'POST';
-    this.endpoint = 'publish';
-
-    return this;
-  },
-
-  /**
-    * Allows polling of a channel.
-
-    * @ignore
-    * @memberOf QuerySet
-    * @instance
-
-    * @param {Object} options
-    * @param {Boolean} [start = true]
-    * @returns {ChannelPoll}
-
-    * @example {@lang javascript}
-    * var poll = Channel.please().poll({ instanceName: 'test-instace', name: 'test-class' });
-    *
-    * poll.on('start', function() {
-    *   console.log('poll::start');
-    * });
-    *
-    * poll.on('stop', function() {
-    *   console.log('poll::stop');
-    * });
-    *
-    * poll.on('message', function(message) {
-    *   console.log('poll::message', message);
-    * });
-    *
-    * poll.on('custom', function(message) {
-    *   console.log('poll::custom', message);
-    * });
-    *
-    * poll.on('create', function(data) {
-    *   console.log('poll::create', data);
-    * });
-    *
-    * poll.on('delete', function(data) {
-    *   console.log('poll::delete', data);
-    * });
-    *
-    * poll.on('update', function(data) {
-    *   console.log('poll::update', data);
-    * });
-    *
-    * poll.on('error', function(error) {
-    *   console.log('poll::error', error);
-    * });
-    *
-    * poll.start();
-    *
-    */
-
-  poll(properties = {}, options = {}, start = true) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    const config = this.getConfig();
-    const meta = this.model.getMeta();
-    const path = meta.resolveEndpointPath('poll', this.properties);
-
-    options.path = path;
-
-    const channelPoll = ChannelPoll.setConfig(config)(options);
-
-    if (start === true) {
-      channelPoll.start();
-    }
-
-    return channelPoll;
-  },
-
-  history(properties = {}, query = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-
-    this.method = 'GET';
-    this.endpoint = 'history';
-    this.query = query;
-    this._serialize = false;
-
-    return this;
-  }
-
-});
-
-const ChannelMeta = Meta({
-  name: 'channel',
-  pluralName: 'channels',
-  endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/channels/{name}/'
-    },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/channels/'
-    },
-    'poll': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/channels/{name}/poll/'
-    },
-    'publish': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/channels/{name}/publish/'
-    },
-    'history': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/channels/{name}/history/'
-    }
-  }
-});
-
-const channelConstraints = {
-  instanceName: {
-    presence: true,
-    length: {
-      minimum: 5
-    }
-  },
-  name: {
-    presence: true,
-    string: true,
-    length: {
-      minimum: 5
-    }
-  },
-  description: {
-    string: true
-  },
-  type: {
-    inclusion: ['default', 'separate_rooms']
-  },
-  acl: {
-    object: true
-  }
-};
+import stampit from 'stampit'
+import _ from 'lodash'
+import Request from '../request'
+import {EventEmittable} from '../utils'
+import QuerySet from '../querySet'
+import {Meta, Model} from './base'
 
 /**
   * Wrapper around {@link http://docs.syncano.io/v0.1/docs/channels-poll|channels poll} endpoint which implements `EventEmitter` interface.
@@ -243,53 +77,219 @@ export const ChannelPoll = stampit()
           last_id: this.lastId,
           room: this.room
         }
-      };
+      }
 
-      this.emit('request', options);
-      return this.makeRequest('GET', this.path, options);
+      this.emit('request', options)
+      return this.makeRequest('GET', this.path, options)
     },
 
     start() {
-      this.emit('start');
+      this.emit('start')
 
       // some kind of while loop which uses Promises
       const loop = () => {
         if (this.abort === true) {
-          this.emit('stop');
+          this.emit('stop')
           return
         }
 
         return this.request()
-          .then((message) => {
-            this.emit('message', message);
-            this.emit(message.action, message);
-            this.lastId = message.id;
-            return message;
+          .then(message => {
+            this.emit('message', message)
+            this.emit(message.action, message)
+            this.lastId = message.id
+            return message
           })
           .finally(loop)
-          .catch((error) => {
-            if (error.timeout && error.timeout === this.timeout) {
-              return this.emit('timeout', error);
+          .catch(err => {
+            if (err.timeout && err.timeout === this.timeout) {
+              return this.emit('timeout', err)
             }
 
-            this.emit('error', error);
-            this.stop();
-          });
+            this.emit('error', err)
+            this.stop()
+          })
       }
 
-      process.nextTick(loop);
-      return this.stop;
+      process.nextTick(loop)
+      return this.stop
     },
 
     stop(removeListeners = false) {
-      this.abort = true;
-      if(removeListeners) {
-        this.removeAllListeners();
+      this.abort = true
+      if (removeListeners) {
+        this.removeAllListeners()
       }
-      return this;
+      return this
     }
 
-  });
+  })
+
+const ChannelQuerySet = stampit().compose(QuerySet).methods({
+
+  /**
+    * Publishes to a channel.
+
+    * @ignore
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} channel
+    * @param {Object} message
+    * @param {String} [room = null]
+    * @returns {QuerySet}
+
+    * @example {@lang javascript}
+    * Channel.please().publish({ instanceName: 'test-instace', name: 'test-class' }, { content: 'my message'});
+
+    */
+
+  publish(properties, message, room = null) {
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = {payload: JSON.stringify(message)}
+
+    if (room) {
+      this.payload.room = room
+    }
+
+    this.method = 'POST'
+    this.endpoint = 'publish'
+
+    return this
+  },
+
+  /**
+    * Allows polling of a channel.
+
+    * @ignore
+    * @memberOf QuerySet
+    * @instance
+
+    * @param {Object} options
+    * @param {Boolean} [start = true]
+    * @returns {ChannelPoll}
+
+    * @example {@lang javascript}
+    * var poll = Channel.please().poll({ instanceName: 'test-instace', name: 'test-class' });
+    *
+    * poll.on('start', function() {
+    *   console.log('poll::start');
+    * });
+    *
+    * poll.on('stop', function() {
+    *   console.log('poll::stop');
+    * });
+    *
+    * poll.on('message', function(message) {
+    *   console.log('poll::message', message);
+    * });
+    *
+    * poll.on('custom', function(message) {
+    *   console.log('poll::custom', message);
+    * });
+    *
+    * poll.on('create', function(data) {
+    *   console.log('poll::create', data);
+    * });
+    *
+    * poll.on('delete', function(data) {
+    *   console.log('poll::delete', data);
+    * });
+    *
+    * poll.on('update', function(data) {
+    *   console.log('poll::update', data);
+    * });
+    *
+    * poll.on('error', function(error) {
+    *   console.log('poll::error', error);
+    * });
+    *
+    * poll.start();
+    *
+    */
+
+  poll(properties = {}, options = {}, start = true) {
+    this.properties = _.assign({}, this.properties, properties)
+
+    const config = this.getConfig()
+    const meta = this.model.getMeta()
+    const path = meta.resolveEndpointPath('poll', this.properties)
+
+    options.path = path
+
+    const channelPoll = ChannelPoll.setConfig(config)(options)
+
+    if (start === true) {
+      channelPoll.start()
+    }
+
+    return channelPoll
+  },
+
+  history(properties = {}, query = {}) {
+    this.properties = _.assign({}, this.properties, properties)
+
+    this.method = 'GET'
+    this.endpoint = 'history'
+    this.query = query
+    this._serialize = false
+
+    return this
+  }
+
+})
+
+const ChannelMeta = Meta({
+  name: 'channel',
+  pluralName: 'channels',
+  endpoints: {
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/channels/{name}/'
+    },
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/channels/'
+    },
+    poll: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/channels/{name}/poll/'
+    },
+    publish: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/channels/{name}/publish/'
+    },
+    history: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/channels/{name}/history/'
+    }
+  }
+})
+
+const channelConstraints = {
+  instanceName: {
+    presence: true,
+    length: {
+      minimum: 5
+    }
+  },
+  name: {
+    presence: true,
+    string: true,
+    length: {
+      minimum: 5
+    }
+  },
+  description: {
+    string: true
+  },
+  type: {
+    inclusion: ['default', 'separate_rooms']
+  },
+  acl: {
+    object: true
+  }
+}
 
 /**
  * OO wrapper around channels {@link http://docs.syncano.io/v0.1/docs/channels-list endpoint}.
@@ -357,19 +357,19 @@ const Channel = stampit()
   .methods({
 
     poll(options = {}, start = true) {
-      const config = this.getConfig();
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('poll', this);
+      const config = this.getConfig()
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('poll', this)
 
-      options.path = path;
+      options.path = path
 
-      const channelPoll = ChannelPoll.setConfig(config)(options);
+      const channelPoll = ChannelPoll.setConfig(config)(options)
 
       if (start === true) {
-        channelPoll.start();
+        channelPoll.start()
       }
 
-      return channelPoll;
+      return channelPoll
     },
 
     publish(message, room = null) {
@@ -377,25 +377,25 @@ const Channel = stampit()
         payload: {
           payload: JSON.stringify(message)
         }
-      };
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('publish', this);
+      }
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('publish', this)
 
       if (room !== null) {
-        options.payload.room = room;
+        options.payload.room = room
       }
 
-      return this.makeRequest('POST', path, options);
+      return this.makeRequest('POST', path, options)
     },
 
     history(query = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('history', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('history', this)
 
-      return this.makeRequest('GET', path, {query});
+      return this.makeRequest('GET', path, {query})
     }
 
   })
-  .setConstraints(channelConstraints);
+  .setConstraints(channelConstraints)
 
-export default Channel;
+export default Channel

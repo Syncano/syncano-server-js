@@ -1,12 +1,11 @@
-import stampit from 'stampit';
-import Promise from 'bluebird';
-import _ from 'lodash';
-import {validate} from '../utils';
-import QuerySet from '../querySet';
-import Request from '../request';
-import {ValidationError} from '../errors';
-import {ConfigMixin, MetaMixin, ConstraintsMixin} from '../utils';
-import {omitBy, pick, mapValues} from 'lodash/fp';
+import stampit from 'stampit'
+import Promise from 'bluebird'
+import _ from 'lodash'
+import {omitBy, pick, mapValues} from 'lodash/fp'
+import QuerySet from '../querySet'
+import Request from '../request'
+import {ValidationError} from '../errors'
+import {ConfigMixin, MetaMixin, ConstraintsMixin, validate} from '../utils'
 
 /**
  * Object which holds whole configuration for {@link Model}.
@@ -46,11 +45,11 @@ export const Meta = stampit()
       }
     }
   })
-  .init(function({ instance }) {
-    _.forEach(instance.endpoints, (value) => {
-      value.properties = this.getPathProperties(value.path);
-      instance.properties = _.union(instance.properties, value.properties);
-    });
+  .init(function ({ instance }) {
+    _.forEach(instance.endpoints, value => {
+      value.properties = this.getPathProperties(value.path)
+      instance.properties = _.union(instance.properties, value.properties)
+    })
   })
   .methods({
 
@@ -64,9 +63,9 @@ export const Meta = stampit()
     */
     getObjectProperties(object) {
       return _.reduce(this.properties, (result, property) => {
-        result[property] = object[property];
-        return result;
-      }, {});
+        result[property] = object[property]
+        return result
+      }, {})
     },
 
     /**
@@ -82,36 +81,36 @@ export const Meta = stampit()
     * @returns {Object}
     */
     assignProperties(source, target) {
-      const dateFields = this.convertDateFields(target);
-      return _.assign({}, this.getObjectProperties(source), target, dateFields);
+      const dateFields = this.convertDateFields(target)
+      return _.assign({}, this.getObjectProperties(source), target, dateFields)
     },
 
     convertDateFields(object) {
       return _.flow([
-                omitBy(_.isNull),
-                pick(['created_at', 'updated_at', 'executed_at']),
-                mapValues((o) => new Date(o))
-              ])(object);
+        omitBy(_.isNull),
+        pick(['created_at', 'updated_at', 'executed_at']),
+        mapValues(o => new Date(o))
+      ])(object)
     },
 
     getPathProperties(path) {
-      const re = /{([^}]*)}/gi;
-      let match = null;
-      let result = [];
+      const re = /{([^}]*)}/gi
+      let match = null
+      const result = []
 
       while ((match = re.exec(path)) !== null) {
-        result.push(match[1]);
+        result.push(match[1])
       }
 
-      return result;
+      return result
     },
 
     resolveActionToPath(action, model) {
-      return this.resolveEndpointPath(this.batchMap[action].endpoint, model);
+      return this.resolveEndpointPath(this.batchMap[action].endpoint, model)
     },
 
     resolveActionToMethod(action) {
-      return this.batchMap[action].method;
+      return this.batchMap[action].method
     },
 
     /**
@@ -128,22 +127,22 @@ export const Meta = stampit()
     */
     resolveEndpointPath(endpointName, properties) {
       if (_.isEmpty(this.endpoints[endpointName])) {
-        return Promise.reject(new Error(`Invalid endpoint name: "${endpointName}".`));
+        return Promise.reject(new Error(`Invalid endpoint name: "${endpointName}".`))
       }
 
-      const endpoint = this.endpoints[endpointName];
-      const diff = _.difference(endpoint.properties, _.keys(properties));
-      let path = endpoint.path;
+      const endpoint = this.endpoints[endpointName]
+      const diff = _.difference(endpoint.properties, _.keys(properties))
+      let path = endpoint.path
 
-      if (diff.length) {
-        return Promise.reject(new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`));
+      if (diff.length > 0) {
+        return Promise.reject(new Error(`Missing path properties "${diff.join()}" for "${endpointName}" endpoint.`))
       }
 
-      _.forEach(endpoint.properties, (property) => {
-        path = path.replace(`{${property}}`, properties[property]);
-      });
+      _.forEach(endpoint.properties, property => {
+        path = path.replace(`{${property}}`, properties[property])
+      })
 
-      return path;
+      return path
     },
 
     /**
@@ -159,16 +158,16 @@ export const Meta = stampit()
     * @returns {String}
     */
     findAllowedMethod(endpointName, ...methodNames) {
-      const endpoint = this.endpoints[endpointName];
-      const methods = _.intersection(_.map(methodNames, (m) => m.toLowerCase()), endpoint.methods);
+      const endpoint = this.endpoints[endpointName]
+      const methods = _.intersection(_.map(methodNames, m => m.toLowerCase()), endpoint.methods)
 
       if (_.isEmpty(methods)) {
-        return Promise.reject(new Error(`Unsupported request methods: ${methodNames.join()}.`));
+        return Promise.reject(new Error(`Unsupported request methods: ${methodNames.join()}.`))
       }
 
-      return methods[0];
+      return methods[0]
     }
-  });
+  })
 
 export const Rename = stampit().methods({
   /**
@@ -184,16 +183,16 @@ export const Rename = stampit().methods({
   * Model.rename({ new_name: 'new_name'}).then(function(model) {});
   */
   rename(payload = { new_name: this.name }) {
-    const meta = this.getMeta();
-    const path = meta.resolveEndpointPath('rename', this);
+    const meta = this.getMeta()
+    const path = meta.resolveEndpointPath('rename', this)
 
     return this.makeRequest('POST', path, {payload})
-      .then((response) => {
-        return this.serialize(response);
+      .then(response => {
+        return this.serialize(response)
       })
   }
 
-});
+})
 
 /**
  * Base {@link https://github.com/stampit-org/stampit|stamp} for all models which wraps all raw JavaScript objects.
@@ -236,7 +235,7 @@ export const Model = stampit({
 
     */
     setQuerySet(querySet) {
-      return this.refs({_querySet: querySet});
+      return this.refs({_querySet: querySet})
     },
 
     /**
@@ -252,7 +251,7 @@ export const Model = stampit({
 
     */
     getQuerySet() {
-      return this.fixed.refs._querySet;
+      return this.fixed.refs._querySet
     },
 
     /**
@@ -270,20 +269,20 @@ export const Model = stampit({
 
     */
     please(properties = {}) {
-      const querySet = this.getQuerySet();
-      const defaultProps = _.assign({}, this.getDefaultProperties(), properties);
-      const {mapDefaults} = this.getMeta();
+      const querySet = this.getQuerySet()
+      const defaultProps = _.assign({}, this.getDefaultProperties(), properties)
+      const {mapDefaults} = this.getMeta()
       _.forOwn(defaultProps, (v, k) => {
-        if(_.has(mapDefaults, k)) {
+        if (_.has(mapDefaults, k)) {
           _.set(defaultProps, [mapDefaults[k]], v)
-          _.unset(defaultProps, k);
+          _.unset(defaultProps, k)
         }
-      });
+      })
       return querySet({
         model: this,
         properties: defaultProps,
         _config: this.getConfig()
-      });
+      })
     },
 
     /**
@@ -299,9 +298,9 @@ export const Model = stampit({
 
     */
     fromJSON(rawJSON, properties = {}) {
-      const meta = this.getMeta();
-      const attrs = meta.assignProperties(properties, rawJSON);
-      return this(attrs);
+      const meta = this.getMeta()
+      const attrs = meta.assignProperties(properties, rawJSON)
+      return this(attrs)
     }
   },
   methods: {
@@ -314,7 +313,7 @@ export const Model = stampit({
     * @returns {Boolean}
     */
     isNew() {
-      return (!_.has(this, 'links') && !_.has(this, 'update'));
+      return (!_.has(this, 'links') && !_.has(this, 'update'))
     },
 
     /**
@@ -325,14 +324,14 @@ export const Model = stampit({
     * @returns {Object|undefined}
     */
     validate() {
-      const constraints = this.getConstraints();
-      const attributes = this.toJSON();
+      const constraints = this.getConstraints()
+      const attributes = this.toJSON()
 
       if (_.isEmpty(constraints)) {
-        return;
+        return
       }
 
-      return validate(attributes, constraints);
+      return validate(attributes, constraints)
     },
 
     /**
@@ -343,8 +342,8 @@ export const Model = stampit({
     * @returns {Model}
     */
     serialize(object) {
-      const meta = this.getMeta();
-      return this.getStamp()(meta.assignProperties(this, object));
+      const meta = this.getMeta()
+      return this.getStamp()(meta.assignProperties(this, object))
     },
 
     /**
@@ -355,35 +354,35 @@ export const Model = stampit({
     * @returns {Promise}
     */
     save() {
-      const meta = this.getMeta();
-      const errors = this.validate();
-      let path = null;
-      let endpoint = 'list';
-      let method = 'POST';
-      let payload = this.toJSON();
+      const meta = this.getMeta()
+      const errors = this.validate()
+      let path = null
+      let endpoint = 'list'
+      let method = 'POST'
+      const payload = this.toJSON()
 
       if (!_.isEmpty(errors)) {
-        return Promise.reject(new ValidationError(errors));
+        return Promise.reject(new ValidationError(errors))
       }
 
       try {
         if (!this.isNew()) {
-          endpoint = 'detail';
-          method = meta.findAllowedMethod(endpoint, 'PUT', 'PATCH', 'POST');
+          endpoint = 'detail'
+          method = meta.findAllowedMethod(endpoint, 'PUT', 'PATCH', 'POST')
         }
 
-        path = meta.resolveEndpointPath(endpoint, this);
-      } catch(err) {
-        return Promise.reject(err);
+        path = meta.resolveEndpointPath(endpoint, this)
+      } catch (err) {
+        return Promise.reject(err)
       }
 
-      return this.makeRequest(method, path, {payload}).then((body) => this.serialize(body));
+      return this.makeRequest(method, path, {payload}).then(body => this.serialize(body))
     },
 
     update() {
-      this.update = true;
+      this.update = true
 
-      return this.save();
+      return this.save()
     },
 
     /**
@@ -394,14 +393,14 @@ export const Model = stampit({
     * @returns {Promise}
     */
     delete() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('detail', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('detail', this)
 
-      return this.makeRequest('DELETE', path);
+      return this.makeRequest('DELETE', path)
     },
 
     toBatchObject(action) {
-      const meta = this.getMeta();
+      const meta = this.getMeta()
       return {
         method: meta.resolveActionToMethod(action),
         path: meta.resolveActionToPath(action, this),
@@ -422,52 +421,52 @@ export const Model = stampit({
         'links',
         'created_at',
         'updated_at'
-      ];
+      ]
 
-      return _.omit(this, attrs.concat(_.functions(this).concat(_.functionsIn(this))));
+      return _.omit(this, attrs.concat(_.functions(this).concat(_.functionsIn(this))))
     }
   }
 })
 .init(({instance, stamp}) => {
   if (!stamp.fixed.methods.getStamp) {
-    stamp.fixed.methods.getStamp = () => stamp;
+    stamp.fixed.methods.getStamp = () => stamp
   }
-  if(_.has(instance, '_meta.relatedModels')) {
-    const relatedModels = instance._meta.relatedModels;
-    const properties = instance._meta.properties.slice();
-    const last = _.last(properties);
-    const lastIndex = _.lastIndexOf(properties, last);
-    properties[lastIndex] = _.camelCase(`${instance._meta.name} ${last}`);
-    let map = {};
-    map[last] = properties[lastIndex];
+  if (_.has(instance, '_meta.relatedModels')) {
+    const relatedModels = instance._meta.relatedModels
+    const properties = instance._meta.properties.slice()
+    const last = _.last(properties)
+    const lastIndex = _.lastIndexOf(properties, last)
+    properties[lastIndex] = _.camelCase(`${instance._meta.name} ${last}`)
+    let map = {}
+    map[last] = properties[lastIndex]
 
     map = _.reduce(properties, (result, property) => {
-      result[property] = property;
-      return result;
-    }, map);
+      result[property] = property
+      return result
+    }, map)
 
     _.forEach(instance.getConfig(), (model, name) => {
-      if(_.includes(relatedModels, name)) {
-
+      if (_.includes(relatedModels, name)) {
         instance[model.getMeta().pluralName] = (_properties = {}) => {
-
           const parentProperties = _.reduce(map, (result, target, source) => {
-            const value = _.get(instance, source, null);
+            const value = _.get(instance, source, null)
 
             if (value !== null) {
-              result[target] = value;
+              result[target] = value
             }
 
-            return result;
-          }, {});
+            return result
+          }, {})
 
-          return stampit().compose(model).please(_.assign(parentProperties, _properties));
-        };
+          return stampit().compose(model).please(_.assign(parentProperties, _properties))
+        }
       }
-    });
+    })
   }
-  if(_.has(instance, '_config')) _.defaults(instance, instance.getDefaultProperties());
+  if (_.has(instance, '_config')) {
+    _.defaults(instance, instance.getDefaultProperties())
+  }
 })
-.compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request);
+.compose(ConfigMixin, MetaMixin, ConstraintsMixin, Request)
 
-export default Model;
+export default Model

@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, List, Delete, Update, Create, Get} from '../querySet';
-import _ from 'lodash';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, List, Delete, Update, Create, Get} from '../querySet'
+import {Meta, Model} from './base'
 
 const SocketQuerySet = stampit().compose(
   BaseQuerySet,
@@ -14,30 +14,30 @@ const SocketQuerySet = stampit().compose(
 .methods({
 
   recheck(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'POST';
-    this.endpoint = 'recheck';
-    this.raw();
+    this.method = 'POST'
+    this.endpoint = 'recheck'
+    this.raw()
 
-    return this;
+    return this
   },
 
   runEndpoint(properties = {}, method = 'GET', payload = {}) {
-    const {Endpoint} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return Endpoint.please().run(this.properties, method, payload);
+    const {Endpoint} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return Endpoint.please().run(this.properties, method, payload)
   },
 
   installFromUrl(properties = {}, name, url) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'POST';
-    this.endpoint = 'install';
-    this.payload = { name: name, install_url: url };
-    this.raw();
+    this.method = 'POST'
+    this.endpoint = 'install'
+    this.payload = { name, install_url: url }
+    this.raw()
 
-    return this;
+    return this
   }
 
 })
@@ -46,24 +46,24 @@ const SocketMeta = Meta({
   name: 'socket',
   pluralName: 'sockets',
   endpoints: {
-    'detail': {
-      'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v2/instances/{instanceName}/sockets/{name}/'
+    detail: {
+      methods: ['get', 'put', 'patch', 'delete'],
+      path: '/v2/instances/{instanceName}/sockets/{name}/'
     },
-    'recheck': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/sockets/{name}/recheck/'
+    recheck: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/sockets/{name}/recheck/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/sockets/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/sockets/'
     },
-    'install': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/sockets/install/'
+    install: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/sockets/install/'
     }
   }
-});
+})
 
 const CostomSocketConstraints = {
   instanceName: {
@@ -78,7 +78,7 @@ const CostomSocketConstraints = {
   install_url: {
     string: true
   }
-};
+}
 
 /**
  * OO wrapper around Socket.
@@ -94,32 +94,32 @@ const Socket = stampit()
   .methods({
 
     recheck() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('recheck', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('recheck', this)
 
-      return this.makeRequest('POST', path);
+      return this.makeRequest('POST', path)
     },
 
     runEndpoint(endpoint_name, method, payload) {
-      const {Endpoint} = this.getConfig();
-      return Endpoint.please().run({ socket_name: this.name, endpoint_name, instanceName: this.instanceName}, method, payload);
+      const {Endpoint} = this.getConfig()
+      return Endpoint.please().run({ socket_name: this.name, endpoint_name, instanceName: this.instanceName}, method, payload)
     },
 
     install() {
-      _.each(this.endpointObjects, (endpoint) => {
+      _.each(this.endpointObjects, endpoint => {
         this.endpoints = _.assign({}, this.endpoints, { [endpoint.name]: { calls: endpoint.scriptCalls } })
-      });
+      })
       this.dependencies = _.map(this.dependencyObjects, ({label, runtime_name, source}) => {
         return { name: label, runtime_name, source, type: 'script'}
-      });
+      })
       return this.save()
-        .then((result) => {
-          _.each(this.endpointObjects, (endpoint) => {
-            endpoint.socket_name = result.name;
-          });
+        .then(result => {
+          _.each(this.endpointObjects, endpoint => {
+            endpoint.socket_name = result.name
+          })
         })
     }
   })
   .setConstraints(CostomSocketConstraints)
 
-export default Socket;
+export default Socket

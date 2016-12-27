@@ -1,123 +1,118 @@
-import should from 'should/as-function';
-import {SyncanoError, NotFoundError, ValidationError, RequestError} from '../../src/errors';
+import should from 'should/as-function'
+import {SyncanoError, NotFoundError, ValidationError, RequestError} from '../../src/errors'
 
-describe('SyncanoError', function() {
-  let error = null;
+describe('SyncanoError', () => {
+  let error = null
 
-  beforeEach(function() {
-    error = new SyncanoError('dummy');
-  });
+  beforeEach(() => {
+    error = new SyncanoError('dummy')
+  })
 
-  it('is a function', function() {
-    should(SyncanoError).be.a.Function();
-  });
+  it('is a function', () => {
+    should(SyncanoError).be.a.Function()
+  })
 
-  it('has a proper name attribute', function() {
-    should(error).have.property('name').which.is.String().equal('SyncanoError');
-  });
+  it('has a proper name attribute', () => {
+    should(error).have.property('name').which.is.String().equal('SyncanoError')
+  })
 
-  it('has a proper message attribute', function() {
-    should(error).have.property('message').which.is.String().equal('dummy');
-  });
+  it('has a proper message attribute', () => {
+    should(error).have.property('message').which.is.String().equal('dummy')
+  })
 
-  it('has a proper stack attribute', function() {
-    should(error).have.property('stack').which.is.String();
-  });
+  it('has a proper stack attribute', () => {
+    should(error).have.property('stack').which.is.String()
+  })
 
-  it('has defaults', function() {
-    should(new SyncanoError()).have.property('message').which.is.String().equal('');
-  });
+  it('has defaults', () => {
+    should(new SyncanoError()).have.property('message').which.is.String().equal('')
+  })
+})
 
-});
+describe('NotFoundError', () => {
+  let error = null
 
-describe('NotFoundError', function() {
-  let error = null;
+  beforeEach(() => {
+    error = new NotFoundError('dummy')
+  })
 
-  beforeEach(function() {
-    error = new NotFoundError('dummy');
-  });
+  it('is a function', () => {
+    should(NotFoundError).be.a.Function()
+  })
 
-  it('is a function', function() {
-    should(NotFoundError).be.a.Function();
-  });
+  it('has a proper name attribute', () => {
+    should(error).have.property('name').which.is.String().equal('NotFoundError')
+  })
 
-  it('has a proper name attribute', function() {
-    should(error).have.property('name').which.is.String().equal('NotFoundError');
-  });
+  it('has a proper message attribute', () => {
+    should(error).have.property('message').which.is.String().equal('dummy')
+  })
 
-  it('has a proper message attribute', function() {
-    should(error).have.property('message').which.is.String().equal('dummy');
-  });
+  it('has a proper stack attribute', () => {
+    should(error).have.property('stack').which.is.String()
+  })
 
-  it('has a proper stack attribute', function() {
-    should(error).have.property('stack').which.is.String();
-  });
+  it('has defaults', () => {
+    should(new NotFoundError()).have.property('message').which.is.String().equal('No results for given query.')
+  })
+})
 
-  it('has defaults', function() {
-    should(new NotFoundError()).have.property('message').which.is.String().equal('No results for given query.');
-  });
+describe('ValidationError', () => {
+  let error = null
 
-});
+  beforeEach(() => {
+    error = new ValidationError({name: ['is required', 'needs to be alphanumeric']})
+  })
 
-describe('ValidationError', function() {
-  let error = null;
+  it('is a function', () => {
+    should(ValidationError).be.a.Function()
+  })
 
-  beforeEach(function() {
-    error = new ValidationError({name: ['is required', 'needs to be alphanumeric']});
-  });
+  it('has a proper name attribute', () => {
+    should(error).have.property('name').which.is.String().equal('ValidationError')
+  })
 
-  it('is a function', function() {
-    should(ValidationError).be.a.Function();
-  });
+  it('has a proper message attribute', () => {
+    should(error).have.property('message').which.is.String().equal('"name" is required, needs to be alphanumeric')
+  })
 
-  it('has a proper name attribute', function() {
-    should(error).have.property('name').which.is.String().equal('ValidationError');
-  });
+  it('has a proper stack attribute', () => {
+    should(error).have.property('stack').which.is.String()
+  })
 
-  it('has a proper message attribute', function() {
-    should(error).have.property('message').which.is.String().equal('"name" is required, needs to be alphanumeric');
-  });
+  it('has a proper errors attribute', () => {
+    should(error).have.property('errors').which.is.Object().properties('name')
+  })
 
-  it('has a proper stack attribute', function() {
-    should(error).have.property('stack').which.is.String();
-  });
+  it('has defaults', () => {
+    should(new ValidationError()).have.property('errors').which.is.Object()
+  })
+})
 
-  it('has a proper errors attribute', function() {
-    should(error).have.property('errors').which.is.Object().properties('name');
-  });
+describe('RequestError', () => {
+  let error = null
 
-  it('has defaults', function() {
-    should(new ValidationError()).have.property('errors').which.is.Object();
-  });
+  beforeEach(() => {
+    error = new RequestError({status: 400, response: {body: {name: ['is required']}}})
+  })
 
-});
+  it('is a function', () => {
+    should(RequestError).be.a.Function()
+  })
 
+  it('has a proper name attribute', () => {
+    should(error).have.property('name').which.is.String().equal('RequestError')
+  })
 
-describe('RequestError', function() {
-  let error = null;
+  it('has a proper message attribute', () => {
+    should(error).have.property('message').which.is.String().equal('"name" is required')
+  })
 
-  beforeEach(function() {
-    error = new RequestError({status: 400, response: {body: {name: ['is required']}}});
-  });
+  it('has a proper stack attribute', () => {
+    should(error).have.property('stack').which.is.String()
+  })
 
-  it('is a function', function() {
-    should(RequestError).be.a.Function();
-  });
-
-  it('has a proper name attribute', function() {
-    should(error).have.property('name').which.is.String().equal('RequestError');
-  });
-
-  it('has a proper message attribute', function() {
-    should(error).have.property('message').which.is.String().equal('"name" is required');
-  });
-
-  it('has a proper stack attribute', function() {
-    should(error).have.property('stack').which.is.String();
-  });
-
-  it('has a proper errors attribute', function() {
-    should(error).have.property('errors').which.is.Object().properties('name');
-  });
-
-});
+  it('has a proper errors attribute', () => {
+    should(error).have.property('errors').which.is.Object().properties('name')
+  })
+})

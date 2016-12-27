@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import _ from 'lodash';
-import {BaseQuerySet, Get, Create, Update, Delete, List} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, Get, Create, Update, Delete, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const HostingFileQuerySet = stampit().compose(
   BaseQuerySet,
@@ -14,16 +14,16 @@ const HostingFileQuerySet = stampit().compose(
 .methods({
 
   upload(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'POST';
-    this.endpoint = 'list';
-    this.payload = payload;
-    this.raw();
+    this.method = 'POST'
+    this.endpoint = 'list'
+    this.payload = payload
+    this.raw()
 
-    return this.then((response) => {
-      return this.model.fromJSON(response, this.properties);
-    });
+    return this.then(response => {
+      return this.model.fromJSON(response, this.properties)
+    })
   }
 
 })
@@ -32,16 +32,16 @@ const HostingFileMeta = Meta({
   name: 'hostingfile',
   pluralName: 'hostingfiles',
   endpoints: {
-    'detail': {
-      'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v2/instances/{instanceName}/hosting/{hostingId}/files/{id}/'
+    detail: {
+      methods: ['get', 'put', 'patch', 'delete'],
+      path: '/v2/instances/{instanceName}/hosting/{hostingId}/files/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/hosting/{hostingId}/files/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/hosting/{hostingId}/files/'
     }
   }
-});
+})
 
 const HostingFileConstraints = {
   instanceName: {
@@ -77,6 +77,6 @@ const HostingFile = stampit()
   .compose(Model)
   .setQuerySet(HostingFileQuerySet)
   .setMeta(HostingFileMeta)
-  .setConstraints(HostingFileConstraints);
+  .setConstraints(HostingFileConstraints)
 
-export default HostingFile;
+export default HostingFile

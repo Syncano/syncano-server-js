@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Create, BulkCreate, List, Delete} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, Get, Create, BulkCreate, List, Delete} from '../querySet'
+import {Meta, Model} from './base'
 
 const UserQuerySet = stampit().compose(
   BaseQuerySet,
@@ -25,12 +25,12 @@ const UserQuerySet = stampit().compose(
 
   */
   getSchema(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'GET';
-    this.endpoint = 'schema';
-    this.raw();
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'GET'
+    this.endpoint = 'schema'
+    this.raw()
 
-    return this;
+    return this
   },
   /**
   * Updates user profile schema
@@ -47,13 +47,13 @@ const UserQuerySet = stampit().compose(
 
   */
   updateSchema(properties = {}, schema = []) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'PATCH';
-    this.endpoint = 'schema';
-    this.raw();
-    this.payload = {schema};
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'PATCH'
+    this.endpoint = 'schema'
+    this.raw()
+    this.payload = {schema}
 
-    return this;
+    return this
   },
   /**
   * Gets a user's groups.
@@ -69,9 +69,9 @@ const UserQuerySet = stampit().compose(
 
   */
   getGroups(properties = {}) {
-    const {Group} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return Group.please().getUserGroups(this.properties);
+    const {Group} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return Group.please().getUserGroups(this.properties)
   },
   /**
   * Gets a user's group.
@@ -87,9 +87,9 @@ const UserQuerySet = stampit().compose(
 
   */
   getGroup(properties = {}, group = {}) {
-    const {Group} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return Group.please().getUserGroup(this.properties, group);
+    const {Group} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return Group.please().getUserGroup(this.properties, group)
   },
   /**
   * Adds a group to user.
@@ -106,9 +106,9 @@ const UserQuerySet = stampit().compose(
 
   */
   addGroup(properties = {}, group = {}) {
-    const {Group} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return Group.please().addUserGroup(this.properties, group);
+    const {Group} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return Group.please().addUserGroup(this.properties, group)
   },
   /**
   * Removes a user's group.
@@ -125,78 +125,78 @@ const UserQuerySet = stampit().compose(
 
   */
   deleteGroup(properties = {}, group = {}) {
-    const {Group} = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    return Group.please().deleteUserGroup(this.properties, group);
+    const {Group} = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    return Group.please().deleteUserGroup(this.properties, group)
   },
 
   getDetails(properties = {}, user = {}) {
-    this.properties = _.assign({}, this.properties, properties, user);
-    this.method = 'GET';
-    this.endpoint = 'groupUser';
+    this.properties = _.assign({}, this.properties, properties, user)
+    this.method = 'GET'
+    this.endpoint = 'groupUser'
 
-    return this.then((response) => {
-      return this.model.fromJSON(response.user, this.properties);
-    });
+    return this.then(response => {
+      return this.model.fromJSON(response.user, this.properties)
+    })
   },
 
   groupUsers(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'GET';
-    this.endpoint = 'groupUsers';
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'GET'
+    this.endpoint = 'groupUsers'
 
-    return this.then((response) => {
-      return this.model.please().asResultSet(response, 'user');
-    });
+    return this.then(response => {
+      return this.model.please().asResultSet(response, 'user')
+    })
   },
 
   addUserToGroup(properties = {}, user = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = user;
-    this.method = 'POST';
-    this.endpoint = 'groupUsers';
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = user
+    this.method = 'POST'
+    this.endpoint = 'groupUsers'
 
-    return this.then((response) => {
-      return this.model.fromJSON(response.user, this.properties);
-    });
+    return this.then(response => {
+      return this.model.fromJSON(response.user, this.properties)
+    })
   },
 
   deleteUserFromGroup(properties = {}, user = {}) {
-    this.properties = _.assign({}, this.properties, properties, user);
-    this.payload = user;
-    this.method = 'DELETE';
-    this.endpoint = 'groupUser';
+    this.properties = _.assign({}, this.properties, properties, user)
+    this.payload = user
+    this.method = 'DELETE'
+    this.endpoint = 'groupUser'
 
-    return this;
+    return this
   },
 
   get(properties = {}) {
-    const config = this.getConfig();
+    const config = this.getConfig()
 
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'GET';
-    this.endpoint = 'detail';
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'GET'
+    this.endpoint = 'detail'
 
     if (_.isEmpty(config.getAccountKey()) && !_.isEmpty(config.getUserKey()) && !_.isEmpty(config.getApiKey())) {
-      this.endpoint = 'user';
+      this.endpoint = 'user'
     }
 
-    return this;
+    return this
   },
 
   update(properties = {}, object = {}) {
-    const config = this.getConfig();
+    const config = this.getConfig()
 
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = object;
-    this.method = 'PATCH';
-    this.endpoint = 'detail';
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = object
+    this.method = 'PATCH'
+    this.endpoint = 'detail'
 
     if (_.isEmpty(config.getAccountKey()) && !_.isEmpty(config.getUserKey()) && !_.isEmpty(config.getApiKey())) {
-      this.endpoint = 'user';
+      this.endpoint = 'user'
     }
 
-    return this;
+    return this
   },
 
   /**
@@ -213,11 +213,11 @@ const UserQuerySet = stampit().compose(
 
   */
   resetKey(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'reset_key';
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
+    this.endpoint = 'reset_key'
 
-    return this;
+    return this
   },
 
   /**
@@ -236,16 +236,16 @@ const UserQuerySet = stampit().compose(
 
   */
   login(properties = {}, credentials = {}) {
-    const config = this.getConfig();
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'login';
-    this.payload = credentials;
+    const config = this.getConfig()
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
+    this.endpoint = 'login'
+    this.payload = credentials
 
-    return this.then((response) => {
-      config.setUserKey(response.user_key);
-      return this.model.fromJSON(response, this.properties);
-    });
+    return this.then(response => {
+      config.setUserKey(response.user_key)
+      return this.model.fromJSON(response, this.properties)
+    })
   },
 
   /**
@@ -264,58 +264,58 @@ const UserQuerySet = stampit().compose(
 
   */
   socialLogin(properties = {}, credentials = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'socialLogin';
-    this.payload = credentials;
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
+    this.endpoint = 'socialLogin'
+    this.payload = credentials
 
-    return this;
+    return this
   }
 
-});
+})
 
 const UserMeta = Meta({
   name: 'user',
   pluralName: 'users',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/users/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/users/{id}/'
     },
-    'reset_key': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/users/{id}/reset_key/'
+    reset_key: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/users/{id}/reset_key/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/users/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/users/'
     },
-    'login': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/users/auth/'
+    login: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/users/auth/'
     },
-    'socialLogin': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/users/auth/{backend}/proxy/'
+    socialLogin: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/users/auth/{backend}/proxy/'
     },
-    'user': {
-      'methods': ['get', 'post', 'patch'],
-      'path': '/v2/instances/{instanceName}/users/me/'
+    user: {
+      methods: ['get', 'post', 'patch'],
+      path: '/v2/instances/{instanceName}/users/me/'
     },
-    'groupUsers': {
-      'methods': ['get', 'post'],
-      'path': '/v2/instances/{instanceName}/groups/{id}/users/'
+    groupUsers: {
+      methods: ['get', 'post'],
+      path: '/v2/instances/{instanceName}/groups/{id}/users/'
     },
-    'groupUser': {
-      'methods': ['get', 'delete'],
-      'path': '/v2/instances/{instanceName}/groups/{id}/users/{user}/'
+    groupUser: {
+      methods: ['get', 'delete'],
+      path: '/v2/instances/{instanceName}/groups/{id}/users/{user}/'
     },
-    'schema': {
-      'methods': ['get', 'put', 'patch'],
-      'path': '/v2/instances/{instanceName}/users/schema/'
+    schema: {
+      methods: ['get', 'put', 'patch'],
+      path: '/v2/instances/{instanceName}/users/schema/'
     }
   }
-});
+})
 
 const UserConstraints = {
   instanceName: {
@@ -332,7 +332,7 @@ const UserConstraints = {
     presence: true,
     string: true
   }
-};
+}
 
 /**
  * OO wrapper around instance users {@link http://docs.syncano.com/v4.0/docs/user-management endpoint}.
@@ -368,8 +368,8 @@ const User = stampit()
     * });
     */
     getGroups() {
-      const {Group} = this.getConfig();
-      return Group.please().getUserGroups({ user: this.id, instanceName: this.instanceName});
+      const {Group} = this.getConfig()
+      return Group.please().getUserGroups({ user: this.id, instanceName: this.instanceName})
     },
     /**
     * Gets a user's group.
@@ -384,8 +384,8 @@ const User = stampit()
     * });
     */
     getGroup(group = {}) {
-      const {Group} = this.getConfig();
-      return Group.please().getUserGroup({ user: this.id, instanceName: this.instanceName}, group);
+      const {Group} = this.getConfig()
+      return Group.please().getUserGroup({ user: this.id, instanceName: this.instanceName}, group)
     },
     /**
     * Adds a group to user.
@@ -403,8 +403,8 @@ const User = stampit()
     * });
     */
     addGroup(group = {}) {
-      const {Group} = this.getConfig();
-      return Group.please().addUserGroup({ user: this.id, instanceName: this.instanceName}, group);
+      const {Group} = this.getConfig()
+      return Group.please().addUserGroup({ user: this.id, instanceName: this.instanceName}, group)
     },
     /**
     * Removes a user's group.
@@ -422,8 +422,8 @@ const User = stampit()
     * });
     */
     deleteGroup(group = {}) {
-      const {Group} = this.getConfig();
-      return Group.please().deleteUserGroup({ user: this.id, instanceName: this.instanceName}, group);
+      const {Group} = this.getConfig()
+      return Group.please().deleteUserGroup({ user: this.id, instanceName: this.instanceName}, group)
     },
     /**
     * Restes user key.
@@ -438,12 +438,12 @@ const User = stampit()
     * });
     */
     resetKey() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('reset_key', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('reset_key', this)
 
-      return this.makeRequest('POST', path, {}).then((body) => this.serialize(body));
+      return this.makeRequest('POST', path, {}).then(body => this.serialize(body))
     }
 
-  });
+  })
 
-export default User;
+export default User

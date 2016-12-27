@@ -1,27 +1,27 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const ScriptEndpointTraceQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   List
-);
+)
 
 const ScriptEndpointTraceMeta = Meta({
   name: 'triggertrace',
   pluralName: 'triggertraces',
   endpoints: {
-    'detail': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/{id}/'
+    detail: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/{id}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/'
+    list: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/endpoints/scripts/{scriptEndpointName}/traces/'
     }
   }
-});
+})
 
 const ScriptEndpointTraceConstraints = {
   instanceName: {
@@ -34,7 +34,7 @@ const ScriptEndpointTraceConstraints = {
     presence: true,
     string: true
   }
-};
+}
 
 /**
  * OO wrapper around webhook traces {@link # endpoint}.
@@ -58,6 +58,6 @@ const ScriptEndpointTrace = stampit()
   .compose(Model)
   .setMeta(ScriptEndpointTraceMeta)
   .setQuerySet(ScriptEndpointTraceQuerySet)
-  .setConstraints(ScriptEndpointTraceConstraints);
+  .setConstraints(ScriptEndpointTraceConstraints)
 
-export default ScriptEndpointTrace;
+export default ScriptEndpointTrace

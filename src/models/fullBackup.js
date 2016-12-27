@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, List, Get, Delete, Create, ListAll} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, List, Get, Delete, Create, ListAll} from '../querySet'
+import {Meta, Model} from './base'
 
 const FullBackupQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,26 +9,26 @@ const FullBackupQuerySet = stampit().compose(
   Delete,
   Create,
   ListAll
-);
+)
 
 const FullBackupMeta = Meta({
   name: 'fullBackup',
   pluralName: 'fullBackups',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v2/instances/{instanceName}/backups/full/{id}/'
+    detail: {
+      methods: ['delete', 'get'],
+      path: '/v2/instances/{instanceName}/backups/full/{id}/'
     },
-    'list': {
-      'methods': ['get', 'post'],
-      'path': '/v2/instances/{instanceName}/backups/full/'
+    list: {
+      methods: ['get', 'post'],
+      path: '/v2/instances/{instanceName}/backups/full/'
     },
-    'all': {
-      'methods': ['get'],
-      'path': '/v2/backups/full/'
+    all: {
+      methods: ['get'],
+      path: '/v2/backups/full/'
     }
   }
-});
+})
 
 const FullBackupConstraints = {
   instanceName: {
@@ -43,7 +43,7 @@ const FullBackupConstraints = {
   label: {
     string: true
   }
-};
+}
 
 /**
  * OO wrapper around instance backups {@link # endpoint}.
@@ -66,6 +66,6 @@ const FullBackup = stampit()
   .compose(Model)
   .setQuerySet(FullBackupQuerySet)
   .setMeta(FullBackupMeta)
-  .setConstraints(FullBackupConstraints);
+  .setConstraints(FullBackupConstraints)
 
-export default FullBackup;
+export default FullBackup

@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, Delete, GetOrCreate, List} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Create, BulkCreate, Get, Delete, GetOrCreate, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const InvitationQuerySet = stampit().compose(
   BaseQuerySet,
@@ -14,34 +14,34 @@ const InvitationQuerySet = stampit().compose(
 ).methods({
 
   accept(invitation_key) {
-    this.method = 'POST';
-    this.endpoint = 'accept';
-    this.payload = {invitation_key};
-    this._serialize = false;
+    this.method = 'POST'
+    this.endpoint = 'accept'
+    this.payload = {invitation_key}
+    this._serialize = false
 
-    return this;
+    return this
   }
 
-});
+})
 
 const InvitationMeta = Meta({
   name: 'invitation',
   pluralName: 'invitations',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v2/account/invitations/{id}/'
+    detail: {
+      methods: ['delete', 'get'],
+      path: '/v2/account/invitations/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/account/invitations/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/account/invitations/'
     },
-    'accept': {
-      'methods': ['post'],
-      'path': '/v2/account/invitations/accept/'
+    accept: {
+      methods: ['post'],
+      path: '/v2/account/invitations/accept/'
     }
   }
-});
+})
 
 /**
  * OO wrapper around invitations {@link # endpoint}.
@@ -67,12 +67,12 @@ const Invitation = stampit()
   .methods({
 
     accept(invitation_key) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('accept', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('accept', this)
 
-      return this.makeRequest('POST', path, {invitation_key});
+      return this.makeRequest('POST', path, {invitation_key})
     }
 
-  });
+  })
 
-export default Invitation;
+export default Invitation

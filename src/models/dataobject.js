@@ -1,8 +1,8 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import Promise from 'bluebird';
-import _ from 'lodash';
-import QuerySet, {Filter} from '../querySet';
+import stampit from 'stampit'
+import Promise from 'bluebird'
+import _ from 'lodash'
+import QuerySet, {Filter} from '../querySet'
+import {Meta, Model} from './base'
 
 const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
@@ -21,8 +21,8 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
     */
   orderBy(field) {
-    this.query['order_by'] = field;
-    return this;
+    this.query.order_by = field
+    return this
   },
   /**
   * Adds an array to an array field.
@@ -40,14 +40,14 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
   */
   add(properties = {}, object = {}) {
-    const payload = {};
-    payload[_.keys(object)[0]] = { _add: object[_.keys(object)[0]] };
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = payload;
+    const payload = {}
+    payload[_.keys(object)[0]] = { _add: object[_.keys(object)[0]] }
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = payload
 
-    this.method = 'PATCH';
-    this.endpoint = 'detail';
-    return this;
+    this.method = 'PATCH'
+    this.endpoint = 'detail'
+    return this
   },
   /**
   * Adds an array to an array field without duplicate values.
@@ -65,14 +65,14 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
   */
   addUnique(properties = {}, object = {}) {
-    const payload = {};
-    payload[_.keys(object)[0]] = { _addunique: object[_.keys(object)[0]] };
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = payload;
+    const payload = {}
+    payload[_.keys(object)[0]] = { _addunique: object[_.keys(object)[0]] }
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = payload
 
-    this.method = 'PATCH';
-    this.endpoint = 'detail';
-    return this;
+    this.method = 'PATCH'
+    this.endpoint = 'detail'
+    return this
   },
   /**
     * Filters DataObjects using _is.
@@ -90,9 +90,9 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
     */
   is(field, object = {}) {
-    const query = {};
-    query[field] = { _is: object};
-    return this.filter(query);
+    const query = {}
+    query[field] = { _is: object}
+    return this.filter(query)
   },
   /**
     * Filters DataObjects using _contains.
@@ -110,9 +110,9 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
     */
   contains(field, array = []) {
-    const query = {};
-    query[field] = { _contains: array};
-    return this.filter(query);
+    const query = {}
+    query[field] = { _contains: array}
+    return this.filter(query)
   },
   /**
   * Subtracts an array from an array field.
@@ -130,14 +130,14 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
   */
   remove(properties = {}, object = {}) {
-    const payload = {};
-    payload[_.keys(object)[0]] = { _remove: object[_.keys(object)[0]] };
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = payload;
+    const payload = {}
+    payload[_.keys(object)[0]] = { _remove: object[_.keys(object)[0]] }
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = payload
 
-    this.method = 'PATCH';
-    this.endpoint = 'detail';
-    return this;
+    this.method = 'PATCH'
+    this.endpoint = 'detail'
+    return this
   },
   /**
   * Increments single object based on provided arguments
@@ -155,14 +155,14 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
   */
   increment(properties = {}, object = {}) {
-    const payload = {};
-    payload[_.keys(object)[0]] = { _increment: object[_.keys(object)[0]] };
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = payload;
+    const payload = {}
+    payload[_.keys(object)[0]] = { _increment: object[_.keys(object)[0]] }
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = payload
 
-    this.method = 'PATCH';
-    this.endpoint = 'detail';
-    return this;
+    this.method = 'PATCH'
+    this.endpoint = 'detail'
+    return this
   },
   /**
     * Filters dataobjects by a geopoint field.
@@ -185,9 +185,9 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
     */
   near(object = {}) {
-    const query = {};
-    query[_.keys(object)[0]] = { _near: object[_.keys(object)[0]]};
-    return this.filter(query);
+    const query = {}
+    query[_.keys(object)[0]] = { _near: object[_.keys(object)[0]]}
+    return this.filter(query)
   },
   /**
     * Returns DataObject count.
@@ -203,27 +203,27 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
 
     */
   count() {
-    this.query['include_count'] = true;
-    this.raw();
-    return this;
+    this.query.include_count = true
+    this.raw()
+    return this
   }
 
-});
+})
 
 const DataObjectMeta = Meta({
   name: 'dataobject',
   pluralName: 'dataobjects',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'post', 'get'],
-      'path': '/v2/instances/{instanceName}/classes/{className}/objects/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'post', 'get'],
+      path: '/v2/instances/{instanceName}/classes/{className}/objects/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/classes/{className}/objects/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/classes/{className}/objects/'
     }
   }
-});
+})
 
 const DataobjectConstraints = {
   instanceName: {
@@ -242,7 +242,7 @@ const DataobjectConstraints = {
   channel_room: {
     string: true
   }
-};
+}
 
 /**
  * OO wrapper around instance data objects {@link http://docs.syncano.com/v4.0/docs/view-data-objects endpoint}.
@@ -287,12 +287,16 @@ const DataObject = stampit()
 
     */
     getRelatedObjects(field) {
-      if(!_.has(this, field)) return Promise.reject(new Error(`The ${field} field does not exist.`));
-      if(!_.has(this[field], 'value') || !_.isArray(this[field].value)) return Promise.reject(new Error(`The ${field} is not a relation.`));
+      if (!_.has(this, field)) {
+        return Promise.reject(new Error(`The ${field} field does not exist.`))
+      }
+      if (!_.has(this[field], 'value') || !_.isArray(this[field].value)) {
+        return Promise.reject(new Error(`The ${field} is not a relation.`))
+      }
 
-      const {DataObject} =  this.getConfig();
+      const {DataObject} = this.getConfig()
 
-      return DataObject.please().list({instanceName: this.instanceName, className: this[field].target }).filter({ id: { _in: this[field].value }});
+      return DataObject.please().list({instanceName: this.instanceName, className: this[field].target }).filter({ id: { _in: this[field].value }})
     },
     /**
     * Increments single object field based on provided arguments.
@@ -310,12 +314,16 @@ const DataObject = stampit()
 
     */
     increment(field, by) {
-      if(!_.isNumber(this[field])) return Promise.reject(new Error(`The ${field} is not numeric.`));
-      if(!_.isNumber(by)) return Promise.reject(new Error('The provided value is not numeric.'));
+      if (!_.isNumber(this[field])) {
+        return Promise.reject(new Error(`The ${field} is not numeric.`))
+      }
+      if (!_.isNumber(by)) {
+        return Promise.reject(new Error('The provided value is not numeric.'))
+      }
 
-      this[field] += _.add(this[field], by);
+      this[field] += _.add(this[field], by)
 
-      return this.save();
+      return this.save()
     },
     /**
     * Adds an array to an array field.
@@ -333,12 +341,16 @@ const DataObject = stampit()
 
     */
     add(field, array) {
-      if((_.has(this[field], 'value') && !_.isArray(this[field].value)) || (!_.has(this[field], 'value') && !_.isArray(this[field]))) return Promise.reject(new Error(`The ${field} is not an array.`));
-      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+      if ((_.has(this[field], 'value') && !_.isArray(this[field].value)) || (!_.has(this[field], 'value') && !_.isArray(this[field]))) {
+        return Promise.reject(new Error(`The ${field} is not an array.`))
+      }
+      if (!_.isArray(array)) {
+        return Promise.reject(new Error('The provided value is not an array.'))
+      }
 
-      this[field] = _.has(this[field], 'value') ? _.concat(this[field].value, array) :  _.concat(this[field], array);
+      this[field] = _.has(this[field], 'value') ? _.concat(this[field].value, array) : _.concat(this[field], array)
 
-      return this.save();
+      return this.save()
     },
     /**
     * Adds an array to an array field without duplicate values.
@@ -356,12 +368,16 @@ const DataObject = stampit()
 
     */
     addUnique(field, array) {
-      if(!_.isArray(this[field])) return Promise.reject(new Error(`The ${field} is not an array.`));
-      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+      if (!_.isArray(this[field])) {
+        return Promise.reject(new Error(`The ${field} is not an array.`))
+      }
+      if (!_.isArray(array)) {
+        return Promise.reject(new Error('The provided value is not an array.'))
+      }
 
-      this[field] = _.union(this[field], array);
+      this[field] = _.union(this[field], array)
 
-      return this.save();
+      return this.save()
     },
     /**
     * Subtracts an array from an array field.
@@ -379,15 +395,19 @@ const DataObject = stampit()
 
     */
     remove(field, array) {
-      if((_.has(this[field], 'value') && !_.isArray(this[field].value)) || (!_.has(this[field], 'value') && !_.isArray(this[field]))) return Promise.reject(new Error(`The ${field} is not an array.`));
-      if(!_.isArray(array)) return Promise.reject(new Error('The provided value is not an array.'));
+      if ((_.has(this[field], 'value') && !_.isArray(this[field].value)) || (!_.has(this[field], 'value') && !_.isArray(this[field]))) {
+        return Promise.reject(new Error(`The ${field} is not an array.`))
+      }
+      if (!_.isArray(array)) {
+        return Promise.reject(new Error('The provided value is not an array.'))
+      }
 
-      this[field] = _.has(this[field], 'value') ? _.difference(this[field].value, array) : _.difference(this[field], array);
+      this[field] = _.has(this[field], 'value') ? _.difference(this[field].value, array) : _.difference(this[field], array)
 
-      return this.save();
+      return this.save()
     }
   })
   .setQuerySet(DataObjectQuerySet)
-  .setConstraints(DataobjectConstraints);
+  .setConstraints(DataobjectConstraints)
 
-export default DataObject;
+export default DataObject

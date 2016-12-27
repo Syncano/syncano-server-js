@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import Request from './request';
-import _ from 'lodash';
+import stampit from 'stampit'
+import _ from 'lodash'
+import Request from './request'
 
 /**
  * Wrapper around account endpoint. Meant to be used directly form {@link Syncano} instance.
@@ -42,8 +42,8 @@ const Account = stampit().compose(Request)
 
     */
     getUserDetails() {
-      const path = this._account.updatePath;
-      return this.makeRequest('GET', path);
+      const path = this._account.updatePath
+      return this.makeRequest('GET', path)
     },
 
     /**
@@ -60,8 +60,8 @@ const Account = stampit().compose(Request)
 
     */
     activate(payload = {}) {
-      const path = this._account.activatePath;
-      return this.makeRequest('POST', path, {payload});
+      const path = this._account.activatePath
+      return this.makeRequest('POST', path, {payload})
     },
 
     /**
@@ -78,7 +78,7 @@ const Account = stampit().compose(Request)
 
     */
     changePassword(payload = {}) {
-      const path = this._account.changePasswordPath;
+      const path = this._account.changePasswordPath
       return this.makeRequest('POST', path, {payload})
     },
 
@@ -94,8 +94,8 @@ const Account = stampit().compose(Request)
 
     */
     resetPassword(email) {
-      const path = this._account.resetPasswordPath;
-      return this.makeRequest('POST', path, { payload: {email} });
+      const path = this._account.resetPasswordPath
+      return this.makeRequest('POST', path, { payload: {email} })
     },
 
     /**
@@ -113,8 +113,8 @@ const Account = stampit().compose(Request)
 
     */
     confirmPasswordReset(payload = {}) {
-      const path = this._account.resetPasswordConfimPath;
-      return this.makeRequest('POST', path, {payload});
+      const path = this._account.resetPasswordConfimPath
+      return this.makeRequest('POST', path, {payload})
     },
 
     /**
@@ -129,8 +129,8 @@ const Account = stampit().compose(Request)
 
     */
     setPassword(password) {
-      const path = this._account.setPasswordPath;
-      return this.makeRequest('POST', path, { payload: {password} });
+      const path = this._account.setPasswordPath
+      return this.makeRequest('POST', path, { payload: {password} })
     },
 
     /**
@@ -144,8 +144,8 @@ const Account = stampit().compose(Request)
 
     */
     resetKey() {
-      const path = this._account.resetKeyPath;
-      return this.makeRequest('POST', path);
+      const path = this._account.resetKeyPath
+      return this.makeRequest('POST', path)
     },
 
     /**
@@ -162,8 +162,8 @@ const Account = stampit().compose(Request)
 
     */
     register(payload = {}) {
-      const path = this._account.registerPath;
-      return this.makeRequest('POST', path, {payload});
+      const path = this._account.registerPath
+      return this.makeRequest('POST', path, {payload})
     },
 
     /**
@@ -181,15 +181,15 @@ const Account = stampit().compose(Request)
 
     */
     login(payload = {}, setAccountKey = true) {
-      const config = this.getConfig();
-      const path = this._account.loginPath;
+      const config = this.getConfig()
+      const path = this._account.loginPath
 
-      return this.makeRequest('POST', path, {payload}).then((user) => {
+      return this.makeRequest('POST', path, {payload}).then(user => {
         if (setAccountKey === true) {
-          config.setAccountKey(user.account_key);
+          config.setAccountKey(user.account_key)
         }
-        return user;
-      });
+        return user
+      })
     },
 
     /**
@@ -205,8 +205,8 @@ const Account = stampit().compose(Request)
 
     */
     socialLogin(backend, access_token) {
-      const path = _.replace(this._account.socialLoginPath, '{backend}', backend);
-      return this.makeRequest('POST', path, { payload: {access_token} });
+      const path = _.replace(this._account.socialLoginPath, '{backend}', backend)
+      return this.makeRequest('POST', path, { payload: {access_token} })
     },
 
     /**
@@ -221,8 +221,8 @@ const Account = stampit().compose(Request)
 
     */
     resendEmail(email) {
-      const path = this._account.emailPath;
-      return this.makeRequest('POST', path, { payload: {email} });
+      const path = this._account.emailPath
+      return this.makeRequest('POST', path, { payload: {email} })
     },
 
     /**
@@ -239,11 +239,10 @@ const Account = stampit().compose(Request)
 
     */
     update(payload = {}) {
-      const path = this._account.updatePath;
-      return this.makeRequest('PUT', path, {payload});
+      const path = this._account.updatePath
+      return this.makeRequest('PUT', path, {payload})
     }
 
-  });
+  })
 
-
-export default Account;
+export default Account

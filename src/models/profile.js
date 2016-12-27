@@ -1,23 +1,23 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Update} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, Update} from '../querySet'
+import {Meta, Model} from './base'
 
 const ProfileQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   Update
-);
+)
 
 const ProfileMeta = Meta({
   name: 'profile',
   pluralName: 'profiles',
   endpoints: {
-    'detail': {
-      'methods': ['get', 'put', 'patch'],
-      'path': '/v2/billing/profile/'
+    detail: {
+      methods: ['get', 'put', 'patch'],
+      path: '/v2/billing/profile/'
     }
   }
-});
+})
 /**
  * OO wrapper around Profile.
  * @ignore
@@ -43,6 +43,6 @@ const ProfileMeta = Meta({
 const Profile = stampit()
   .compose(Model)
   .setQuerySet(ProfileQuerySet)
-  .setMeta(ProfileMeta);
+  .setMeta(ProfileMeta)
 
-export default Profile;
+export default Profile

@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List, SendToDevice, SendToDevices} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List, SendToDevice, SendToDevices} from '../querySet'
+import {Meta, Model} from './base'
 
 const GCMMessageQuerySet = stampit().compose(
   BaseQuerySet,
@@ -11,26 +11,26 @@ const GCMMessageQuerySet = stampit().compose(
   GetOrCreate,
   SendToDevice,
   SendToDevices
-);
+)
 
 const GCMMessageMeta = Meta({
   name: 'gcmmessage',
   pluralName: 'gcmmessages',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v2/instances/{instanceName}/push_notifications/gcm/messages/{id}/'
+    detail: {
+      methods: ['delete', 'get'],
+      path: '/v2/instances/{instanceName}/push_notifications/gcm/messages/{id}/'
     },
-    'list': {
-      'methods': ['get', 'post'],
-      'path': '/v2/instances/{instanceName}/push_notifications/gcm/messages/'
+    list: {
+      methods: ['get', 'post'],
+      path: '/v2/instances/{instanceName}/push_notifications/gcm/messages/'
     },
-    'deviceMessage': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/push_notifications/gcm/devices/{registration_id}/send_message/'
+    deviceMessage: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/push_notifications/gcm/devices/{registration_id}/send_message/'
     }
   }
-});
+})
 
 const GCMMessageConstraints = {
   instanceName: {
@@ -51,7 +51,7 @@ const GCMMessageConstraints = {
     presence: true,
     inclusion: ['development', 'production']
   }
-};
+}
 
 /**
  * OO wrapper around instance GCM messages {@link # endpoint}.
@@ -71,6 +71,6 @@ const GCMMessage = stampit()
   .compose(Model)
   .setMeta(GCMMessageMeta)
   .setQuerySet(GCMMessageQuerySet)
-  .setConstraints(GCMMessageConstraints);
+  .setConstraints(GCMMessageConstraints)
 
-export default GCMMessage;
+export default GCMMessage

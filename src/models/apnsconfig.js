@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Update, Get} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, Update, Get} from '../querySet'
+import {Meta, Model} from './base'
 
 const APNSConfigQuerySet = stampit().compose(
   BaseQuerySet,
@@ -10,29 +10,29 @@ const APNSConfigQuerySet = stampit().compose(
 ).methods({
 
   removeCertificate(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = payload;
-    this.method = 'POST';
-    this.endpoint = 'removeCertificate';
-    return this;
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = payload
+    this.method = 'POST'
+    this.endpoint = 'removeCertificate'
+    return this
   }
 
-});
+})
 
 const APNSConfigMeta = Meta({
   name: 'apnsconfig',
   pluralName: 'apnsconfig',
   endpoints: {
-    'detail': {
-      'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v2/instances/{instanceName}/push_notifications/apns/config/'
+    detail: {
+      methods: ['post', 'get', 'patch', 'put'],
+      path: '/v2/instances/{instanceName}/push_notifications/apns/config/'
     },
-    'removeCertificate': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/push_notifications/apns/config/remove_certificate/'
+    removeCertificate: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/push_notifications/apns/config/remove_certificate/'
     }
   }
-});
+})
 
 const APNSConfigConstraints = {
   instanceName: {
@@ -41,7 +41,7 @@ const APNSConfigConstraints = {
       minimum: 5
     }
   }
-};
+}
 
 /**
  * OO wrapper around instance APNS config {@link # endpoint}.
@@ -68,12 +68,12 @@ const APNSConfig = stampit()
   .methods({
 
     removeCertificate(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('removeCertificate', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('removeCertificate', this)
 
-      return this.makeRequest('POST', path, {payload}).then((body) => this.serialize(body));
+      return this.makeRequest('POST', path, {payload}).then(body => this.serialize(body))
     }
 
-  });
+  })
 
-export default APNSConfig;
+export default APNSConfig

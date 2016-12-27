@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
-import _ from 'lodash';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, Get, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const PlanQuerySet = stampit().compose(
   BaseQuerySet,
@@ -10,34 +10,34 @@ const PlanQuerySet = stampit().compose(
 ).methods({
 
   subscribe(properties = {}, commitment = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
     this.payload = {commitment}
-    this.endpoint = 'subscribe';
+    this.endpoint = 'subscribe'
 
-    return this;
+    return this
   }
 
-});
+})
 
 const PlanMeta = Meta({
   name: 'plan',
   pluralName: 'plans',
   endpoints: {
-    'detail': {
-      'methods': ['get'],
-      'path': '/v2/billing/plans/{name}/'
+    detail: {
+      methods: ['get'],
+      path: '/v2/billing/plans/{name}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/billing/plans/'
+    list: {
+      methods: ['get'],
+      path: '/v2/billing/plans/'
     },
-    'subscribe': {
-      'methods': ['post'],
-      'path': '/v2/billing/plans/{name}/subscribe/'
+    subscribe: {
+      methods: ['post'],
+      path: '/v2/billing/plans/{name}/subscribe/'
     }
   }
-});
+})
 /**
  * OO wrapper around Plan.
  * @ignore
@@ -55,12 +55,12 @@ const Plan = stampit()
   .methods({
 
     subscribe(commitment = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('subscribe', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('subscribe', this)
 
-      return this.makeRequest('POST', path, {commitment});
+      return this.makeRequest('POST', path, {commitment})
     }
 
-  });
+  })
 
-export default Plan;
+export default Plan

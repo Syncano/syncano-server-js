@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Create, BulkCreate, Delete, Update, List} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, Get, Create, BulkCreate, Delete, Update, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const ApiKeyQuerySet = stampit().compose(
   BaseQuerySet,
@@ -14,32 +14,32 @@ const ApiKeyQuerySet = stampit().compose(
 ).methods({
 
   reset(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'reset';
-    return this;
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
+    this.endpoint = 'reset'
+    return this
   }
 
-});
+})
 
 const ApiKeyMeta = Meta({
   name: 'apiKey',
   pluralName: 'apiKeys',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/api_keys/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/api_keys/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/api_keys/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/api_keys/'
     },
-    'reset': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/api_keys/{id}/reset_key/'
+    reset: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/api_keys/{id}/reset_key/'
     }
   }
-});
+})
 
 const ApiKeyConstraints = {
   instanceName: {
@@ -54,7 +54,7 @@ const ApiKeyConstraints = {
   ignore_acl: {
     boolean: true
   }
-};
+}
 
 /**
  * OO wrapper around instance api keys {@link http://docs.syncano.io/docs/authentication endpoint}.
@@ -75,14 +75,14 @@ const ApiKey = stampit()
   .methods({
 
     reset() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('reset', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('reset', this)
 
-      return this.makeRequest('POST', path);
+      return this.makeRequest('POST', path)
     }
 
   })
   .setQuerySet(ApiKeyQuerySet)
-  .setConstraints(ApiKeyConstraints);
+  .setConstraints(ApiKeyConstraints)
 
-export default ApiKey;
+export default ApiKey

@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, List, Total, StartDate, EndDate, CurrentMonth} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, List, Total, StartDate, EndDate, CurrentMonth} from '../querySet'
+import {Meta, Model} from './base'
 
 const HourlyUsageQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,18 +9,18 @@ const HourlyUsageQuerySet = stampit().compose(
   StartDate,
   EndDate,
   CurrentMonth
-);
+)
 
 const HourlyUsageMeta = Meta({
   name: 'hourlyusage',
   pluralName: 'hourlyusages',
   endpoints: {
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/usage/hourly/'
+    list: {
+      methods: ['get'],
+      path: '/v2/usage/hourly/'
     }
   }
-});
+})
 /**
  * OO wrapper around HourlyUsage.
  * @ignore
@@ -30,6 +30,6 @@ const HourlyUsageMeta = Meta({
 const HourlyUsage = stampit()
   .compose(Model)
   .setQuerySet(HourlyUsageQuerySet)
-  .setMeta(HourlyUsageMeta);
+  .setMeta(HourlyUsageMeta)
 
-export default HourlyUsage;
+export default HourlyUsage

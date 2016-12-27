@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, List, Get, Delete, Create, ListAll} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, List, Get, Delete, Create, ListAll} from '../querySet'
+import {Meta, Model} from './base'
 
 const PartialBackupQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,26 +9,26 @@ const PartialBackupQuerySet = stampit().compose(
   Delete,
   Create,
   ListAll
-);
+)
 
 const PartialBackupMeta = Meta({
   name: 'partialBackup',
   pluralName: 'partialBackups',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v2/instances/{instanceName}/backups/partial/{id}/'
+    detail: {
+      methods: ['delete', 'get'],
+      path: '/v2/instances/{instanceName}/backups/partial/{id}/'
     },
-    'list': {
-      'methods': ['get', 'post'],
-      'path': '/v2/instances/{instanceName}/backups/partial/'
+    list: {
+      methods: ['get', 'post'],
+      path: '/v2/instances/{instanceName}/backups/partial/'
     },
-    'all': {
-      'methods': ['get'],
-      'path': '/v2/backups/partial/'
+    all: {
+      methods: ['get'],
+      path: '/v2/backups/partial/'
     }
   }
-});
+})
 
 const PartialBackupConstraints = {
   instanceName: {
@@ -47,7 +47,7 @@ const PartialBackupConstraints = {
     presence: true,
     object: true
   }
-};
+}
 
 /**
  * OO wrapper around instance backups {@link # endpoint}.
@@ -71,6 +71,6 @@ const PartialBackup = stampit()
   .compose(Model)
   .setQuerySet(PartialBackupQuerySet)
   .setMeta(PartialBackupMeta)
-  .setConstraints(PartialBackupConstraints);
+  .setConstraints(PartialBackupConstraints)
 
-export default PartialBackup;
+export default PartialBackup
