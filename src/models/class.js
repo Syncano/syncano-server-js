@@ -50,6 +50,7 @@ const ClassConstraints = {
 
 /**
  * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/instancesinstanceclasses endpoint}.
+ * @ignore
  * @constructor
  * @type {Class}
 

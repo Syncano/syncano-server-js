@@ -40,6 +40,7 @@ const TriggerTraceConstraints = {
 /**
  * OO wrapper around trigger trace {@link # endpoint}.
  * This model is *read only*.
+ * @ignore
  * @constructor
  * @type {TriggerTrace}
 

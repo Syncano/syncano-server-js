@@ -10,6 +10,7 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
   /**
     * Publishes to a channel.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -40,6 +41,7 @@ const ChannelQuerySet = stampit().compose(QuerySet).methods({
   /**
     * Allows polling of a channel.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -173,6 +175,7 @@ const channelConstraints = {
   * Wrapper around {@link http://docs.syncano.io/v0.1/docs/channels-poll|channels poll} endpoint which implements `EventEmitter` interface.
   * Use it via `Channel` poll method.
 
+  * @ignore
   * @constructor
   * @type {ChannelPoll}
 
@@ -292,6 +295,7 @@ export const ChannelPoll = stampit()
  * OO wrapper around channels {@link http://docs.syncano.io/v0.1/docs/channels-list endpoint}.
  * **Channel** has two special methods called ``publish`` and ``poll``. First one will send message to the channel and second one will create {@link http://en.wikipedia.org/wiki/Push_technology#Long_polling long polling} connection which will listen for messages.
 
+ * @ignore
  * @constructor
  * @type {Channel}
 

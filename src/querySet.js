@@ -8,6 +8,7 @@ import {EventEmittable} from './utils';
 
 /**
  * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
+ * @ignore
  * @constructor
  * @type {ResultSet}
 
@@ -38,6 +39,7 @@ const ResultSet = function(querySet, response, objects) {
   /**
   * Helper method which will fetch next page or throws `PaginationError`.
 
+  * @ignore
   * @memberOf ResultSet
   * @instance
 
@@ -60,6 +62,7 @@ const ResultSet = function(querySet, response, objects) {
   /**
   * Helper method which will check if next page is available.
 
+  * @ignore
   * @memberOf ResultSet
   * @instance
 
@@ -70,6 +73,7 @@ const ResultSet = function(querySet, response, objects) {
   /**
   * Helper method which will fetch previous page or throws `PaginationError`.
 
+  * @ignore
   * @memberOf ResultSet
   * @instance
 
@@ -92,6 +96,7 @@ const ResultSet = function(querySet, response, objects) {
   /**
   * Helper method which will check if prev page is available.
 
+  * @ignore
   * @memberOf ResultSet
   * @instance
 
@@ -123,6 +128,7 @@ const QuerySetRequest = stampit().compose(Request)
     /**
     * Converts raw objects to {@link https://github.com/stampit-org/stampit|stampit} instances
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
     * @private
@@ -145,6 +151,7 @@ const QuerySetRequest = stampit().compose(Request)
     /**
     * Converts API response into {ResultSet}
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
     * @private
@@ -164,6 +171,7 @@ const QuerySetRequest = stampit().compose(Request)
     /**
     * Executes current state of QuerySet
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -199,6 +207,7 @@ const QuerySetRequest = stampit().compose(Request)
     /**
     * Wrapper around {@link Queryset.request} method
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -214,6 +223,7 @@ export const Filter = stampit().methods({
 
   /**
   * Allows to filter the request.
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -235,6 +245,7 @@ export const Create = stampit().methods({
   /**
   * A convenience method for creating an object and saving it all in one step.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -303,6 +314,7 @@ export const ListAll = stampit().methods({
 export const Rename = stampit().methods({
   /**
   * A convenience method for renaming an object that support the action.
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -328,6 +340,7 @@ export const Rename = stampit().methods({
 const CacheKey = stampit().methods({
   /**
   * Sets the provided cache key in the request query.
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -349,6 +362,7 @@ export const Get = stampit().methods({
 
   /**
   * Returns the object matching the given lookup properties.
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -375,6 +389,7 @@ export const GetOrCreate = stampit().methods({
   * A convenience method for looking up an object with the given lookup properties, creating one if necessary.
   * Successful callback will receive **object, created** arguments.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -421,6 +436,7 @@ export const List = stampit().methods({
   /**
   * Returns list of objects that match the given lookup properties.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -448,6 +464,7 @@ export const Delete = stampit().methods({
   /**
   * Removes single object based on provided properties.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -473,6 +490,7 @@ export const Update = stampit().methods({
   /**
   * Updates single object based on provided arguments
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -507,6 +525,7 @@ const TemplateResponse = stampit().methods({
   /**
   * Renders the api response as a template.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -535,6 +554,7 @@ export const UpdateOrCreate = stampit().methods({
   * A convenience method for updating an object with the given properties, creating a new one if necessary.
   * Successful callback will receive **object, updated** arguments.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -581,6 +601,7 @@ const ExcludedFields = stampit().methods({
   /**
     * Removes specified fields from object response.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -601,6 +622,7 @@ const Fields = stampit().methods({
   /**
     * Selects specified fields from object.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -622,6 +644,7 @@ export const First = stampit().methods({
   /**
   * Returns the first object matched by the lookup properties or undefined, if there is no matching object.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -650,6 +673,7 @@ export const PageSize = stampit().methods({
   /**
   * Sets page size.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -672,6 +696,7 @@ export const CurrentMonth = stampit().methods({
   /**
   * Sets the range of Usage query to current month.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -694,6 +719,7 @@ export const StartDate = stampit().methods({
   /**
   * Sets start date for Usage.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -716,6 +742,7 @@ export const EndDate = stampit().methods({
   /**
   * Sets end date for Usage.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -738,6 +765,7 @@ export const Total = stampit().methods({
   /**
   * Sets grouping for Usage.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -759,6 +787,7 @@ export const Ordering = stampit().methods({
   /**
   * Sets order of returned objects.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -788,6 +817,7 @@ export const Raw = stampit().methods({
   /**
   * Disables serialization. Callback will will recive raw JavaScript objects.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -806,6 +836,7 @@ export const Raw = stampit().methods({
 /**
 * Wrapper for fetching all objects (DataObjects, Classes etc.).
 
+* @ignore
 * @memberOf QuerySet
 * @instance
 
@@ -909,6 +940,7 @@ const AllObjects = stampit()
   /**
   * Allows fetching of all objects of a type (DataObjects, Classes etc.) recursively.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -966,6 +998,7 @@ export const BulkCreate = stampit().methods({
   /**
   * Creates many objects based on provied Array of objects.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -986,6 +1019,7 @@ export const BulkCreate = stampit().methods({
 
 /**
  * Base class responsible for all ORM (``please``) actions.
+ * @ignore
  * @constructor
  * @type {QuerySet}
 

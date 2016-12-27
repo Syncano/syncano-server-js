@@ -103,6 +103,7 @@ const HostingConstraints = {
 
 /**
  * OO wrapper around Hosting.
+ * @ignore
  * @constructor
  * @type {Hosting}
 

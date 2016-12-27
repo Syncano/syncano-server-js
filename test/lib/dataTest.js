@@ -1,7 +1,7 @@
 import nock from 'nock';
 import should from 'should/as-function';
 import Syncano from '../../src/syncano'
-import SyncanoORM from '../../src/orm';
+import Server from '../../src/server'
 
 import { NotFoundError } from '../../src/errors';
 
@@ -18,7 +18,8 @@ describe('Data', function() {
       defaults: { instanceName }
     })
     instance.setBaseUrl(testUrl);
-    data = new SyncanoORM(instance);
+    const server = new Server(instance);
+    data = server.data;
     api = nock(testUrl).filteringRequestBody(() => '*');
   });
 

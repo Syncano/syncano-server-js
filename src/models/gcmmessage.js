@@ -55,6 +55,7 @@ const GCMMessageConstraints = {
 
 /**
  * OO wrapper around instance GCM messages {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {GCMMessage}
 

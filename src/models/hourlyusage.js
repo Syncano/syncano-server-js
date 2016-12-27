@@ -23,6 +23,7 @@ const HourlyUsageMeta = Meta({
 });
 /**
  * OO wrapper around HourlyUsage.
+ * @ignore
  * @constructor
  * @type {HourlyUsage}
  */

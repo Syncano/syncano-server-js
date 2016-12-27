@@ -5,7 +5,8 @@ import validate from 'validate.js';
 import SyncanoFile from './file';
 
 /**
-  Validators used in the library.
+* Validators used in the library.
+* @ignore
 **/
 
 validate.Promise = Promise;
@@ -58,6 +59,7 @@ export {validate};
 
 /**
  * Simple wrapper around `EventEmitter`
+ * @ignore
  * @constructor
  * @type {EventEmittable}
 
@@ -69,6 +71,7 @@ export const EventEmittable = stampit.convertConstructor(EventEmitter);
 
 /**
  * Used as a manager for {@link Syncano} base object. **Not** meant to be used directly.
+ * @ignore
  * @constructor
  * @type {ConfigMixin}
 
@@ -82,6 +85,7 @@ export const ConfigMixin = stampit({
     /**
     * Gets default properties.
 
+    * @ignore
     * @memberOf ConfigMixin
     * @instance
     * @returns {Object}
@@ -98,6 +102,7 @@ export const ConfigMixin = stampit({
     /**
     * Sets config.
 
+    * @ignore
     * @memberOf ConfigMixin
     * @instance
 
@@ -117,6 +122,7 @@ export const ConfigMixin = stampit({
     /**
     * Gets config.
 
+    * @ignore
     * @memberOf ConfigMixin
     * @instance
     * @returns {Syncano}
@@ -140,6 +146,7 @@ export const ConfigMixin = stampit({
     /**
     * Sets config and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
 
+    * @ignore
     * @memberOf ConfigMixin
     * @static
 
@@ -157,6 +164,7 @@ export const ConfigMixin = stampit({
     /**
     * Gets config from {@link https://github.com/stampit-org/stampit|stampit} definition.
 
+    * @ignore
     * @memberOf ConfigMixin
     * @static
     * @returns {Syncano}
@@ -173,6 +181,7 @@ export const ConfigMixin = stampit({
 
 /**
  * Used as a manager for {@link Meta} object. **Not** meant to be used directly.
+ * @ignore
  * @constructor
  * @type {MetaMixin}
 
@@ -187,6 +196,7 @@ export const MetaMixin = stampit({
     /**
     * Sets meta.
 
+    * @ignore
     * @memberOf MetaMixin
     * @instance
 
@@ -206,6 +216,7 @@ export const MetaMixin = stampit({
     /**
     * Gets meta.
 
+    * @ignore
     * @memberOf MetaMixin
     * @instance
     * @returns {Meta}
@@ -225,6 +236,7 @@ export const MetaMixin = stampit({
     /**
     * Sets meta and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
 
+    * @ignore
     * @memberOf MetaMixin
     * @static
 
@@ -242,6 +254,7 @@ export const MetaMixin = stampit({
     /**
     * Gets meta from {@link https://github.com/stampit-org/stampit|stampit} definition.
 
+    * @ignore
     * @memberOf MetaMixin
     * @static
     * @returns {Meta}
@@ -258,6 +271,7 @@ export const MetaMixin = stampit({
 
 /**
  * Used as a manager for {@link http://validatejs.org/#constraints|Constraints} object (validation). **Not** meant to be used directly.
+ * @ignore
  * @constructor
  * @type {ConstraintsMixin}
 
@@ -272,6 +286,7 @@ export const ConstraintsMixin = stampit({
     /**
     * Sets constraints used for validation.
 
+    * @ignore
     * @memberOf ConstraintsMixin
     * @instance
 
@@ -291,6 +306,7 @@ export const ConstraintsMixin = stampit({
     /**
     * Gets constraints from object instance.
 
+    * @ignore
     * @memberOf ConstraintsMixin
     * @instance
     * @returns {Object}
@@ -310,6 +326,7 @@ export const ConstraintsMixin = stampit({
     /**
     * Sets constraints in {@link https://github.com/stampit-org/stampit|stampit} definition used for validation.
 
+    * @ignore
     * @memberOf ConstraintsMixin
     * @static
 
@@ -327,6 +344,7 @@ export const ConstraintsMixin = stampit({
     /**
     * Gets constraints from {@link https://github.com/stampit-org/stampit|stampit} definition.
 
+    * @ignore
     * @memberOf ConstraintsMixin
     * @static
     * @returns {Object}
@@ -343,6 +361,7 @@ export const ConstraintsMixin = stampit({
 
 /**
  * Adds logging functionality.
+ * @ignore
  * @constructor
  * @type {Logger}
 
@@ -354,6 +373,7 @@ export const Logger = stampit({
 
     /**
     * Wrapper around *console.log*.
+    * @ignore
     * @memberOf Logger
     * @instance
     */

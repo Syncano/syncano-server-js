@@ -30,6 +30,7 @@ const GCMConfigConstraints = {
 
 /**
  * OO wrapper around instance GCM config {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {GCMConfig}
 

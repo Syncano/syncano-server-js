@@ -1,1 +1,1 @@
-# Syncano API wrapper
+# Syncano server

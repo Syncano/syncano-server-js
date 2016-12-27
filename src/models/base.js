@@ -11,6 +11,7 @@ import {omitBy, pick, mapValues} from 'lodash/fp';
 /**
  * Object which holds whole configuration for {@link Model}.
 
+ * @ignore
  * @constructor
  * @type {Meta}
 
@@ -55,6 +56,7 @@ export const Meta = stampit()
 
     /**
     * Gets required properties from object. Used mostly during serialization.
+    * @ignore
     * @memberOf Meta
     * @instance
     * @param {Object} object
@@ -70,6 +72,7 @@ export const Meta = stampit()
     /**
     * Makes a copy of target and adds required properties from source.
 
+    * @ignore
     * @memberOf Meta
     * @instance
 
@@ -114,6 +117,7 @@ export const Meta = stampit()
     /**
     * Resolves endpoint path e.g: `/v2/instances/{name}/` will be converted to `/v2/instances/someName/`.
 
+    * @ignore
     * @memberOf Meta
     * @instance
 
@@ -145,6 +149,7 @@ export const Meta = stampit()
     /**
     * Looks for the first allowed method from `methodNames` for selected endpoint.
 
+    * @ignore
     * @memberOf Meta
     * @instance
 
@@ -168,6 +173,7 @@ export const Meta = stampit()
 export const Rename = stampit().methods({
   /**
   * Method used for making requests to the 'rename' endpoint in models.
+  * @ignore
   * @memberOf Model
   * @instance
 
@@ -193,6 +199,7 @@ export const Rename = stampit().methods({
  * Base {@link https://github.com/stampit-org/stampit|stamp} for all models which wraps all raw JavaScript objects.
  * **Not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
 
+ * @ignore
  * @constructor
  * @type {Model}
 
@@ -217,6 +224,7 @@ export const Model = stampit({
     /**
     * Sets {@link QuerySet} and returns new {@link https://github.com/stampit-org/stampit|stampit} definition.
 
+    * @ignore
     * @memberOf Model
     * @static
 
@@ -234,6 +242,7 @@ export const Model = stampit({
     /**
     * Gets {@link QuerySet} from {@link https://github.com/stampit-org/stampit|stampit} definition.
 
+    * @ignore
     * @memberOf Model
     * @static
     * @returns {QuerySet}
@@ -249,6 +258,7 @@ export const Model = stampit({
     /**
     * Returns {@link QuerySet} instance which allows to do ORM like operations on {@link https://syncano.io/|Syncano} API.
 
+    * @ignore
     * @memberOf Model
     * @static
 
@@ -279,6 +289,7 @@ export const Model = stampit({
     /**
     * Used only for serialization for raw object to {@link https://github.com/stampit-org/stampit|stamp}.
 
+    * @ignore
     * @memberOf Model
     * @static
 
@@ -297,6 +308,7 @@ export const Model = stampit({
 
     /**
     * Checks if model instance if already saved.
+    * @ignore
     * @memberOf Model
     * @instance
     * @returns {Boolean}
@@ -307,6 +319,7 @@ export const Model = stampit({
 
     /**
     * Validates current model instance in context of defined constraints.
+    * @ignore
     * @memberOf Model
     * @instance
     * @returns {Object|undefined}
@@ -324,6 +337,7 @@ export const Model = stampit({
 
     /**
     * Serializes raw JavaScript object into {@link Model} instance.
+    * @ignore
     * @memberOf Model
     * @instance
     * @returns {Model}
@@ -335,6 +349,7 @@ export const Model = stampit({
 
     /**
     * Creates or updates the current instance.
+    * @ignore
     * @memberOf Model
     * @instance
     * @returns {Promise}
@@ -373,6 +388,7 @@ export const Model = stampit({
 
     /**
     * Removes the current instance.
+    * @ignore
     * @memberOf Model
     * @instance
     * @returns {Promise}

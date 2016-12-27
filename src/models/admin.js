@@ -27,6 +27,7 @@ const AdminMeta = Meta({
 
 /**
  * OO wrapper around instance admins {@link http://docs.syncano.com/v4.0/docs/v1instancesinstanceadmins endpoint}.
+ * @ignore
  * @constructor
  * @type {Admin}
 

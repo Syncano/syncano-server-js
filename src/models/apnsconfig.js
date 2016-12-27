@@ -45,6 +45,7 @@ const APNSConfigConstraints = {
 
 /**
  * OO wrapper around instance APNS config {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {APNSConfig}
 

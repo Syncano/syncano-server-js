@@ -39,6 +39,7 @@ const SubscriptionMeta = Meta({
 });
 /**
  * OO wrapper around Subscription.
+ * @ignore
  * @constructor
  * @type {Subscription}
 

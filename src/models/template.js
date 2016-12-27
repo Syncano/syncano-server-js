@@ -70,6 +70,7 @@ const TemplateConstraints = {
 
 /**
  * OO wrapper around templates {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {Template}
 

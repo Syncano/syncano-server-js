@@ -1,27 +1,10 @@
+import { NotFoundError } from './errors'
+import Collection from './collection'
+
 /**
- * Syncano ORM
- * @constructor
- * @type {Class}
+ * Syncano server
  * @property {Function} query Instance of syncano DataObject
  */
-
-import { NotFoundError } from './errors'
-
-class Collection {
-   constructor(data) {
-     this.data = data
-   }
-
-   raw() {
-     return this.data.map(item =>
-       Object.keys(item).filter(key => !/^_/.test(key)).reduce((all, key) => {
-         all[key] = item[key]
-         return all
-       }, {})
-     )
-   }
-}
-
 class Data {
   get query() {
     return this._query()
@@ -31,6 +14,11 @@ class Data {
     this._query = query
   }
 
+  /**
+   * Call method on current query.
+   *
+   * @returns {Object}
+   */
   call(fn, paramteres) {
     this.query = this.query[fn].bind(this.query, paramteres)
 
@@ -39,8 +27,9 @@ class Data {
 
   /**
    * List objects matching query.
-
+   *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * // Get all users
    * const users = await data.users.list()
@@ -85,6 +74,7 @@ class Data {
    * Get first element matching query or return null.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.where('name', 'John').first()
    */
@@ -100,6 +90,7 @@ class Data {
    * Get first element matching query or throw error.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.where('name', 'John').firstOrFail()
    */
@@ -118,6 +109,7 @@ class Data {
    * Get single object by id or objects list if ids passed as array.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.find(4)
    * @example {@lang javascript}
@@ -135,6 +127,7 @@ class Data {
    * Same as #find method but throws error for no results.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.findOrFail(4)
    * @example {@lang javascript}
@@ -158,6 +151,7 @@ class Data {
    * Number of objects to get.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.take(500).list()
    */
@@ -169,6 +163,7 @@ class Data {
    * Filter objects using MongoDB style query.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.filter({
    *   name: { _eq: 'John' }
@@ -182,6 +177,7 @@ class Data {
    * Set order of fetched objects.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.orderBy('created_at', 'DESC').list()
    */
@@ -196,6 +192,7 @@ class Data {
    * Filter rows.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.where('name', 'eq' 'John').list()
    * @example {@lang javascript}
@@ -219,6 +216,7 @@ class Data {
    * Create new object.
    *
    * @returns {Promise}
+   *
    * @example {@lang javascript}
    * const users = await data.users.create({
    *   name: 'John Doe',
@@ -231,14 +229,4 @@ class Data {
   }
 }
 
-export default function connect(instance) {
-  const { DataObject } = instance
-
-  return new Proxy(new Data(), {
-    get: function(target, property) {
-      target._query = instance.DataObject.please.bind(DataObject, { className: property })
-
-      return target
-    }
-  })
-}
+export default Data

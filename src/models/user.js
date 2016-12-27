@@ -13,6 +13,7 @@ const UserQuerySet = stampit().compose(
 ).methods({
   /**
   * Gets user profile schema
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -33,6 +34,7 @@ const UserQuerySet = stampit().compose(
   },
   /**
   * Updates user profile schema
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -55,6 +57,7 @@ const UserQuerySet = stampit().compose(
   },
   /**
   * Gets a user's groups.
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -72,6 +75,7 @@ const UserQuerySet = stampit().compose(
   },
   /**
   * Gets a user's group.
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -89,6 +93,7 @@ const UserQuerySet = stampit().compose(
   },
   /**
   * Adds a group to user.
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -107,6 +112,7 @@ const UserQuerySet = stampit().compose(
   },
   /**
   * Removes a user's group.
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -195,6 +201,7 @@ const UserQuerySet = stampit().compose(
 
   /**
   * Restes user key.
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -216,6 +223,7 @@ const UserQuerySet = stampit().compose(
   /**
   * A convenience method for authenticating instance user with email and password.
 
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -243,6 +251,7 @@ const UserQuerySet = stampit().compose(
   /**
   * A convenience method for authenticating instance user with email and password.
 
+  * @ignore
   * @memberOf UserQuerySet
   * @instance
 
@@ -327,6 +336,7 @@ const UserConstraints = {
 
 /**
  * OO wrapper around instance users {@link http://docs.syncano.com/v4.0/docs/user-management endpoint}.
+ * @ignore
  * @constructor
  * @type {User}
 
@@ -347,6 +357,7 @@ const User = stampit()
   .methods({
     /**
     * Gets a user's groups.
+    * @ignore
     * @memberOf User
     * @instance
     * @returns {Promise}
@@ -362,6 +373,7 @@ const User = stampit()
     },
     /**
     * Gets a user's group.
+    * @ignore
     * @memberOf User
     * @instance
     * @returns {Promise}
@@ -377,6 +389,7 @@ const User = stampit()
     },
     /**
     * Adds a group to user.
+    * @ignore
     * @memberOf User
     * @instance
 
@@ -395,6 +408,7 @@ const User = stampit()
     },
     /**
     * Removes a user's group.
+    * @ignore
     * @memberOf User
     * @instance
 
@@ -413,6 +427,7 @@ const User = stampit()
     },
     /**
     * Restes user key.
+    * @ignore
     * @memberOf User
     * @instance
     * @returns {Promise}

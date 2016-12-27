@@ -49,6 +49,7 @@ const ScheduleConstraints = {
 
 /**
  * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/codebox-schedules-list endpoint}.
+ * @ignore
  * @constructor
  * @type {Schedule}
 

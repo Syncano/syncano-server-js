@@ -23,6 +23,7 @@ const EndpointQuerySet = stampit().compose(BaseQuerySet)
 
   /**
   * Fetches Endpoints of given Socket.
+  * @ignore
   * @memberOf EndpointQuerySet
   * @instance
 
@@ -81,6 +82,7 @@ const EndpointConstraints = {
 
 /**
  * OO wrapper around Endpoint {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {Endpoint}
 

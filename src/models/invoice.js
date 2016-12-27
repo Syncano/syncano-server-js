@@ -51,6 +51,7 @@ const InvoiceMeta = Meta({
 });
 /**
  * OO wrapper around Invoice.
+ * @ignore
  * @constructor
  * @type {Invoice}
 

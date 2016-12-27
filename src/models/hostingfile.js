@@ -65,6 +65,7 @@ const HostingFileConstraints = {
 
 /**
  * OO wrapper around HostingFile.
+ * @ignore
  * @constructor
  * @type {Hosting}
 

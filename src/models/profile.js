@@ -20,6 +20,7 @@ const ProfileMeta = Meta({
 });
 /**
  * OO wrapper around Profile.
+ * @ignore
  * @constructor
  * @type {Invoice}
 

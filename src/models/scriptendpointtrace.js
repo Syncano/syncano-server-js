@@ -39,6 +39,7 @@ const ScriptEndpointTraceConstraints = {
 /**
  * OO wrapper around webhook traces {@link # endpoint}.
  * This model is *read only*.
+ * @ignore
  * @constructor
  * @type {ScriptEndpointTrace}
 

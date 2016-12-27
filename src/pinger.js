@@ -5,6 +5,7 @@ import Request from './request';
 /**
 * Utility for pinging the api. Allows checking for connection to the platofrm. Meant to be used directly form the {@link Syncano} instance.
 *
+* @ignore
 * @constructor
 * @type {Pinger}
 *

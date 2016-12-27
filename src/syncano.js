@@ -9,6 +9,7 @@ import BatchManager from './batchmanager';
 
 /**
  * Main Syncano object.
+ * @ignore
  * @constructor
  * @type {Syncano}
 
@@ -50,6 +51,7 @@ const Syncano = stampit()
     /**
     * Sets *instanceName*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
 
@@ -74,6 +76,7 @@ const Syncano = stampit()
     /**
      * Sets progressCallback
      *
+     * @ignore
      * @memberOf Syncano
      * @instance
      *
@@ -88,6 +91,7 @@ const Syncano = stampit()
     /**
     * Gets *instanceName*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
     * @returns {String}
@@ -104,6 +108,7 @@ const Syncano = stampit()
     /**
     * Sets *baseUrl*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
 
@@ -125,6 +130,7 @@ const Syncano = stampit()
     /**
     * Gets *baseUrl*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
     * @returns {String}
@@ -141,6 +147,7 @@ const Syncano = stampit()
     /**
     * Sets *accountKey*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
 
@@ -160,6 +167,7 @@ const Syncano = stampit()
     /**
     * Gets *accountKey*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
     * @returns {String}
@@ -176,6 +184,7 @@ const Syncano = stampit()
     /**
     * Sets *userKey*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
 
@@ -195,6 +204,7 @@ const Syncano = stampit()
     /**
     * Gets *userKey*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
     * @returns {String}
@@ -211,6 +221,7 @@ const Syncano = stampit()
     /**
     * Sets *apiKey*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
 
@@ -230,6 +241,7 @@ const Syncano = stampit()
     /**
     * Gets *apiKey*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
     * @returns {String}
@@ -246,6 +258,7 @@ const Syncano = stampit()
     /**
     * Sets *socialToken*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
 
@@ -265,6 +278,7 @@ const Syncano = stampit()
     /**
     * Gets *socialToken*.
 
+    * @ignore
     * @memberOf Syncano
     * @instance
     * @returns {String}

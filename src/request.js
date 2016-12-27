@@ -11,6 +11,7 @@ const IS_NODE = typeof module !== 'undefined' && module.exports && typeof __webp
 /**
  * Base request object **not** meant to be used directly more like mixin in other {@link https://github.com/stampit-org/stampit|stamps}.
 
+ * @ignore
  * @constructor
  * @type {Request}
 
@@ -39,6 +40,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
    /**
     * Sets request handler, used for mocking.
+    * @ignore
     * @memberOf Request
     * @instance
     * @param {Function} handler
@@ -51,6 +53,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
     /**
     * Gets request handler.
+    * @ignore
     * @memberOf Request
     * @instance
     * @returns {Function}
@@ -62,6 +65,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     /**
     * Builds full URL based on path.
 
+    * @ignore
     * @memberOf Request
     * @instance
 
@@ -86,6 +90,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
     /**
     * Wrapper around {@link http://visionmedia.github.io/superagent/|superagent} which validates and calls requests.
 
+    * @ignore
     * @memberOf Request
     * @instance
 
@@ -246,6 +251,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
     /**
     * Sets request handler and returns new {@link https://github.com/stampit-org/stampit|stampit} object, used for mocking.
+    * @ignore
     * @memberOf Request
     * @static
     * @returns {stampit}
@@ -258,6 +264,7 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
     /**
     * Sets request handler from {@link https://github.com/stampit-org/stampit|stampit} definition.
+    * @ignore
     * @memberOf Request
     * @static
     * @returns {Function}
