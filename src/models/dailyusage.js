@@ -23,6 +23,7 @@ const DailyUsageMeta = Meta({
 });
 /**
  * OO wrapper around DailyUsage.
+ * @ignore
  * @constructor
  * @type {DailyUsage}
  */

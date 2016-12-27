@@ -61,6 +61,7 @@ const InstanceInvitationConstraints = {
 
 /**
  * OO wrapper around instance invitations {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {InstanceInvitation}
 

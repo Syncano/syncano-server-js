@@ -52,6 +52,7 @@ const RestoreConstraints = {
 
 /**
  * OO wrapper around instance restores {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {Backup}
 

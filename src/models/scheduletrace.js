@@ -38,6 +38,7 @@ const ScheduleTraceConstraints = {
 
 /**
  * OO wrapper around shedule traces {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {ScheduleTrace}
 

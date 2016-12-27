@@ -8,6 +8,7 @@ const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
   /**
   * Runs Script matching the given lookup properties.
+  * @ignore
   * @memberOf ScriptQuerySet
   * @instance
 
@@ -31,6 +32,7 @@ const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
   /**
   * Gets allowed runtimes.
+  * @ignore
   * @memberOf ScriptQuerySet
   * @instance
 
@@ -107,6 +109,7 @@ const ScriptConstraints = {
 /**
  * OO wrapper around scripts {@link http://docs.syncano.com/v4.0/docs/codebox-list-codeboxes endpoint}.
  * **Script** has special method called ``run`` which will execute attached source code.
+ * @ignore
  * @constructor
  * @type {Script}
 
@@ -129,6 +132,7 @@ const Script = stampit()
 
     /**
     * Runs current Script.
+    * @ignore
     * @memberOf Script
     * @instance
 
@@ -149,6 +153,7 @@ const Script = stampit()
 
     /**
     * Gets allowed runtimes.
+    * @ignore
     * @memberOf Script
     * @instance
 

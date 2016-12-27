@@ -61,6 +61,7 @@ const APNSMessageConstraints = {
 
 /**
  * OO wrapper around instance APNS messages {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {APNSMessage}
 

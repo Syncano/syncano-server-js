@@ -69,6 +69,7 @@ const GCMDevicConstraints = {
 
 /**
  * OO wrapper around instance GCM devices {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {GCMDevice}
 

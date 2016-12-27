@@ -40,6 +40,7 @@ const PlanMeta = Meta({
 });
 /**
  * OO wrapper around Plan.
+ * @ignore
  * @constructor
  * @type {Subscription}
 

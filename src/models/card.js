@@ -27,6 +27,7 @@ const CardMeta = Meta({
 
 /**
  * OO wrapper around Card.
+ * @ignore
  * @constructor
  * @type {Card}
 

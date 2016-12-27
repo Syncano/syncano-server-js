@@ -8,8 +8,8 @@ module.exports = [
     debug: false,
     profile: false,
     devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'orm.js'),
-    target: 'web',
+    entry: path.join(__dirname, 'src', 'server.js'),
+    target: 'node',
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'syncano-server.js',
@@ -30,8 +30,8 @@ module.exports = [
     debug: false,
     profile: false,
     devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'orm.js'),
-    target: 'web',
+    entry: path.join(__dirname, 'src', 'server.js'),
+    target: 'node',
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'syncano-server.min.js',
@@ -66,8 +66,8 @@ module.exports = [
     debug: false,
     profile: false,
     devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'orm.js'),
-    target: 'web',
+    entry: path.join(__dirname, 'src', 'server.js'),
+    target: 'node',
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'syncano-server.fuse.js',

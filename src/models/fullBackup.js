@@ -47,6 +47,7 @@ const FullBackupConstraints = {
 
 /**
  * OO wrapper around instance backups {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {Backup}
 

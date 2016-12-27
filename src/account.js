@@ -5,6 +5,7 @@ import _ from 'lodash';
 /**
  * Wrapper around account endpoint. Meant to be used directly form {@link Syncano} instance.
 
+ * @ignore
  * @constructor
  * @type {Account}
 
@@ -33,7 +34,7 @@ const Account = stampit().compose(Request)
   .methods({
     /**
     * A convenience method for getting the currently logged in user details.
-
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -48,6 +49,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for activating an accoung.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -65,6 +67,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for changing an accoung.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -82,6 +85,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for resetting the password.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -97,6 +101,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for confirming password reset.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -115,6 +120,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for setting the password.
 
+    * @ignore
     * @memberOf Account
     * @param {String} password
     * @instance
@@ -130,6 +136,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for resetting the account key.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -144,6 +151,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for creating a new account.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -161,6 +169,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for authenticating with email and password.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -186,6 +195,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for authenticating with a social media token.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -202,6 +212,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for resending email.
 
+    * @ignore
     * @memberOf Account
     * @instance
 
@@ -217,6 +228,7 @@ const Account = stampit().compose(Request)
     /**
     * A convenience method for updating your account details.
 
+    * @ignore
     * @memberOf Account
     * @instance
 

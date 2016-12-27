@@ -19,6 +19,7 @@ const UsageMeta = Meta({
 });
 /**
  * OO wrapper around Usage.
+ * @ignore
  * @constructor
  * @type {Usage}
  */

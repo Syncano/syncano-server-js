@@ -8,6 +8,7 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
 
   /**
   * Fetches Data Objects matching the Data View properties.
+  * @ignore
   * @memberOf DataEndpointQerySet
   * @instance
 
@@ -29,6 +30,7 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
   },
   /**
   * Clears cache of DataEndpoint.
+  * @ignore
   * @memberOf DataEndpointQerySet
   * @instance
 
@@ -49,6 +51,7 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
   },
   /**
   * Creates a DataObject in a DataEndpoint.
+  * @ignore
   * @memberOf DataEndpointQerySet
   * @instance
 
@@ -139,6 +142,7 @@ const DataEndpointConstraints = {
 
 /**
  * OO wrapper around data views {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {DataEndpoint}
 
@@ -163,6 +167,7 @@ const DataEndpoint = stampit()
 
     /**
     * Fetches Data Objects matching the Data View properties.
+    * @ignore
     * @memberOf DataEndpoint
     * @instance
 
@@ -186,6 +191,7 @@ const DataEndpoint = stampit()
     },
     /**
     * Clears cache of DataEndpoint.
+    * @ignore
     * @memberOf DataEndpointQerySet
     * @instance
 
@@ -203,6 +209,7 @@ const DataEndpoint = stampit()
     },
     /**
     * Creates a DataObject in a DataEndpoint.
+    * @ignore
     * @memberOf DataEndpointQerySet
     * @instance
 

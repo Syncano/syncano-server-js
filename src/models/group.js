@@ -6,6 +6,7 @@ import QuerySet from '../querySet';
 const GroupQuerySet = stampit().compose(QuerySet).methods({
   /**
   * Fetches Users belonging to a group.
+  * @ignore
   * @memberOf GroupQuerySet
   * @instance
 
@@ -22,6 +23,7 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   },
   /**
   * Adds user to group.
+  * @ignore
   * @memberOf GroupQuerySet
   * @instance
 
@@ -39,6 +41,7 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   },
   /**
   * Deletes user from group.
+  * @ignore
   * @memberOf GroupQuerySet
   * @instance
 
@@ -56,6 +59,7 @@ const GroupQuerySet = stampit().compose(QuerySet).methods({
   },
   /**
   * Fetches details of a user belonging to a group.
+  * @ignore
   * @memberOf Group
   * @instance
 
@@ -157,6 +161,7 @@ const GroupConstraints = {
 
 /**
  * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/groups endpoint}.
+ * @ignore
  * @constructor
  * @type {Group}
 
@@ -176,6 +181,7 @@ const Group = stampit()
   .methods({
     /**
     * Fetches Users belonging to a group.
+    * @ignore
     * @memberOf Group
     * @instance
 
@@ -190,6 +196,7 @@ const Group = stampit()
     },
     /**
     * Add user to group.
+    * @ignore
     * @memberOf Group
     * @instance
 
@@ -204,6 +211,7 @@ const Group = stampit()
     },
     /**
     * Delete user from group.
+    * @ignore
     * @memberOf Group
     * @instance
 
@@ -218,6 +226,7 @@ const Group = stampit()
     },
     /**
     * Fetches details of a user belonging to a group.
+    * @ignore
     * @memberOf Group
     * @instance
 

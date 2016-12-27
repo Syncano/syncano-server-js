@@ -5,6 +5,7 @@ import Request from './request';
 /**
 * Manager for handling batch requests to the platform. Supported actions are 'create', 'update', 'delete'. Meant to be used directly form the {@link Syncano} instance.
 *
+* @ignore
 * @constructor
 * @type {BatchManager}
 *

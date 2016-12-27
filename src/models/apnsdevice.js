@@ -69,6 +69,7 @@ const APNSDeviceConstraints = {
 
 /**
  * OO wrapper around instance APNS devices {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {APNSDevice}
 

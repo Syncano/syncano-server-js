@@ -82,6 +82,7 @@ const CostomSocketConstraints = {
 
 /**
  * OO wrapper around Socket.
+ * @ignore
  * @constructor
  * @type {Socket}
 

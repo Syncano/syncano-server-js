@@ -58,6 +58,7 @@ const ApiKeyConstraints = {
 
 /**
  * OO wrapper around instance api keys {@link http://docs.syncano.io/docs/authentication endpoint}.
+ * @ignore
  * @constructor
  * @type {ApiKey}
 

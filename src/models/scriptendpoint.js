@@ -8,6 +8,7 @@ const ScriptEndpointQuerySet = stampit().compose(QuerySet).methods({
 
   /**
   * Runs ScriptEndpoint matching the given lookup properties.
+  * @ignore
   * @memberOf ScriptEndpointQuerySet
   * @instance
 
@@ -85,6 +86,7 @@ const ScriptEndpointConstraints = {
 
 /**
  * OO wrapper around instance webhooks {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {ScriptEndpoint}
 
@@ -105,6 +107,7 @@ const ScriptEndpoint = stampit()
 
     /**
     * Runs current ScriptEndpoint.
+    * @ignore
     * @memberOf ScriptEndpoint
     * @instance
 

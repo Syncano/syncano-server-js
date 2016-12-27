@@ -8,6 +8,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
     * Orders DataObject by field.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -26,6 +27,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
   * Adds an array to an array field.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -50,6 +52,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
   * Adds an array to an array field without duplicate values.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -74,6 +77,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
     * Filters DataObjects using _is.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -93,6 +97,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
     * Filters DataObjects using _contains.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -112,6 +117,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
   * Subtracts an array from an array field.
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -136,6 +142,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
   * Increments single object based on provided arguments
 
+  * @ignore
   * @memberOf QuerySet
   * @instance
 
@@ -160,6 +167,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
     * Filters dataobjects by a geopoint field.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -184,6 +192,7 @@ const DataObjectQuerySet = stampit().compose(QuerySet, Filter).methods({
   /**
     * Returns DataObject count.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -238,6 +247,7 @@ const DataobjectConstraints = {
 /**
  * OO wrapper around instance data objects {@link http://docs.syncano.com/v4.0/docs/view-data-objects endpoint}.
  * This model is special because each instance will be **dynamically populated** with fields defined in related {@link Class} schema attribute.
+ * @ignore
  * @constructor
  * @type {DataObject}
 
@@ -265,6 +275,7 @@ const DataObject = stampit()
     /**
     * Gets related objects via relation field name.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -286,6 +297,7 @@ const DataObject = stampit()
     /**
     * Increments single object field based on provided arguments.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -308,6 +320,7 @@ const DataObject = stampit()
     /**
     * Adds an array to an array field.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -330,6 +343,7 @@ const DataObject = stampit()
     /**
     * Adds an array to an array field without duplicate values.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 
@@ -352,6 +366,7 @@ const DataObject = stampit()
     /**
     * Subtracts an array from an array field.
 
+    * @ignore
     * @memberOf QuerySet
     * @instance
 

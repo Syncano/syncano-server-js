@@ -72,6 +72,7 @@ const InstanceConstraints = {
 
 /**
  * OO wrapper around instances {@link http://docs.syncano.io/v0.1/docs/instances-list endpoint}.
+ * @ignore
  * @constructor
  * @type {Instance}
 

@@ -43,6 +43,7 @@ const TriggerConstraints = {
 
 /**
  * OO wrapper around instance triggers {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {Trigger}
 

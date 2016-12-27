@@ -12,6 +12,7 @@ describe('Syncano', function() {
   });
 
   describe('#init()', function() {
+    this.timeout(3000);
 
     it('should have model factories automatically injected as properties', function() {
       should(baseObject).have.property('Instance').which.is.Function();
@@ -50,7 +51,7 @@ describe('Syncano', function() {
       should(baseObject).have.property('Profile').which.is.Function();
       should(baseObject).have.property('Card').which.is.Function();
       should(baseObject).have.property('Account').which.is.Object();
-      // should(baseObject).have.property('Monitor').which.is.Object(); TODO: Make it pass
+      should(baseObject).have.property('Monitor').which.is.Object();
       should(baseObject).have.property('BatchManager').which.is.Function();
       should(baseObject).have.property('Endpoint').which.is.Function();
       should(baseObject).have.property('Hosting').which.is.Function();

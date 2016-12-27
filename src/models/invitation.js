@@ -45,6 +45,7 @@ const InvitationMeta = Meta({
 
 /**
  * OO wrapper around invitations {@link # endpoint}.
+ * @ignore
  * @constructor
  * @type {Invitation}
 

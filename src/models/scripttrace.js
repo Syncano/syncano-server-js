@@ -38,6 +38,7 @@ const ScriptConstraints = {
 /**
  * OO wrapper around script trace {@link # endpoint}.
  * This model is *read only*.
+ * @ignore
  * @constructor
  * @type {ScriptTrace}
 
