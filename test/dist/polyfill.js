@@ -1,21 +1,22 @@
+/* eslint-disable func-names, no-extend-native, prefer-const, one-var */
 /**
  * Function.prototype.bind polyfill used by PhantomJS
  */
-if (typeof Function.prototype.bind != 'function') {
+if (typeof Function.prototype.bind !== 'function') {
   Function.prototype.bind = function bind(obj) {
-    var args = Array.prototype.slice.call(arguments, 1),
+    let args = Array.prototype.slice.call(arguments, 1),
       self = this,
-      nop = function() {
+      nop = function () {
       },
-      bound = function() {
+      bound = function () {
         return self.apply(
           this instanceof nop ? this : (obj || {}), args.concat(
             Array.prototype.slice.call(arguments)
           )
-        );
-      };
-    nop.prototype = this.prototype || {};
-    bound.prototype = new nop();
-    return bound;
-  };
+        )
+      }
+    nop.prototype = this.prototype || {}
+    bound.prototype = new nop()
+    return bound
+  }
 }

@@ -1,27 +1,27 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const TriggerTraceQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   List
-);
+)
 
 const TriggerTraceMeta = Meta({
   name: 'triggertrace',
   pluralName: 'triggertraces',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/triggers/{triggerId}/traces/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/triggers/{triggerId}/traces/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/triggers/{triggerId}/traces/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/triggers/{triggerId}/traces/'
     }
   }
-});
+})
 
 const TriggerTraceConstraints = {
   instanceName: {
@@ -34,8 +34,7 @@ const TriggerTraceConstraints = {
     presence: true,
     numericality: true
   }
-};
-
+}
 
 /**
  * OO wrapper around trigger trace {@link # endpoint}.
@@ -59,6 +58,6 @@ const TriggerTrace = stampit()
   .compose(Model)
   .setQuerySet(TriggerTraceQuerySet)
   .setConstraints(TriggerTraceConstraints)
-  .setMeta(TriggerTraceMeta);
+  .setMeta(TriggerTraceMeta)
 
-export default TriggerTrace;
+export default TriggerTrace

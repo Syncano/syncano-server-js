@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const InvoiceQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,46 +9,46 @@ const InvoiceQuerySet = stampit().compose(
 ).methods({
 
   pdf(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'GET';
-    this.endpoint = 'pdf';
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'GET'
+    this.endpoint = 'pdf'
 
-    return this;
+    return this
   },
 
   retryPayment(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
     this.payload = {payload}
-    this.endpoint = 'retryPayment';
+    this.endpoint = 'retryPayment'
 
-    return this;
+    return this
   }
 
-});
+})
 
 const InvoiceMeta = Meta({
   name: 'invoice',
   pluralName: 'invoices',
   endpoints: {
-    'detail': {
-      'methods': ['get'],
-      'path': '/v2/billing/invoices/{id}/'
+    detail: {
+      methods: ['get'],
+      path: '/v2/billing/invoices/{id}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/billing/invoices/'
+    list: {
+      methods: ['get'],
+      path: '/v2/billing/invoices/'
     },
-    'pdf': {
-      'methods': ['get'],
-      'path': '/v2/billing/invoices/{id}/pdf/'
+    pdf: {
+      methods: ['get'],
+      path: '/v2/billing/invoices/{id}/pdf/'
     },
-    'retryPayment': {
-      'methods': ['post'],
-      'path': '/v2/billing/invoices/{id}/retry_payment/'
+    retryPayment: {
+      methods: ['post'],
+      path: '/v2/billing/invoices/{id}/retry_payment/'
     }
   }
-});
+})
 /**
  * OO wrapper around Invoice.
  * @ignore
@@ -70,19 +70,19 @@ const Invoice = stampit()
   .methods({
 
     pdf() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('pdf', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('pdf', this)
 
-      return this.makeRequest('POST', path);
+      return this.makeRequest('POST', path)
     },
 
     retryPayment(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('retryPayment', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('retryPayment', this)
 
-      return this.makeRequest('POST', path, {payload});
+      return this.makeRequest('POST', path, {payload})
     }
 
-  });
+  })
 
-export default Invoice;
+export default Invoice

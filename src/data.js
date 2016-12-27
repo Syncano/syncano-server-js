@@ -46,8 +46,8 @@ class Data {
         result = result.concat(response)
 
         const loadNext =
-          (pageSize === 0 || pageSize > result.length)
-          && response.hasNext()
+          (pageSize === 0 || pageSize > result.length) &&
+          response.hasNext()
 
         if (loadNext) {
           response
@@ -67,7 +67,7 @@ class Data {
         .list()
         .then(saveAndLoadNext)
         .catch(err => reject(err))
-    });
+    })
   }
 
   /**
@@ -98,9 +98,9 @@ class Data {
     return new Promise((resolve, reject) => {
       this
         .first()
-        .then(object => object ? resolve(object) : reject(new NotFoundError))
+        .then(object => object ? resolve(object) : reject(new NotFoundError()))
         .catch(() => {
-          reject(new NotFoundError)
+          reject(new NotFoundError())
         })
     })
   }
@@ -138,11 +138,11 @@ class Data {
       this
         .find(ids)
         .then(response => {
-          const shouldThrow = Array.isArray(ids) ? !response.objects.length : response;
-          return shouldThrow ? resolve(response) : reject(new NotFoundError)
+          const shouldThrow = Array.isArray(ids) ? !response.objects.length : response
+          return shouldThrow ? resolve(response) : reject(new NotFoundError())
         })
         .catch(() => {
-          reject(new NotFoundError)
+          reject(new NotFoundError())
         })
     })
   }

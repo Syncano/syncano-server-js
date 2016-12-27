@@ -5,7 +5,7 @@ export default function connect(instance) {
 
   return {
     data: new Proxy(new Data(), {
-      get: function(target, property) {
+      get(target, property) {
         target._query = instance.DataObject.please.bind(DataObject, { className: property })
 
         return target

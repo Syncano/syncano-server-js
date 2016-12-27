@@ -1,10 +1,10 @@
-import stampit from 'stampit';
-import Promise from 'bluebird';
-import _ from 'lodash';
-import Request from './request';
-import PaginationError from './errors';
-import moment from 'moment';
-import {EventEmittable} from './utils';
+import stampit from 'stampit'
+import Promise from 'bluebird'
+import _ from 'lodash'
+import moment from 'moment'
+import Request from './request'
+import {PaginationError} from './errors'
+import {EventEmittable} from './utils'
 
 /**
  * Wrapper around plain JavaScript Array which provides two additional methods for pagination.
@@ -30,11 +30,10 @@ import {EventEmittable} from './utils';
  *
  *   .then((instances) => console.log('instances', instances));
  */
-const ResultSet = function(querySet, response, objects) {
-  let results = [];
-  results.push.apply(results, objects);
-  const query = _.omit(querySet.query, ['page_size', 'last_pk', 'direction']);
-
+const ResultSet = function (querySet, response, objects) {
+  const results = []
+  results.push.apply(results, objects)
+  const query = _.omit(querySet.query, ['page_size', 'last_pk', 'direction'])
 
   /**
   * Helper method which will fetch next page or throws `PaginationError`.
@@ -48,16 +47,16 @@ const ResultSet = function(querySet, response, objects) {
   */
   results.next = () => {
     if (!response.next) {
-      return Promise.reject(new PaginationError('There is no next page'));
+      return Promise.reject(new PaginationError('There is no next page'))
     }
 
     return new Promise((resolve, reject) => {
       return querySet
         .request(response.next, {query})
         .spread(resolve)
-        .catch(reject);
-    });
-  };
+        .catch(reject)
+    })
+  }
 
   /**
   * Helper method which will check if next page is available.
@@ -68,7 +67,7 @@ const ResultSet = function(querySet, response, objects) {
 
   * @returns {Boolean}
   */
-  results.hasNext = () => response.next !== null;
+  results.hasNext = () => response.next !== null
 
   /**
   * Helper method which will fetch previous page or throws `PaginationError`.
@@ -82,16 +81,16 @@ const ResultSet = function(querySet, response, objects) {
   */
   results.prev = () => {
     if (!response.prev) {
-      return Promise.reject(new PaginationError('There is no previous page'));
+      return Promise.reject(new PaginationError('There is no previous page'))
     }
 
     return new Promise((resolve, reject) => {
       return querySet
         .request(response.prev, {query})
         .spread(resolve)
-        .catch(reject);
-    });
-  };
+        .catch(reject)
+    })
+  }
 
   /**
   * Helper method which will check if prev page is available.
@@ -102,9 +101,9 @@ const ResultSet = function(querySet, response, objects) {
 
   * @returns {Boolean}
   */
-  results.hasPrev = () => response.prev !== null;
+  results.hasPrev = () => response.prev !== null
 
-  return results;
+  return results
 }
 
 const QuerySetRequest = stampit().compose(Request)
@@ -138,14 +137,14 @@ const QuerySetRequest = stampit().compose(Request)
     */
     serialize(response) {
       if (this._serialize === false) {
-        return response;
+        return response
       }
 
       if (_.includes(this.resultSetEndpoints, this.endpoint)) {
-        return this.asResultSet(response);
+        return this.asResultSet(response)
       }
 
-      return this.model.fromJSON(response, this.properties);
+      return this.model.fromJSON(response, this.properties)
     },
 
     /**
@@ -161,11 +160,11 @@ const QuerySetRequest = stampit().compose(Request)
     * @returns {ResultSet}
     */
     asResultSet(response, lookupField, additionalProps = {}) {
-      const objects = _.map(response.objects, (object) => {
-        const obj = lookupField ? object[lookupField] : object;
-        return this.model.fromJSON(obj, _.assign({}, this.properties, additionalProps));
-      });
-      return ResultSet(this, response, objects);
+      const objects = _.map(response.objects, object => {
+        const obj = lookupField ? object[lookupField] : object
+        return this.model.fromJSON(obj, _.assign({}, this.properties, additionalProps))
+      })
+      return ResultSet(this, response, objects)
     },
 
     /**
@@ -184,24 +183,24 @@ const QuerySetRequest = stampit().compose(Request)
 
     */
     request(requestPath = null, requestOptions = {}) {
-      const meta = this.model.getMeta();
-      const endpoint = meta.endpoints[this.endpoint] || {};
-      const allowedMethods = endpoint.methods || [];
-      const path = requestPath || meta.resolveEndpointPath(this.endpoint, this.properties);
-      const method = this.method.toLowerCase();
+      const meta = this.model.getMeta()
+      const endpoint = meta.endpoints[this.endpoint] || {}
+      const allowedMethods = endpoint.methods || []
+      const path = requestPath || meta.resolveEndpointPath(this.endpoint, this.properties)
+      const method = this.method.toLowerCase()
       const options = _.defaults(requestOptions, {
         headers: this.headers,
         query: this.query,
         payload: this.payload,
         attachments: this.attachments,
         responseAttr: this.responseAttr
-      });
+      })
 
       if (!_.includes(allowedMethods, method)) {
-        return Promise.reject(new Error(`Invalid request method: "${this.method}".`));
+        return Promise.reject(new Error(`Invalid request method: "${this.method}".`))
       }
 
-      return this.makeRequest(method, path, options).then((body) => [this.serialize(body), body]);
+      return this.makeRequest(method, path, options).then(body => [this.serialize(body), body])
     },
 
     /**
@@ -215,9 +214,9 @@ const QuerySetRequest = stampit().compose(Request)
     * @returns {Promise}
     */
     then(callback) {
-      return this.request().spread(callback);
+      return this.request().spread(callback)
     }
-  });
+  })
 
 export const Filter = stampit().methods({
 
@@ -235,10 +234,10 @@ export const Filter = stampit().methods({
 
   */
   filter(filters = {}) {
-    this.query['query'] = JSON.stringify(filters);
-    return this;
+    this.query.query = JSON.stringify(filters)
+    return this
   }
-});
+})
 
 export const Create = stampit().methods({
 
@@ -269,45 +268,45 @@ export const Create = stampit().methods({
 
   */
   create(object) {
-    const attrs = _.assign({}, this.properties, object);
-    const instance = this.model(attrs);
+    const attrs = _.assign({}, this.properties, object)
+    const instance = this.model(attrs)
 
-    return instance.save();
+    return instance.save()
   }
-});
+})
 
 export const SendToDevice = stampit().methods({
 
   sendToDevice(properties = {}, content = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = {content};
-    this.method = 'POST';
-    this.endpoint = 'deviceMessage';
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = {content}
+    this.method = 'POST'
+    this.endpoint = 'deviceMessage'
 
-    return this;
+    return this
   }
 
-});
+})
 
 export const SendToDevices = stampit().methods({
 
   sendToDevices(properties = {}, content = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = {content};
-    this.method = 'POST';
-    this.endpoint = 'list';
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = {content}
+    this.method = 'POST'
+    this.endpoint = 'list'
 
-    return this;
+    return this
   }
 
-});
+})
 
 export const ListAll = stampit().methods({
   listAll() {
-    this.resultSetEndpoints = ['list', 'all'];
-    this.method = 'GET';
-    this.endpoint = 'all';
-    return this;
+    this.resultSetEndpoints = ['list', 'all']
+    this.method = 'GET'
+    this.endpoint = 'all'
+    return this
   }
 })
 
@@ -327,15 +326,15 @@ export const Rename = stampit().methods({
 
   */
   rename(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'POST';
-    this.endpoint = 'rename';
-    this.payload = payload;
+    this.method = 'POST'
+    this.endpoint = 'rename'
+    this.payload = payload
 
-    return this;
+    return this
   }
-});
+})
 
 const CacheKey = stampit().methods({
   /**
@@ -353,10 +352,10 @@ const CacheKey = stampit().methods({
   */
 
   cacheKey(cache_key) {
-    this.query['cache_key'] = cache_key;
-    return this;
+    this.query.cache_key = cache_key
+    return this
   }
-});
+})
 
 export const Get = stampit().methods({
 
@@ -374,14 +373,14 @@ export const Get = stampit().methods({
 
   */
   get(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'GET';
-    this.endpoint = 'detail';
+    this.method = 'GET'
+    this.endpoint = 'detail'
 
-    return this;
+    return this
   }
-});
+})
 
 export const GetOrCreate = stampit().methods({
 
@@ -420,16 +419,16 @@ export const GetOrCreate = stampit().methods({
   getOrCreate(properties = {}, defaults = {}) {
     return new Promise((resolve, reject) => {
       this.get(properties)
-        .then((object) => resolve(object, false))
+        .then(object => resolve(object, false))
         .catch(() => {
-          const attrs = _.assign({}, this.properties, properties, defaults);
+          const attrs = _.assign({}, this.properties, properties, defaults)
           return this.create(attrs)
-            .then((object) => resolve(object, true))
-            .catch(reject);
-        });
-    });
+            .then(object => resolve(object, true))
+            .catch(reject)
+        })
+    })
   }
-});
+})
 
 export const List = stampit().methods({
 
@@ -450,14 +449,14 @@ export const List = stampit().methods({
 
   */
   list(properties = {}, query = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.query = _.assign({}, this.query, query);
+    this.properties = _.assign({}, this.properties, properties)
+    this.query = _.assign({}, this.query, query)
 
-    this.method = 'GET';
-    this.endpoint = 'list';
-    return this;
+    this.method = 'GET'
+    this.endpoint = 'list'
+    return this
   }
-});
+})
 
 export const Delete = stampit().methods({
 
@@ -477,13 +476,13 @@ export const Delete = stampit().methods({
 
   */
   delete(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'DELETE';
-    this.endpoint = 'detail';
-    return this;
+    this.method = 'DELETE'
+    this.endpoint = 'detail'
+    return this
   }
-});
+})
 
 export const Update = stampit().methods({
 
@@ -511,14 +510,14 @@ export const Update = stampit().methods({
 
   */
   update(properties = {}, object = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.payload = object;
+    this.properties = _.assign({}, this.properties, properties)
+    this.payload = object
 
-    this.method = 'PATCH';
-    this.endpoint = 'detail';
-    return this;
+    this.method = 'PATCH'
+    this.endpoint = 'detail'
+    return this
   }
-});
+})
 
 const TemplateResponse = stampit().methods({
 
@@ -540,13 +539,13 @@ const TemplateResponse = stampit().methods({
     .then(function(objects) {});
   */
   templateResponse(template_name) {
-    this._serialize = false;
-    this.responseAttr = 'text';
-    this.query['template_response'] = template_name;
-    return this;
+    this._serialize = false
+    this.responseAttr = 'text'
+    this.query.template_response = template_name
+    return this
   }
 
-});
+})
 
 export const UpdateOrCreate = stampit().methods({
 
@@ -586,16 +585,16 @@ export const UpdateOrCreate = stampit().methods({
   updateOrCreate(properties = {}, object = {}, defaults = {}) {
     return new Promise((resolve, reject) => {
       this.update(properties, object)
-        .then((_object) => resolve(_object, true))
+        .then(_object => resolve(_object, true))
         .catch(() => {
-          const attrs = _.assign({}, this.properties, properties, defaults);
+          const attrs = _.assign({}, this.properties, properties, defaults)
           return this.create(attrs)
-            .then((_object) => resolve(_object, false))
-            .catch(reject);
+            .then(_object => resolve(_object, false))
+            .catch(reject)
         })
-    });
+    })
   }
-});
+})
 
 const ExcludedFields = stampit().methods({
   /**
@@ -613,10 +612,10 @@ const ExcludedFields = stampit().methods({
 
     */
   excludedFields(fields = []) {
-    this.query['excluded_fields'] = fields.join();
-    return this;
+    this.query.excluded_fields = fields.join()
+    return this
   }
-});
+})
 
 const Fields = stampit().methods({
   /**
@@ -634,10 +633,10 @@ const Fields = stampit().methods({
 
     */
   fields(fields = []) {
-    this.query['fields'] = fields.join();
-    return this;
+    this.query.fields = fields.join()
+    return this
   }
-});
+})
 
 export const First = stampit().methods({
 
@@ -660,13 +659,13 @@ export const First = stampit().methods({
   first(properties = {}, query = {}) {
     return this.pageSize(1)
       .list(properties, query)
-      .then((objects) => {
-        if (objects.length) {
-          return objects[0];
+      .then(objects => {
+        if (objects.length > 0) {
+          return objects[0]
         }
-      });
+      })
   }
-});
+})
 
 export const PageSize = stampit().methods({
 
@@ -686,10 +685,10 @@ export const PageSize = stampit().methods({
 
   */
   pageSize(value) {
-    this.query['page_size'] = value;
-    return this;
+    this.query.page_size = value
+    return this
   }
-});
+})
 
 export const CurrentMonth = stampit().methods({
 
@@ -707,12 +706,12 @@ export const CurrentMonth = stampit().methods({
 
   */
   currentMonth() {
-    this.query['start'] = moment().startOf('month').format('YYYY-MM-DD');
-    this.query['end'] = moment().endOf('month').format('YYYY-MM-DD');
-    return this;
+    this.query.start = moment().startOf('month').format('YYYY-MM-DD')
+    this.query.end = moment().endOf('month').format('YYYY-MM-DD')
+    return this
   }
 
-});
+})
 
 export const StartDate = stampit().methods({
 
@@ -731,11 +730,11 @@ export const StartDate = stampit().methods({
 
   */
   startDate(date) {
-    this.query['start'] = moment(date).format('YYYY-MM-DD');
-    return this;
+    this.query.start = moment(date).format('YYYY-MM-DD')
+    return this
   }
 
-});
+})
 
 export const EndDate = stampit().methods({
 
@@ -754,11 +753,11 @@ export const EndDate = stampit().methods({
 
   */
   endDate(date) {
-    this.query['end'] = moment(date).format('YYYY-MM-DD');
-    return this;
+    this.query.end = moment(date).format('YYYY-MM-DD')
+    return this
   }
 
-});
+})
 
 export const Total = stampit().methods({
 
@@ -776,11 +775,11 @@ export const Total = stampit().methods({
 
   */
   total() {
-    this.query['total'] = true;
-    return this;
+    this.query.total = true
+    return this
   }
 
-});
+})
 
 export const Ordering = stampit().methods({
 
@@ -800,17 +799,17 @@ export const Ordering = stampit().methods({
 
   */
   ordering(value = 'asc') {
-    const allowed = ['asc', 'desc'];
-    const ordering = value.toLowerCase();
+    const allowed = ['asc', 'desc']
+    const ordering = value.toLowerCase()
 
     if (!_.includes(allowed, ordering)) {
-      throw Error(`Invalid order value: "${value}", allowed choices are ${allowed.join()}.`);
+      throw new Error(`Invalid order value: "${value}", allowed choices are ${allowed.join()}.`)
     }
 
-    this.query['ordering'] = ordering;
-    return this;
+    this.query.ordering = ordering
+    return this
   }
-});
+})
 
 export const Raw = stampit().methods({
 
@@ -829,10 +828,10 @@ export const Raw = stampit().methods({
 
   */
   raw() {
-    this._serialize = false;
-    return this;
+    this._serialize = false
+    return this
   }
-});
+})
 /**
 * Wrapper for fetching all objects (DataObjects, Classes etc.).
 
@@ -888,55 +887,53 @@ const AllObjects = stampit()
         query: this.query
       }
 
-      return this.makeRequest('GET', this.path, options);
+      return this.makeRequest('GET', this.path, options)
     },
 
     start() {
-
-      this.currentPage = 0;
-      this.result = [];
+      this.currentPage = 0
+      this.result = []
 
       const pageLoop = () => {
-
-        if(this.abort === true) {
-          this.emit('stop', this.result);
-          return this.result;
+        if (this.abort === true) {
+          this.emit('stop', this.result)
+          return this.result
         }
 
         return this.request()
-          .then((page) => {
-            const serializedPage = this.model.please().asResultSet(page);
-            this.result = _.concat(this.result, _.reject(serializedPage, _.isFunction));
-            this.emit('page', serializedPage);
-            this.currentPage++;
-            if(serializedPage.hasNext() === true) {
-              this.path = page.next;
+          .then(page => {
+            const serializedPage = this.model.please().asResultSet(page)
+            this.result = _.concat(this.result, _.reject(serializedPage, _.isFunction))
+            this.emit('page', serializedPage)
+            this.currentPage++
+            if (serializedPage.hasNext() === true) {
+              this.path = page.next
             }
-            if(serializedPage.hasNext() === false || (!_.isEmpty(this, 'pages') && this.currentPage == this.pages)) {
-              this.abort = true;
+            if (serializedPage.hasNext() === false || (!_.isEmpty(this, 'pages') && this.currentPage === this.pages)) {
+              this.abort = true
             }
-            return serializedPage;
+            return serializedPage
           })
           .finally(pageLoop)
-          .catch((error) => {
-            if (error.timeout && error.timeout === this.timeout) {
-              return this.emit('timeout', error);
+          .catch(err => {
+            if (err.timeout && err.timeout === this.timeout) {
+              return this.emit('timeout', err)
             }
 
-            this.emit('error', error);
-            this.stop();
-          });
+            this.emit('error', err)
+            this.stop()
+          })
       }
 
-      pageLoop();
+      pageLoop()
     },
 
     stop() {
-      this.abort = true;
-      return this;
+      this.abort = true
+      return this
     }
 
-  });
+  })
   /**
   * Allows fetching of all objects of a type (DataObjects, Classes etc.) recursively.
 
@@ -970,28 +967,28 @@ const AllObjects = stampit()
 const All = stampit().methods({
 
   all(properties = {}, query = {}, start = true, pages = 0) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    const config = this.getConfig();
-    const meta = this.model.getMeta();
-    const path = meta.resolveEndpointPath('list', this.properties);
+    const config = this.getConfig()
+    const meta = this.model.getMeta()
+    const path = meta.resolveEndpointPath('list', this.properties)
 
-    let options = {}
-    options.path = path;
-    options.model = this.model;
-    options.query = query;
-    options.pages = pages;
+    const options = {}
+    options.path = path
+    options.model = this.model
+    options.query = query
+    options.pages = pages
 
-    const allObjects = AllObjects.setConfig(config)(options);
+    const allObjects = AllObjects.setConfig(config)(options)
 
     if (start === true) {
-      allObjects.start();
+      allObjects.start()
     }
 
-    return allObjects;
+    return allObjects
   }
 
-});
+})
 
 export const BulkCreate = stampit().methods({
 
@@ -1013,9 +1010,9 @@ export const BulkCreate = stampit().methods({
 
   */
   bulkCreate(objects) {
-    return Promise.mapSeries(objects, (o) => o.save());
+    return Promise.mapSeries(objects, o => o.save())
   }
-});
+})
 
 /**
  * Base class responsible for all ORM (``please``) actions.
@@ -1052,7 +1049,7 @@ const QuerySet = stampit.compose(
   TemplateResponse,
   CacheKey,
   All
-);
+)
 
 export const BaseQuerySet = stampit.compose(
   QuerySetRequest,
@@ -1065,6 +1062,6 @@ export const BaseQuerySet = stampit.compose(
   TemplateResponse,
   EventEmittable,
   All
-);
+)
 
-export default QuerySet;
+export default QuerySet

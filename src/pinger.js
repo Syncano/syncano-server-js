@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {EventEmittable} from './utils';
-import Request from './request';
+import stampit from 'stampit'
+import {EventEmittable} from './utils'
+import Request from './request'
 
 /**
 * Utility for pinging the api. Allows checking for connection to the platofrm. Meant to be used directly form the {@link Syncano} instance.
@@ -30,33 +30,33 @@ const Pinger = stampit()
   .methods({
 
     request() {
-      const path = this.getConfig().getBaseUrl();
-      return this.makeRequest('GET', path);
+      const path = this.getConfig().getBaseUrl()
+      return this.makeRequest('GET', path)
     },
 
     startMonitoring() {
-      this.interval = setInterval(() => this.ping(), this.timeout);
+      this.interval = setInterval(() => this.ping(), this.timeout)
     },
 
     ping() {
       this.request()
         .then(() => {
-          if(!this.connected) {
-            this.connected = true;
+          if (!this.connected) {
+            this.connected = true
             this.emit('connected')
           }
         })
-        .catch((error) => {
-          if(this.connected) {
-            this.connected = false;
-            this.emit('disconnected', error)
+        .catch(err => {
+          if (this.connected) {
+            this.connected = false
+            this.emit('disconnected', err)
           }
-        });
+        })
     },
 
     stopMonitoring() {
-      clearInterval(this.interval);
+      clearInterval(this.interval)
     }
-  });
+  })
 
-export default Pinger;
+export default Pinger

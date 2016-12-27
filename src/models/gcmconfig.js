@@ -1,23 +1,23 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Update, Get} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Update, Get} from '../querySet'
+import {Meta, Model} from './base'
 
 const GCMConfigQuerySet = stampit().compose(
   BaseQuerySet,
   Update,
   Get
-);
+)
 
 const GCMConfigMeta = Meta({
   name: 'gcmconfig',
   pluralName: 'gcmconfig',
   endpoints: {
-    'detail': {
-      'methods': ['post', 'get', 'patch', 'put'],
-      'path': '/v2/instances/{instanceName}/push_notifications/gcm/config/'
+    detail: {
+      methods: ['post', 'get', 'patch', 'put'],
+      path: '/v2/instances/{instanceName}/push_notifications/gcm/config/'
     }
   }
-});
+})
 
 const GCMConfigConstraints = {
   instanceName: {
@@ -26,7 +26,7 @@ const GCMConfigConstraints = {
       minimum: 5
     }
   }
-};
+}
 
 /**
  * OO wrapper around instance GCM config {@link # endpoint}.
@@ -43,6 +43,6 @@ const GCMConfig = stampit()
   .compose(Model)
   .setMeta(GCMConfigMeta)
   .setQuerySet(GCMConfigQuerySet)
-  .setConstraints(GCMConfigConstraints);
+  .setConstraints(GCMConfigConstraints)
 
-export default GCMConfig;
+export default GCMConfig

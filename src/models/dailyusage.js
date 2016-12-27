@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, List, Total, StartDate, EndDate, CurrentMonth} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, List, Total, StartDate, EndDate, CurrentMonth} from '../querySet'
+import {Meta, Model} from './base'
 
 const DailyUsageQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,18 +9,18 @@ const DailyUsageQuerySet = stampit().compose(
   StartDate,
   EndDate,
   CurrentMonth
-);
+)
 
 const DailyUsageMeta = Meta({
   name: 'dailyusage',
   pluralName: 'dailyusages',
   endpoints: {
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/usage/daily/'
+    list: {
+      methods: ['get'],
+      path: '/v2/usage/daily/'
     }
   }
-});
+})
 /**
  * OO wrapper around DailyUsage.
  * @ignore
@@ -30,6 +30,6 @@ const DailyUsageMeta = Meta({
 const DailyUsage = stampit()
   .compose(Model)
   .setQuerySet(DailyUsageQuerySet)
-  .setMeta(DailyUsageMeta);
+  .setMeta(DailyUsageMeta)
 
-export default DailyUsage;
+export default DailyUsage

@@ -1,21 +1,21 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
+import stampit from 'stampit'
+import {Meta, Model} from './base'
 
 const TriggerMeta = Meta({
   name: 'trigger',
   pluralName: 'triggers',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/triggers/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/triggers/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/triggers/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/triggers/'
     }
   },
-  relatedModels: [ 'TriggerTrace' ]
-});
+  relatedModels: ['TriggerTrace']
+})
 
 const TriggerConstraints = {
   instanceName: {
@@ -39,7 +39,7 @@ const TriggerConstraints = {
     presence: true,
     object: true
   }
-};
+}
 
 /**
  * OO wrapper around instance triggers {@link # endpoint}.
@@ -61,6 +61,6 @@ const TriggerConstraints = {
 const Trigger = stampit()
   .compose(Model)
   .setConstraints(TriggerConstraints)
-  .setMeta(TriggerMeta);
+  .setMeta(TriggerMeta)
 
-export default Trigger;
+export default Trigger

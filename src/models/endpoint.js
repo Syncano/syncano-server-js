@@ -1,24 +1,24 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import _ from 'lodash';
-import {BaseQuerySet} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet} from '../querySet'
+import {Meta, Model} from './base'
 
 const EndpointQuerySet = stampit().compose(BaseQuerySet)
 .methods({
 
   run(properties = {}, method = 'GET', payload = {}) {
-    this.properties = _.assign({}, this.properies, { socket_name: properties.socket_name, name: properties.endpoint_name, instanceName: properties.instanceName});
+    this.properties = _.assign({}, this.properies, { socket_name: properties.socket_name, name: properties.endpoint_name, instanceName: properties.instanceName})
 
-    this.method = method;
-    this.endpoint = 'run';
-    if(method == 'POST') {
-      this.payload = payload;
+    this.method = method
+    this.endpoint = 'run'
+    if (method === 'POST') {
+      this.payload = payload
     } else {
-      this.query = payload;
+      this.query = payload
     }
-    this.raw();
+    this.raw()
 
-    return this;
+    return this
   },
 
   /**
@@ -35,13 +35,13 @@ const EndpointQuerySet = stampit().compose(BaseQuerySet)
 
   */
   list(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'GET';
-    this.endpoint = 'list';
-    this._serialize = false;
+    this.method = 'GET'
+    this.endpoint = 'list'
+    this._serialize = false
 
-    return this.then((response) => this.model.please().asResultSet(response));
+    return this.then(response => this.model.please().asResultSet(response))
   }
 
 })
@@ -50,16 +50,16 @@ const EndpointMeta = Meta({
   name: 'endpoint',
   pluralName: 'endpoint',
   endpoints: {
-    'run': {
-      'methods': ['post', 'get', 'delete', 'patch', 'put'],
-      'path': '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/{name}/'
+    run: {
+      methods: ['post', 'get', 'delete', 'patch', 'put'],
+      path: '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/{name}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/'
+    list: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/endpoints/sockets/{socket_name}/'
     }
   }
-});
+})
 
 const EndpointConstraints = {
   instanceName: {
@@ -78,7 +78,7 @@ const EndpointConstraints = {
   acl: {
     object: true
   }
-};
+}
 
 /**
  * OO wrapper around Endpoint {@link # endpoint}.
@@ -99,23 +99,23 @@ const Endpoint = stampit()
   .methods({
 
     addScriptCall({ name, methods }) {
-      this.scriptCalls = _.concat(this.scriptCalls, { name, methods, type: 'script'});
+      this.scriptCalls = _.concat(this.scriptCalls, { name, methods, type: 'script'})
     },
 
     run(method = 'GET', payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('run', this);
-      let data = null;
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('run', this)
+      let data = null
 
-      if(method === 'POST') {
-        data = {payload};
+      if (method === 'POST') {
+        data = {payload}
       } else {
-        data = {query: payload};
+        data = {query: payload}
       }
 
-      return this.makeRequest(method, path, data);
+      return this.makeRequest(method, path, data)
     }
 
   })
 
-export default Endpoint;
+export default Endpoint

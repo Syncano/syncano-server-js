@@ -1,27 +1,27 @@
-import crypto from 'crypto';
-import Promise from 'bluebird';
-import  _  from 'lodash';
+import crypto from 'crypto'
+import Promise from 'bluebird'
+import _ from 'lodash'
 
 export const suffix = {
   get(text) {
-    return `${text.toString()}_${this.getValue()}`;
+    return `${text.toString()}_${this.getValue()}`
   },
   getHash() {
-    return `_${new Date().getTime()}_${_.random(0, 99999)}`;
+    return `_${new Date().getTime()}_${_.random(0, 99999)}`
   },
   getValue() {
-    return crypto.createHash('md5').update(this.getHash()).digest('hex');
+    return crypto.createHash('md5').update(this.getHash()).digest('hex')
   },
   getHyphened(text) {
-    return `${text.toString()}-${this.getValue()}`;
+    return `${text.toString()}-${this.getValue()}`
   }
-};
+}
 
 export const hex = {
   getRandom(len) {
-    return crypto.randomBytes(Math.ceil(len/2)).toString('hex').slice(0, len);
+    return crypto.randomBytes(Math.ceil(len / 2)).toString('hex').slice(0, len)
   }
-};
+}
 
 export const credentials = {
   user: null,
@@ -31,39 +31,39 @@ export const credentials = {
   socialToken: process.env.INTEGRATION_SOCIAL_TOKEN,
 
   setCredentials(_credentials = {}) {
-    _.assign(this, _credentials);
+    _.assign(this, _credentials)
   },
 
   getCredentials() {
-    return this;
+    return this
   },
 
   isAuthenticated() {
-    const keys = ['accountKey', 'userKey', 'socialToken', 'user'];
-    return _.some(keys, (key) => !_.isEmpty(this[key]) && !_.isUndefined(this[key]));
+    const keys = ['accountKey', 'userKey', 'socialToken', 'user']
+    return _.some(keys, key => !_.isEmpty(this[key]) && !_.isUndefined(this[key]))
   }
-};
+}
 
 export function createCleaner() {
-  let _data = [];
+  let _data = []
 
   return {
     mark(value) {
       if (_.isArray(value)) {
         _data.push.apply(_data, value)
       } else {
-        _data.push(value);
+        _data.push(value)
       }
 
-      return value;
+      return value
     },
 
     clean() {
       return Promise
-        .mapSeries(_data, (object) => object.delete())
+        .mapSeries(_data, object => object.delete())
         .finally(() => {
-          _data = [];
-        });
+          _data = []
+        })
     }
   }
 }

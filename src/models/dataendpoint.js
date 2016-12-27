@@ -1,8 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model, Rename} from './base';
-import QuerySet, {Filter, Rename as QsRename} from '../querySet';
-
+import stampit from 'stampit'
+import _ from 'lodash'
+import QuerySet, {Filter, Rename as QsRename} from '../querySet'
+import {Meta, Model, Rename} from './base'
 
 const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).methods({
 
@@ -20,13 +19,13 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
 
   */
   fetchData(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'GET';
-    this.endpoint = 'data';
-    this._serialize = false;
+    this.method = 'GET'
+    this.endpoint = 'data'
+    this._serialize = false
 
-    return this.then((response) => this.getConfig().DataObject.please().asResultSet(response));
+    return this.then(response => this.getConfig().DataObject.please().asResultSet(response))
   },
   /**
   * Clears cache of DataEndpoint.
@@ -42,12 +41,12 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
 
   */
   clearCache(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'POST';
-    this.endpoint = 'clear_cache';
+    this.method = 'POST'
+    this.endpoint = 'clear_cache'
 
-    return this;
+    return this
   },
   /**
   * Creates a DataObject in a DataEndpoint.
@@ -63,44 +62,44 @@ const DataEndpointQerySet = stampit().compose(QuerySet, Filter, QsRename).method
   * DataEndpoint.please().createDataObject({name: 'dataViewName', instanceName: 'test-one'}, { field: 'value' });
 
   */
-  createDataObject(properties = {}, payload ={}) {
-    this.properties = _.assign({}, this.properties, properties);
+  createDataObject(properties = {}, payload = {}) {
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'POST';
-    this.endpoint = 'data';
-    this.payload = payload;
+    this.method = 'POST'
+    this.endpoint = 'data'
+    this.payload = payload
 
-    return this;
+    return this
   }
 
-});
+})
 
 const DataEndpointMeta = Meta({
   name: 'dataview',
   pluralName: 'dataviews',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/edit/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/endpoints/data/{name}/edit/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/endpoints/data/'
     },
-    'data': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/'
+    data: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/endpoints/data/{name}/'
     },
-    'rename': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/rename/'
+    rename: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/endpoints/data/{name}/rename/'
     },
-    'clear_cache': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/endpoints/data/{name}/clear_cache/'
+    clear_cache: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/endpoints/data/{name}/clear_cache/'
     }
   }
-});
+})
 
 const DataEndpointConstraints = {
   instanceName: {
@@ -138,7 +137,7 @@ const DataEndpointConstraints = {
   expand: {
     string: true
   }
-};
+}
 
 /**
  * OO wrapper around data views {@link # endpoint}.
@@ -179,15 +178,19 @@ const DataEndpoint = stampit()
     * DataEndpoint.please().fetchData({name: 'dataViewName', instanceName: 'test-one'}).then(function(dataObjects) {});
     */
     fetchData(cache_key, filters = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('data', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('data', this)
 
-      const query = {};
-      if(!_.isEmpty(cache_key)) query.cache_key = cache_key;
-      if(!_.isEmpty(filters)) query.query = JSON.stringify(filters)
+      const query = {}
+      if (!_.isEmpty(cache_key)) {
+        query.cache_key = cache_key
+      }
+      if (!_.isEmpty(filters)) {
+        query.query = JSON.stringify(filters)
+      }
 
       return this.makeRequest('GET', path, {query})
-        .then((response) => this.getConfig().DataObject.please().asResultSet(response));
+        .then(response => this.getConfig().DataObject.please().asResultSet(response))
     },
     /**
     * Clears cache of DataEndpoint.
@@ -202,10 +205,10 @@ const DataEndpoint = stampit()
 
     */
     clearCache() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('clear_cache', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('clear_cache', this)
 
-      return this.makeRequest('POST', path);
+      return this.makeRequest('POST', path)
     },
     /**
     * Creates a DataObject in a DataEndpoint.
@@ -221,12 +224,12 @@ const DataEndpoint = stampit()
 
     */
     createDataObject(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('data', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('data', this)
 
-      return this.makeRequest('POST', path, {payload});
+      return this.makeRequest('POST', path, {payload})
     }
 
-  });
+  })
 
-export default DataEndpoint;
+export default DataEndpoint

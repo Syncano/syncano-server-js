@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List, SendToDevice, SendToDevices} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Create, BulkCreate, Get, GetOrCreate, List, SendToDevice, SendToDevices} from '../querySet'
+import {Meta, Model} from './base'
 
 const APNSMessageQuerySet = stampit().compose(
   BaseQuerySet,
@@ -11,26 +11,26 @@ const APNSMessageQuerySet = stampit().compose(
   GetOrCreate,
   SendToDevice,
   SendToDevices
-);
+)
 
 const APNSMessageMeta = Meta({
   name: 'apnsmessage',
   pluralName: 'apnsmessages',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'get'],
-      'path': '/v2/instances/{instanceName}/push_notifications/apns/messages/{id}/'
+    detail: {
+      methods: ['delete', 'get'],
+      path: '/v2/instances/{instanceName}/push_notifications/apns/messages/{id}/'
     },
-    'list': {
-      'methods': ['get', 'post'],
-      'path': '/v2/instances/{instanceName}/push_notifications/apns/messages/'
+    list: {
+      methods: ['get', 'post'],
+      path: '/v2/instances/{instanceName}/push_notifications/apns/messages/'
     },
-    'deviceMessage': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/send_message/'
+    deviceMessage: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/push_notifications/apns/devices/{registration_id}/send_message/'
     }
   }
-});
+})
 
 const APNSMessageConstraints = {
   instanceName: {
@@ -57,7 +57,7 @@ const APNSMessageConstraints = {
   'content.aps.alert': {
     presence: true
   }
-};
+}
 
 /**
  * OO wrapper around instance APNS messages {@link # endpoint}.
@@ -77,6 +77,6 @@ const APNSMessage = stampit()
   .compose(Model)
   .setQuerySet(APNSMessageQuerySet)
   .setConstraints(APNSMessageConstraints)
-  .setMeta(APNSMessageMeta);
+  .setMeta(APNSMessageMeta)
 
-export default APNSMessage;
+export default APNSMessage

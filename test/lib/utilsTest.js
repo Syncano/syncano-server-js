@@ -1,135 +1,116 @@
-import should from 'should/as-function';
-import { ConfigMixin, MetaMixin, ConstraintsMixin } from '../../src/utils';
+import should from 'should/as-function'
+import { ConfigMixin, MetaMixin, ConstraintsMixin } from '../../src/utils'
 
-describe('ConfigMixin', function() {
-  let configMixin = null;
-  let testConfig = { key: 'value' };
+describe('ConfigMixin', () => {
+  let configMixin = null
+  const testConfig = { key: 'value' }
 
-  beforeEach(function() {
-    configMixin = ConfigMixin();
-  });
+  beforeEach(() => {
+    configMixin = ConfigMixin()
+  })
 
-  describe('#setConfig()', function() {
+  describe('#setConfig()', () => {
+    it('should be a method of the ConfigMixin object', () => {
+      should(configMixin).have.property('setConfig').which.is.Function()
+    })
 
-    it('should be a method of the ConfigMixin object', function() {
-      should(configMixin).have.property('setConfig').which.is.Function();
-    });
+    it('should allow to set config', () => {
+      configMixin.setConfig(testConfig)
+      should(configMixin._config).is.equal(testConfig)
+    })
+  })
 
-    it('should allow to set config', function() {
-      configMixin.setConfig(testConfig);
-      should(configMixin._config).is.equal(testConfig);
-    });
+  describe('#getConfig()', () => {
+    it('should be a method of the ConfigMixin object', () => {
+      should(configMixin).have.property('getConfig').which.is.Function()
+    })
 
-  });
+    it('should allow to get config', () => {
+      configMixin.setConfig(testConfig)
+      should(configMixin.getConfig()).is.equal(testConfig)
+    })
+  })
 
-  describe('#getConfig()', function() {
+  describe('#getConfig() (static)', () => {
+    it('should allow to get config', () => {
+      const configMixinStatic = ConfigMixin.setConfig(testConfig)
+      should(configMixinStatic.getConfig()).is.equal(testConfig)
+    })
+  })
+})
 
-    it('should be a method of the ConfigMixin object', function() {
-      should(configMixin).have.property('getConfig').which.is.Function();
-    });
+describe('MetaMixin', () => {
+  let metaMixin = null
+  const testMeta = { key: 'value' }
 
-    it('should allow to get config', function() {
-      configMixin.setConfig(testConfig);
-      should(configMixin.getConfig()).is.equal(testConfig);
-    });
+  beforeEach(() => {
+    metaMixin = MetaMixin()
+  })
 
-  });
+  describe('#setMeta()', () => {
+    it('should be a method of the MetaMixin object', () => {
+      should(metaMixin).have.property('setMeta').which.is.Function()
+    })
 
-  describe('#getConfig() (static)', function() {
+    it('should allow to set config', () => {
+      metaMixin.setMeta(testMeta)
+      should(metaMixin._meta).is.equal(testMeta)
+    })
+  })
 
-    it('should allow to get config', function() {
-      let configMixinStatic = ConfigMixin.setConfig(testConfig);
-      should(configMixinStatic.getConfig()).is.equal(testConfig);
-    });
+  describe('#getMeta()', () => {
+    it('should be a method of the MetaMixin object', () => {
+      should(metaMixin).have.property('getMeta').which.is.Function()
+    })
 
-  });
+    it('should allow to get meta', () => {
+      metaMixin.setMeta(testMeta)
+      should(metaMixin.getMeta()).is.equal(testMeta)
+    })
+  })
 
-});
+  describe('#getMeta() (static)', () => {
+    it('should allow to get meta', () => {
+      const metaMixinStatic = MetaMixin.setMeta(testMeta)
+      should(metaMixinStatic.getMeta()).is.equal(testMeta)
+    })
+  })
+})
 
-describe('MetaMixin', function() {
-  let metaMixin = null;
-  let testMeta = { key: 'value' };
+describe('ConstraintsMixin', () => {
+  let constraintsMixin = null
+  const testConstraints = { key: 'value' }
 
-  beforeEach(function() {
-    metaMixin = MetaMixin();
-  });
+  beforeEach(() => {
+    constraintsMixin = ConstraintsMixin()
+  })
 
-  describe('#setMeta()', function() {
+  describe('#setConstraints()', () => {
+    it('should be a method of the ConstraintsMixin object', () => {
+      should(constraintsMixin).have.property('setConstraints').which.is.Function()
+    })
 
-    it('should be a method of the MetaMixin object', function() {
-      should(metaMixin).have.property('setMeta').which.is.Function();
-    });
+    it('should allow to set config', () => {
+      constraintsMixin.setConstraints(testConstraints)
+      should(constraintsMixin._constraints).is.equal(testConstraints)
+    })
+  })
 
-    it('should allow to set config', function() {
-      metaMixin.setMeta(testMeta);
-      should(metaMixin._meta).is.equal(testMeta);
-    });
+  describe('#getConstraints()', () => {
+    it('should be a method of the ConstraintsMixin object', () => {
+      should(constraintsMixin).have.property('getConstraints').which.is.Function()
+    })
 
-  });
+    it('should allow to get constraints', () => {
+      constraintsMixin.setConstraints(testConstraints)
+      should(constraintsMixin.getConstraints()).is.equal(testConstraints)
+    })
+  })
 
-  describe('#getMeta()', function() {
-
-    it('should be a method of the MetaMixin object', function() {
-      should(metaMixin).have.property('getMeta').which.is.Function();
-    });
-
-    it('should allow to get meta', function() {
-      metaMixin.setMeta(testMeta);
-      should(metaMixin.getMeta()).is.equal(testMeta);
-    });
-
-  });
-
-  describe('#getMeta() (static)', function() {
-
-    it('should allow to get meta', function() {
-      let metaMixinStatic = MetaMixin.setMeta(testMeta);
-      should(metaMixinStatic.getMeta()).is.equal(testMeta);
-    });
-
-  });
-});
-
-describe('ConstraintsMixin', function() {
-  let constraintsMixin = null;
-  let testConstraints = { key: 'value' };
-
-  beforeEach(function() {
-    constraintsMixin = ConstraintsMixin();
-  });
-
-  describe('#setConstraints()', function() {
-
-    it('should be a method of the ConstraintsMixin object', function() {
-      should(constraintsMixin).have.property('setConstraints').which.is.Function();
-    });
-
-    it('should allow to set config', function() {
-      constraintsMixin.setConstraints(testConstraints);
-      should(constraintsMixin._constraints).is.equal(testConstraints);
-    });
-
-  });
-
-  describe('#getConstraints()', function() {
-
-    it('should be a method of the ConstraintsMixin object', function() {
-      should(constraintsMixin).have.property('getConstraints').which.is.Function();
-    });
-
-    it('should allow to get constraints', function() {
-      constraintsMixin.setConstraints(testConstraints);
-      should(constraintsMixin.getConstraints()).is.equal(testConstraints);
-    });
-
-  });
-
-  describe('#getConstraints() (static)', function() {
-
-    it('should allow to get constraints', function() {
-      let constraintsMixinStatic = ConstraintsMixin.setConstraints(testConstraints);
-      should(constraintsMixinStatic.getConstraints()).is.equal(testConstraints);
-    });
-
-  });
-});
+  describe('#getConstraints() (static)', () => {
+    it('should allow to get constraints', () => {
+      const constraintsMixinStatic = ConstraintsMixin.setConstraints(testConstraints)
+      should(constraintsMixinStatic.getConstraints()).is.equal(testConstraints)
+    })
+  })
+})

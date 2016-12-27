@@ -1,7 +1,7 @@
 class SyncanoFile {
   constructor(content) {
-    this.content = content;
+    this.content = content
   }
 }
 
-export default SyncanoFile;
+export default SyncanoFile

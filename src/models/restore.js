@@ -1,7 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import {BaseQuerySet, List, Get} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import {BaseQuerySet, List, Get} from '../querySet'
+import {Meta, Model} from './base'
 
 const RestoreQuerySet = stampit().compose(
   BaseQuerySet,
@@ -10,33 +10,33 @@ const RestoreQuerySet = stampit().compose(
 ).methods({
 
   restore(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.payload = payload;
-    this.endpoint = 'restore';
-    return this;
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
+    this.payload = payload
+    this.endpoint = 'restore'
+    return this
   }
 
-});
+})
 
 const RestoreMeta = Meta({
   name: 'restore',
   pluralName: 'restores',
   endpoints: {
-    'detail': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/restores/{id}/'
+    detail: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/restores/{id}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/restores/'
+    list: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/restores/'
     },
-    'restore': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/restores/'
+    restore: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/restores/'
     }
   }
-});
+})
 
 const RestoreConstraints = {
   instanceName: {
@@ -48,7 +48,7 @@ const RestoreConstraints = {
       number: true
     }
   }
-};
+}
 
 /**
  * OO wrapper around instance restores {@link # endpoint}.
@@ -75,12 +75,12 @@ const Restore = stampit()
   .methods({
 
     restore(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('restore', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('restore', this)
 
-      return this.makeRequest('POST', path, {payload});
+      return this.makeRequest('POST', path, {payload})
     }
 
-  });
+  })
 
-export default Restore;
+export default Restore

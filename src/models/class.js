@@ -1,21 +1,21 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
+import stampit from 'stampit'
+import {Meta, Model} from './base'
 
 const ClassMeta = Meta({
   name: 'class',
   pluralName: 'classes',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/classes/{name}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/classes/{name}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/classes/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/classes/'
     }
   },
-  relatedModels: [ 'DataObject' ]
-});
+  relatedModels: ['DataObject']
+})
 
 const ClassConstraints = {
   instanceName: {
@@ -46,7 +46,7 @@ const ClassConstraints = {
   metadata: {
     object: true
   }
-};
+}
 
 /**
  * OO wrapper around instance groups {@link http://docs.syncano.com/v4.0/docs/instancesinstanceclasses endpoint}.
@@ -74,6 +74,6 @@ const ClassConstraints = {
 const Class = stampit()
   .compose(Model)
   .setMeta(ClassMeta)
-  .setConstraints(ClassConstraints);
+  .setConstraints(ClassConstraints)
 
-export default Class;
+export default Class

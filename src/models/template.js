@@ -1,45 +1,45 @@
-import stampit from 'stampit';
-import {Meta, Model, Rename} from './base';
-import _ from 'lodash';
-import QuerySet, {Rename as QsRename} from '../querySet';
+import stampit from 'stampit'
+import _ from 'lodash'
+import QuerySet, {Rename as QsRename} from '../querySet'
+import {Meta, Model, Rename} from './base'
 
 const TemplateQuerySet = stampit().compose(QuerySet, QsRename).methods({
 
   render(properties = {}, context = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
-    this.endpoint = 'render';
-    this.payload = {context};
-    this.responseAttr = 'text';
-    this.raw();
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
+    this.endpoint = 'render'
+    this.payload = {context}
+    this.responseAttr = 'text'
+    this.raw()
 
-    return this;
+    return this
   }
 
-});
+})
 
 const TemplateMeta = Meta({
   name: 'template',
   pluralName: 'templates',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/snippets/templates/{name}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/snippets/templates/{name}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/snippets/templates/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/snippets/templates/'
     },
-    'rename': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/snippets/templates/{name}/rename/'
+    rename: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/snippets/templates/{name}/rename/'
     },
-    'render': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/snippets/templates/{name}/render/'
+    render: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/snippets/templates/{name}/render/'
     }
   }
-});
+})
 
 const TemplateConstraints = {
   name: {
@@ -66,7 +66,7 @@ const TemplateConstraints = {
   context: {
     object: true
   }
-};
+}
 
 /**
  * OO wrapper around templates {@link # endpoint}.
@@ -93,13 +93,13 @@ const Template = stampit()
         payload: {context},
         responseAttr: 'text'
       }
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('render', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('render', this)
 
-      return this.makeRequest('POST', path, options);
+      return this.makeRequest('POST', path, options)
     }
 
   })
-  .setConstraints(TemplateConstraints);
+  .setConstraints(TemplateConstraints)
 
-export default Template;
+export default Template

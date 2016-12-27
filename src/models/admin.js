@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List, Delete, Update} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, List, Delete, Update} from '../querySet'
+import {Meta, Model} from './base'
 
 const AdminQuerySet = stampit().compose(
   BaseQuerySet,
@@ -8,22 +8,22 @@ const AdminQuerySet = stampit().compose(
   List,
   Delete,
   Update
-);
+)
 
 const AdminMeta = Meta({
   name: 'admin',
   pluralName: 'admins',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/admins/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/admins/{id}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/instances/{instanceName}/admins/'
+    list: {
+      methods: ['get'],
+      path: '/v2/instances/{instanceName}/admins/'
     }
   }
-});
+})
 
 /**
  * OO wrapper around instance admins {@link http://docs.syncano.com/v4.0/docs/v1instancesinstanceadmins endpoint}.
@@ -42,6 +42,6 @@ const AdminMeta = Meta({
 const Admin = stampit()
   .compose(Model)
   .setQuerySet(AdminQuerySet)
-  .setMeta(AdminMeta);
+  .setMeta(AdminMeta)
 
-export default Admin;
+export default Admin

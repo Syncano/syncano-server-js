@@ -20,7 +20,7 @@
     "build:lib": "babel src --out-dir lib",
     "build:dist": "webpack",
     "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src -u ./tutorials",
-    "lint": "eslint src/** test/** *.config.js",
+    "lint": "xo",
     "pretest": "npm run lint",
     "test": "npm-run-all test:*",
     "test:lib": "mocha test/lib/**/*.js --compilers js:babel-register",
@@ -94,7 +94,42 @@
     "should": "^8.2.2",
     "sinon": "^1.17.3",
     "stripe": "^4.12.0",
-    "webpack": "^1.12.13"
+    "webpack": "^1.12.13",
+    "xo": "^0.17.1"
+  },
+  "xo": {
+    "semicolon": false,
+    "space": true,
+    "esnext": true,
+    "globals": [
+      "META",
+      "__webpack_require__",
+      "_",
+      "it",
+      "describe",
+      "beforeEach",
+      "afterEach",
+      "before",
+      "after"
+    ],
+    "ignore": [
+    ],
+    "rules": {
+      "no-use-extend-native/no-use-extend-native": 0,
+      "max-nested-callbacks": [ "error", 5 ],
+      "camelcase": 0,
+      "unicorn/filename-case": 0,
+      "new-cap": 0,
+      "object-curly-spacing": 0,
+      "no-warning-comments": [
+        0,
+        {
+          "terms": [
+            "todo"
+          ]
+        }
+      ]
+    }
   },
   "babel": {
     "plugins": [

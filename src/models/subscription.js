@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const SubscriptionQuerySet = stampit().compose(
   BaseQuerySet,
@@ -9,34 +9,34 @@ const SubscriptionQuerySet = stampit().compose(
 ).methods({
 
   cancel(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
-    this.method = 'POST';
+    this.properties = _.assign({}, this.properties, properties)
+    this.method = 'POST'
     this.payload = {payload}
-    this.endpoint = 'cancel';
+    this.endpoint = 'cancel'
 
-    return this;
+    return this
   }
 
-});
+})
 
 const SubscriptionMeta = Meta({
   name: 'subscription',
   pluralName: 'subscriptions',
   endpoints: {
-    'detail': {
-      'methods': ['get'],
-      'path': '/v2/billing/subscriptions/{id}/'
+    detail: {
+      methods: ['get'],
+      path: '/v2/billing/subscriptions/{id}/'
     },
-    'list': {
-      'methods': ['get'],
-      'path': '/v2/billing/subscriptions/'
+    list: {
+      methods: ['get'],
+      path: '/v2/billing/subscriptions/'
     },
-    'cancel': {
-      'methods': ['post'],
-      'path': '/v2/billing/subscriptions/{id}/cancel/'
+    cancel: {
+      methods: ['post'],
+      path: '/v2/billing/subscriptions/{id}/cancel/'
     }
   }
-});
+})
 /**
  * OO wrapper around Subscription.
  * @ignore
@@ -57,12 +57,12 @@ const Subscription = stampit()
   .methods({
 
     cancel(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('cancel', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('cancel', this)
 
-      return this.makeRequest('POST', path, {payload});
+      return this.makeRequest('POST', path, {payload})
     }
 
-  });
+  })
 
-export default Subscription;
+export default Subscription

@@ -1,8 +1,7 @@
-import stampit from 'stampit';
-import _ from 'lodash';
-import {Meta, Model} from './base';
-import QuerySet from '../querySet';
-
+import stampit from 'stampit'
+import _ from 'lodash'
+import QuerySet from '../querySet'
+import {Meta, Model} from './base'
 
 const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
@@ -20,14 +19,14 @@ const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
   */
   run(properties = {}, payload = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'POST';
-    this.endpoint = 'run';
-    this.payload = payload;
-    this._serialize = false;
+    this.method = 'POST'
+    this.endpoint = 'run'
+    this.payload = payload
+    this._serialize = false
 
-    return this;
+    return this
   },
 
   /**
@@ -44,41 +43,40 @@ const ScriptQuerySet = stampit().compose(QuerySet).methods({
 
   */
   getRuntimes(properties = {}) {
-    this.properties = _.assign({}, this.properties, properties);
+    this.properties = _.assign({}, this.properties, properties)
 
-    this.method = 'GET';
-    this.endpoint = 'runtimes';
-    this._serialize = false;
+    this.method = 'GET'
+    this.endpoint = 'runtimes'
+    this._serialize = false
 
-    return this;
+    return this
   }
 
-});
-
+})
 
 const ScriptMeta = Meta({
   name: 'script',
   pluralName: 'scripts',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/snippets/scripts/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/snippets/scripts/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/snippets/scripts/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/snippets/scripts/'
     },
-    'runtimes': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/snippets/scripts/runtimes/'
+    runtimes: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/snippets/scripts/runtimes/'
     },
-    'run': {
-      'methods': ['post'],
-      'path': '/v2/instances/{instanceName}/snippets/scripts/{id}/run/'
+    run: {
+      methods: ['post'],
+      path: '/v2/instances/{instanceName}/snippets/scripts/{id}/run/'
     }
   },
-  relatedModels: [ 'ScriptTrace' ]
-});
+  relatedModels: ['ScriptTrace']
+})
 
 const ScriptConstraints = {
   instanceName: {
@@ -145,10 +143,10 @@ const Script = stampit()
     * });
     */
     run(payload = {}) {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('run', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('run', this)
 
-      return this.makeRequest('POST', path, {payload});
+      return this.makeRequest('POST', path, {payload})
     },
 
     /**
@@ -165,12 +163,12 @@ const Script = stampit()
     * });
     */
     getRuntimes() {
-      const meta = this.getMeta();
-      const path = meta.resolveEndpointPath('runtimes', this);
+      const meta = this.getMeta()
+      const path = meta.resolveEndpointPath('runtimes', this)
 
-      return this.makeRequest('GET', path);
+      return this.makeRequest('GET', path)
     }
 
-  });
+  })
 
-export default Script;
+export default Script

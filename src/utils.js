@@ -1,61 +1,61 @@
-import stampit from 'stampit';
-import EventEmitter from './eventemitter';
-import Promise from 'bluebird';
-import validate from 'validate.js';
-import SyncanoFile from './file';
+import stampit from 'stampit'
+import Promise from 'bluebird'
+import validate from 'validate.js'
+import EventEmitter from './eventemitter'
+import SyncanoFile from './file'
 
 /**
 * Validators used in the library.
 * @ignore
-**/
+* */
 
-validate.Promise = Promise;
+validate.Promise = Promise
 
-validate.validators.object = function(value) {
-  if(value) {
-    if(!validate.isObject(value)) {
-      return "is not an object";
+validate.validators.object = function (value) {
+  if (value) {
+    if (!validate.isObject(value)) {
+      return 'is not an object'
     }
   }
-  return null;
+  return null
 }
 
-validate.validators.array = function(value) {
-  if(value) {
-    if(!validate.isArray(value)) {
-      return "is not an array";
+validate.validators.array = function (value) {
+  if (value) {
+    if (!validate.isArray(value)) {
+      return 'is not an array'
     }
   }
-  return null;
+  return null
 }
 
-validate.validators.boolean = function(value) {
-  if(value) {
-    if(typeof value !== 'boolean') {
-      return "is not a boolean";
+validate.validators.boolean = function (value) {
+  if (value) {
+    if (typeof value !== 'boolean') {
+      return 'is not a boolean'
     }
   }
-  return null;
+  return null
 }
 
-validate.validators.string = function(value) {
-  if(value) {
-    if(!validate.isString(value)) {
-      return "is not a string";
+validate.validators.string = function (value) {
+  if (value) {
+    if (!validate.isString(value)) {
+      return 'is not a string'
     }
   }
-  return null;
+  return null
 }
 
-validate.validators.file = function(value) {
-  if(value) {
-    if(!(value instanceof SyncanoFile)) {
-      return "is not a file"
+validate.validators.file = function (value) {
+  if (value) {
+    if (!(value instanceof SyncanoFile)) {
+      return 'is not a file'
     }
   }
 }
 
-export {validate};
+export {validate}
 
 /**
  * Simple wrapper around `EventEmitter`
@@ -66,8 +66,7 @@ export {validate};
  * @example {@lang javascript}
  * var EmittableModel = stampit().compose(EventEmittable);
  */
-export const EventEmittable = stampit.convertConstructor(EventEmitter);
-
+export const EventEmittable = stampit.convertConstructor(EventEmitter)
 
 /**
  * Used as a manager for {@link Syncano} base object. **Not** meant to be used directly.
@@ -96,7 +95,7 @@ export const ConfigMixin = stampit({
 
     */
     getDefaultProperties() {
-      return this._config.defaults;
+      return this._config.defaults
     },
 
     /**
@@ -115,8 +114,8 @@ export const ConfigMixin = stampit({
 
     */
     setConfig(config) {
-      this._config = config;
-      return this;
+      this._config = config
+      return this
     },
 
     /**
@@ -133,14 +132,14 @@ export const ConfigMixin = stampit({
 
     */
     getConfig() {
-      return this._config;
+      return this._config
     }
   },
 
   static: {
 
     getDefaultProperties() {
-      return this.fixed.refs._config.defaults;
+      return this.fixed.refs._config.defaults
     },
 
     /**
@@ -158,7 +157,7 @@ export const ConfigMixin = stampit({
 
     */
     setConfig(config) {
-      return this.refs({_config: config});
+      return this.refs({_config: config})
     },
 
     /**
@@ -174,10 +173,10 @@ export const ConfigMixin = stampit({
 
     */
     getConfig() {
-      return this.fixed.refs._config;
+      return this.fixed.refs._config
     }
   }
-});
+})
 
 /**
  * Used as a manager for {@link Meta} object. **Not** meant to be used directly.
@@ -209,8 +208,8 @@ export const MetaMixin = stampit({
 
     */
     setMeta(meta) {
-      this._meta = meta;
-      return this;
+      this._meta = meta
+      return this
     },
 
     /**
@@ -227,7 +226,7 @@ export const MetaMixin = stampit({
 
     */
     getMeta() {
-      return this._meta;
+      return this._meta
     }
   },
 
@@ -248,7 +247,7 @@ export const MetaMixin = stampit({
 
     */
     setMeta(meta) {
-      return this.refs({_meta: meta});
+      return this.refs({_meta: meta})
     },
 
     /**
@@ -264,10 +263,10 @@ export const MetaMixin = stampit({
 
     */
     getMeta() {
-      return this.fixed.refs._meta;
+      return this.fixed.refs._meta
     }
   }
-});
+})
 
 /**
  * Used as a manager for {@link http://validatejs.org/#constraints|Constraints} object (validation). **Not** meant to be used directly.
@@ -299,8 +298,8 @@ export const ConstraintsMixin = stampit({
 
     */
     setConstraints(constraints) {
-      this._constraints = constraints;
-      return this;
+      this._constraints = constraints
+      return this
     },
 
     /**
@@ -317,7 +316,7 @@ export const ConstraintsMixin = stampit({
 
     */
     getConstraints() {
-      return this._constraints;
+      return this._constraints
     }
   },
 
@@ -338,7 +337,7 @@ export const ConstraintsMixin = stampit({
 
     */
     setConstraints(constraints) {
-      return this.refs({_constraints: constraints});
+      return this.refs({_constraints: constraints})
     },
 
     /**
@@ -354,10 +353,10 @@ export const ConstraintsMixin = stampit({
 
     */
     getConstraints() {
-      return this.fixed.refs._constraints;
+      return this.fixed.refs._constraints
     }
   }
-});
+})
 
 /**
  * Adds logging functionality.
@@ -378,12 +377,12 @@ export const Logger = stampit({
     * @instance
     */
     log(...args) {
-      const env = process.env.BABEL_ENV || process.env.NODE_ENV;
+      const env = process.env.BABEL_ENV || process.env.NODE_ENV
       if (env === 'development') {
         /* eslint-disable no-console */
-        console.log(...args);
+        console.log(...args)
         /* eslint-enable no-console */
       }
     }
   }
-});
+})

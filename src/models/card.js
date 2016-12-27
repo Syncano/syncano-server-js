@@ -1,6 +1,6 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, Update, Create, Delete} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, Update, Create, Delete} from '../querySet'
+import {Meta, Model} from './base'
 
 const CardQuerySet = stampit().compose(
   BaseQuerySet,
@@ -8,22 +8,22 @@ const CardQuerySet = stampit().compose(
   Update,
   Create,
   Delete
-);
+)
 
 const CardMeta = Meta({
   name: 'card',
   pluralName: 'card',
   endpoints: {
-    'detail': {
-      'methods': ['get', 'put', 'patch', 'delete'],
-      'path': '/v2/billing/card/'
+    detail: {
+      methods: ['get', 'put', 'patch', 'delete'],
+      path: '/v2/billing/card/'
     },
-    'list': {
-      'methods': ['post'],
-      'path': '/v2/billing/card/'
+    list: {
+      methods: ['post'],
+      path: '/v2/billing/card/'
     }
   }
-});
+})
 
 /**
  * OO wrapper around Card.
@@ -42,6 +42,6 @@ const CardMeta = Meta({
 const Card = stampit()
   .compose(Model)
   .setQuerySet(CardQuerySet)
-  .setMeta(CardMeta);
+  .setMeta(CardMeta)
 
-export default Card;
+export default Card

@@ -1,27 +1,27 @@
-import stampit from 'stampit';
-import {Meta, Model} from './base';
-import {BaseQuerySet, Get, List} from '../querySet';
+import stampit from 'stampit'
+import {BaseQuerySet, Get, List} from '../querySet'
+import {Meta, Model} from './base'
 
 const ScheduleTraceQuerySet = stampit().compose(
   BaseQuerySet,
   Get,
   List
-);
+)
 
 const ScheduleTraceMeta = Meta({
   name: 'scheduletrace',
   pluralName: 'scheduletraces',
   endpoints: {
-    'detail': {
-      'methods': ['delete', 'patch', 'put', 'get'],
-      'path': '/v2/instances/{instanceName}/schedules/{scheduleId}/traces/{id}/'
+    detail: {
+      methods: ['delete', 'patch', 'put', 'get'],
+      path: '/v2/instances/{instanceName}/schedules/{scheduleId}/traces/{id}/'
     },
-    'list': {
-      'methods': ['post', 'get'],
-      'path': '/v2/instances/{instanceName}/schedules/{scheduleId}/traces/'
+    list: {
+      methods: ['post', 'get'],
+      path: '/v2/instances/{instanceName}/schedules/{scheduleId}/traces/'
     }
   }
-});
+})
 
 const ScheduleTraceConstraints = {
   instanceName: {
@@ -34,7 +34,7 @@ const ScheduleTraceConstraints = {
     presence: true,
     numericality: true
   }
-};
+}
 
 /**
  * OO wrapper around shedule traces {@link # endpoint}.
@@ -57,6 +57,6 @@ const ScheduleTrace = stampit()
   .compose(Model)
   .setQuerySet(ScheduleTraceQuerySet)
   .setMeta(ScheduleTraceMeta)
-  .setConstraints(ScheduleTraceConstraints);
+  .setConstraints(ScheduleTraceConstraints)
 
-export default ScheduleTrace;
+export default ScheduleTrace
