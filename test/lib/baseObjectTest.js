@@ -12,6 +12,7 @@ describe('Syncano', function() {
   });
 
   describe('#init()', function() {
+    this.timeout(10000);
 
     it('should have model factories automatically injected as properties', function() {
       should(baseObject).have.property('Instance').which.is.Function();
