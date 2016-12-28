@@ -138,26 +138,26 @@ const Request = stampit().compose(ConfigMixin, Logger)
       if (!_.isUndefined(config)) {
         if (!_.isEmpty(config.getAccountKey())) {
           if (_.isEmpty(files)) {
-            options.payload = _.assign({}, options.payload, { _api_key: config.getAccountKey() })
-          } else {
             options.headers['X-API-KEY'] = config.getAccountKey()
+          } else {
+            options.payload = _.assign({}, options.payload, { _api_key: config.getAccountKey() })
           }
         }
 
         // Yes, we will replace account key
         if (!_.isEmpty(config.getApiKey())) {
           if (_.isEmpty(files)) {
-            options.payload = _.assign({}, options.payload, { _api_key: config.getApiKey() })
-          } else {
             options.headers['X-API-KEY'] = config.getApiKey()
+          } else {
+            options.payload = _.assign({}, options.payload, { _api_key: config.getApiKey() })
           }
         }
 
         if (!_.isEmpty(config.getUserKey())) {
           if (_.isEmpty(files)) {
-            options.payload = _.assign({}, options.payload, { _user_key: config.getUserKey() })
-          } else {
             options.headers['X-USER-KEY'] = config.getUserKey()
+          } else {
+            options.payload = _.assign({}, options.payload, { _user_key: config.getUserKey() })
           }
         }
       }
@@ -186,21 +186,10 @@ const Request = stampit().compose(ConfigMixin, Logger)
 
       if (_.isEmpty(files)) {
         request = request
+          .set(options.headers)
           .set('Content-Type', 'text/plain')
           .send(JSON.stringify(options.payloaad))
       // eslint-disable-next-line no-undef
-      } else if (IS_NODE === false && typeof FormData !== 'undefined' && typeof File !== 'undefined') {
-        options.type = null
-        options.payload = _.reduce(options.payload, (formData, value, key) => {
-          formData.append(key, (files[key]) ? value.content : value)
-          return formData
-        // eslint-disable-next-line no-undef
-        }, new FormData())
-
-        request = request
-          .type('form')
-          .set(options.headers)
-          .send(options.payload)
       } else if (IS_NODE === true) {
         request = _.reduce(options.payload, (result, value, key) => {
           if (!_.isFunction(value)) {
