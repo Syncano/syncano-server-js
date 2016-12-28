@@ -1,6 +1,5 @@
 import nock from 'nock'
 import should from 'should/as-function'
-import Syncano from '../../src/syncano'
 import Server from '../../src/server'
 
 import { NotFoundError } from '../../src/errors'
@@ -8,17 +7,15 @@ import { NotFoundError } from '../../src/errors'
 describe('Data', () => {
   const testUrl = 'https://api.syncano.rocks'
   const instanceName = 'testInstance'
-  let instance = null
   let data = null
   let api = null
 
   beforeEach(() => {
-    instance = Syncano({
-      accountKey: 'testKey',
-      defaults: { instanceName }
+    const server = new Server({
+      token: 'testKey',
+      instance: instanceName
     })
-    instance.setBaseUrl(testUrl)
-    const server = new Server(instance)
+    server.setBaseUrl(testUrl)
     data = server.data
     api = nock(testUrl).filteringRequestBody(() => '*')
   })
