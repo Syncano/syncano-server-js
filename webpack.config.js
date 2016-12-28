@@ -25,6 +25,7 @@ module.exports = [
       extensions: ['', '.js', '.json']
     },
     plugins: [
+      new webpack.IgnorePlugin(/vertx/),
       new webpack.DefinePlugin({ 'global.GENTLY': false })
     ]
   },
@@ -51,6 +52,7 @@ module.exports = [
       extensions: ['', '.js', '.json']
     },
     plugins: [
+      new webpack.IgnorePlugin(/vertx/),
       new webpack.optimize.OccurenceOrderPlugin(true),
       new webpack.DefinePlugin({ 'global.GENTLY': false }),
       new webpack.optimize.DedupePlugin(),

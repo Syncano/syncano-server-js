@@ -18,8 +18,8 @@ export default function connect(options) {
       return this
     },
     data: new Proxy(new Data(), {
-      get(target, property) {
-        target._query = instance.DataObject.please.bind(DataObject, { className: property })
+      get(target, className) {
+        target._query = instance.DataObject.please.bind(DataObject, { className })
 
         return target
       }

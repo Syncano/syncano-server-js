@@ -227,6 +227,18 @@ class Data {
   create(object) {
     return this.query.create(object)
   }
+
+  /**
+   * Remove object from database.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.users.delete(55)
+   */
+  delete(id) {
+    return this.query.delete({ id })
+  }
 }
 
 export default Data
