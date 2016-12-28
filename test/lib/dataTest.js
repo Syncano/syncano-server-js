@@ -302,4 +302,23 @@ describe('Data', () => {
       })
     })
   })
+
+  describe('#delete()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('delete').which.is.Function()
+    })
+
+    it('should be able to delete object by id', () => {
+      const id = 9900
+
+      api.delete(`/v2/instances/${instanceName}/classes/users/objects/${id}/`, '*')
+        .query({ id })
+        .reply(200, { id })
+
+      data.users.delete(id).then(object => {
+        should(object).be.Object()
+        should(object).have.property('id').equal(id)
+      })
+    })
+  })
 })
