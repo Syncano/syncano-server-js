@@ -16,13 +16,17 @@ module.exports = [
     },
     module: {
       loaders: [
-        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'}
+        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
+        { test: /\.json$/, loader: 'json-loader' }
       ]
     },
     resolve: {
       modulesDirectories: ['node_modules'],
       extensions: ['', '.js', '.json']
-    }
+    },
+    plugins: [
+      new webpack.DefinePlugin({ 'global.GENTLY': false })
+    ]
   },
   {
     name: 'uglified-package',
@@ -38,7 +42,8 @@ module.exports = [
     },
     module: {
       loaders: [
-        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'}
+        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
+        { test: /\.json$/, loader: 'json-loader' }
       ]
     },
     resolve: {
@@ -47,6 +52,7 @@ module.exports = [
     },
     plugins: [
       new webpack.optimize.OccurenceOrderPlugin(true),
+      new webpack.DefinePlugin({ 'global.GENTLY': false }),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -58,36 +64,6 @@ module.exports = [
           comments: false
         }
       })
-    ]
-  },
-  {
-    name: 'fuse-package',
-    debug: false,
-    profile: false,
-    devtool: 'source-map',
-    entry: path.join(__dirname, 'src', 'server.js'),
-    target: 'node',
-    output: {
-      path: path.join(__dirname, 'dist'),
-      filename: 'syncano-server.fuse.js',
-      libraryTarget: 'commonjs2'
-    },
-    module: {
-      loaders: [
-        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
-        { test: /\.json$/, loader: 'json-loader'}
-      ]
-    },
-    resolve: {
-      alias: {
-        bluebird: path.join(__dirname, 'src/promise.js')
-      },
-      modulesDirectories: ['node_modules'],
-      extensions: ['', '.js', '.json']
-    },
-    plugins: [
-      new webpack.optimize.OccurenceOrderPlugin(true),
-      new webpack.optimize.DedupePlugin()
     ]
   }
 ]
