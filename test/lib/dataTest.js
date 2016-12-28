@@ -303,6 +303,29 @@ describe('Data', () => {
     })
   })
 
+  describe('#update()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('update').which.is.Function()
+    })
+
+    it('should be able to update object by id', () => {
+      const id = 9900
+      const first_name = 'Jane'
+
+      api.patch(`/v2/instances/${instanceName}/classes/users/objects/${id}/`, '*')
+        .query({ id })
+        .reply(200, { id, first_name })
+
+      data.users.update(id, {
+        first_name: 'Jane'
+      }).then(object => {
+        should(object).be.Object()
+        should(object).have.property('id').equal(id)
+        should(object).have.property('first_name').equal(first_name)
+      })
+    })
+  })
+
   describe('#delete()', () => {
     it('should be a method of the model', () => {
       should(data.users).have.property('delete').which.is.Function()
