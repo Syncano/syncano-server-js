@@ -229,6 +229,18 @@ class Data {
   }
 
   /**
+   * Update object in database.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.users.update(55, { last_name: 'Jane' })
+   */
+  update(id, data) {
+    return this.query.update({ id }, data)
+  }
+
+  /**
    * Remove object from database.
    *
    * @returns {Promise}
