@@ -8,6 +8,11 @@
 import server from 'syncano-server-js'
 
 const { data, events } = server()
+// OR 
+const { data, events } = server({
+  token: '9-12jdiasdnfo23nrokms',
+  instance: 'example-instance-name'
+})
 ```
 
 ## Examples
