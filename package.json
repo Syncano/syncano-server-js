@@ -102,6 +102,7 @@
     "space": true,
     "esnext": true,
     "globals": [
+      "CONFIG",
       "META",
       "__webpack_require__",
       "_",
