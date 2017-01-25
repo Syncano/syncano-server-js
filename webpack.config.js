@@ -8,7 +8,7 @@ module.exports = [
     profile: false,
     devtool: 'source-map',
     entry: path.join(__dirname, 'src', 'server.js'),
-    target: 'node',
+    target: 'web',
     output: {
       path: path.join(__dirname, 'dist'),
       filename: 'syncano-server.js',
