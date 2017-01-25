@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "transform-inline-environment-variables",
+    "transform-strict-mode",
+    "add-module-exports",
+    "lodash"
+  ],
+  "presets": [
+    [
+      "env"
+    ]
+  ]
+}

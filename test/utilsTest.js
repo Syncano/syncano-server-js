@@ -1,5 +1,5 @@
 import should from 'should/as-function'
-import { ConfigMixin, MetaMixin, ConstraintsMixin } from '../../src/utils'
+import { ConfigMixin, MetaMixin, ConstraintsMixin } from '../src/utils'
 
 describe('ConfigMixin', () => {
   let configMixin = null

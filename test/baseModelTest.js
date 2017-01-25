@@ -1,8 +1,8 @@
 import should from 'should/as-function'
 import nock from 'nock'
-import Syncano from '../../src/syncano'
-import Instance from '../../src/models/instance'
-import {ValidationError} from '../../src/errors'
+import Syncano from '../src/syncano'
+import Instance from '../src/models/instance'
+import {ValidationError} from '../src/errors'
 import {instanceName, testEndpoint, testBaseUrl, testName} from './utils'
 
 describe('Meta', () => {

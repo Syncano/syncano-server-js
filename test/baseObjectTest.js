@@ -1,5 +1,5 @@
 import should from 'should/as-function'
-import Syncano from '../../src/syncano'
+import Syncano from '../src/syncano'
 
 describe('Syncano', () => {
   let baseObject = null

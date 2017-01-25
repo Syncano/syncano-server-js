@@ -1,8 +1,8 @@
 import should from 'should/as-function'
 import sinon from 'sinon'
 import _ from 'lodash'
-import Syncano from '../../src/syncano'
-import Request from '../../src/request'
+import Syncano from '../src/syncano'
+import Request from '../src/request'
 
 describe('Request', () => {
   let config = null
