@@ -1,6 +1,6 @@
 {
   "name": "syncano-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A library to intereact with the Syncano API on a server side",
   "main": "dist/syncano-server.js",
   "author": "Syncano Inc.",
@@ -113,11 +113,13 @@
       "before",
       "after"
     ],
-    "ignore": [
-    ],
+    "ignore": [],
     "rules": {
       "no-use-extend-native/no-use-extend-native": 0,
-      "max-nested-callbacks": [ "error", 5 ],
+      "max-nested-callbacks": [
+        "error",
+        5
+      ],
       "camelcase": 0,
       "unicorn/filename-case": 0,
       "new-cap": 0,
