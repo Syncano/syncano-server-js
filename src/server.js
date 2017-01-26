@@ -1,6 +1,7 @@
 import Data from './data'
+import Users from './users'
 
-export default function connect(options = {}) {
+export default function server(options = {}) {
   const instance = className => {
     let config = {...options, className}
 
@@ -14,7 +15,11 @@ export default function connect(options = {}) {
     return config
   }
 
+  const users = new Users()
+  users.instance = instance()
+
   return {
+    users,
     data: new Proxy(new Data(), {
       get(target, className) {
         target.instance = instance(className)
