@@ -4,8 +4,7 @@
     "transform-strict-mode",
     "transform-export-extensions",
     "transform-object-rest-spread",
-    "transform-class-properties",
-    "lodash"
+    "transform-class-properties"
   ],
   "presets": [
     [

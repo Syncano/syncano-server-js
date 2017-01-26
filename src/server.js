@@ -2,12 +2,12 @@ import Data from './data'
 
 export default function connect(options = {}) {
   const instance = className => {
-    let config = { ...options, className }
+    let config = {...options, className}
 
     if (global.CONFIG) {
       config = Object.assign({}, {
         token: CONFIG.SYNCANO_API_KEY,
-        instanceName: CONFIG.SYNCANO_INSTANCE_NAME,
+        instanceName: CONFIG.SYNCANO_INSTANCE_NAME
       }, options)
     }
 

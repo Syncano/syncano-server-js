@@ -1,7 +1,7 @@
 import querystring from 'querystring'
-import QueryBuilder from './queryBuilder'
+import QueryBuilder from './query-builder'
 import Collection from './collection'
-import { NotFoundError } from './errors'
+import {NotFoundError} from './errors'
 
 /**
  * Syncano server
@@ -9,8 +9,8 @@ import { NotFoundError } from './errors'
  */
 class Data extends QueryBuilder {
   url(id) {
-    const { instanceName, className } = this.instance
-    const url = `https://api.syncano.rocks/v2/instances/${instanceName}/classes/${className}/objects/${id ? id+'/' : ''}`
+    const {instanceName, className} = this.instance
+    const url = `https://api.syncano.rocks/v2/instances/${instanceName}/classes/${className}/objects/${id ? id + '/' : ''}`
     const query = querystring.stringify(this.query)
 
     return query ? `${url}?${query}` : url
@@ -30,7 +30,7 @@ class Data extends QueryBuilder {
    */
   list() {
     let result = []
-    const { baseUrl } = this
+    const {baseUrl} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
@@ -75,7 +75,7 @@ class Data extends QueryBuilder {
     return this
       .take(1)
       .list()
-      .then(({ objects }) => objects[0] || null)
+      .then(({objects}) => objects[0] || null)
   }
 
   /**
@@ -148,7 +148,7 @@ class Data extends QueryBuilder {
    * const users = await data.users.take(500).list()
    */
   take(count) {
-    return this.withQuery({ page_size: count })
+    return this.withQuery({page_size: count}) // eslint-disable-line camelcase
   }
 
   /**
@@ -164,7 +164,7 @@ class Data extends QueryBuilder {
     direction = direction === 'desc' ? '-' : ''
 
     return this.withQuery({
-      order_by: `${direction}${column}`
+      order_by: `${direction}${column}` // eslint-disable-line camelcase
     })
   }
 
@@ -185,10 +185,10 @@ class Data extends QueryBuilder {
     const whereValue = value === undefined ? operator : value
 
     const currentQuery = JSON.parse(this.query.query || '{}')
-    const nextQuery = { [column]: { [whereOperator]: whereValue } }
+    const nextQuery = {[column]: {[whereOperator]: whereValue}}
     const query = Object.assign(currentQuery, nextQuery)
 
-    return this.withQuery({ query: JSON.stringify(query) })
+    return this.withQuery({query: JSON.stringify(query)})
   }
 
   /**

@@ -1,5 +1,5 @@
 import nodeFetch from 'node-fetch'
-import { addPagination, checkStatus, parseJSON } from './utils'
+import {checkStatus, parseJSON} from './utils'
 
 export default class QueryBuilder {
   constructor() {
@@ -8,12 +8,12 @@ export default class QueryBuilder {
 
   fetch(url, options) {
     const request = nodeFetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-KEY': this.instance.token
-        },
-        ...options
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': this.instance.token
+      },
+      ...options
+    })
       .then(checkStatus)
       .then(parseJSON)
 
