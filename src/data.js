@@ -1,28 +1,19 @@
-import { NotFoundError } from './errors'
+import querystring from 'querystring'
+import QueryBuilder from './queryBuilder'
 import Collection from './collection'
+import { NotFoundError } from './errors'
 
 /**
  * Syncano server
  * @property {Function} query Instance of syncano DataObject
  */
-class Data {
-  get query() {
-    return this._query()
-  }
+class Data extends QueryBuilder {
+  url(id) {
+    const { instanceName, className } = this.instance
+    const url = `https://api.syncano.rocks/v2/instances/${instanceName}/classes/${className}/objects/${id ? id+'/' : ''}`
+    const query = querystring.stringify(this.query)
 
-  set query(query) {
-    this._query = query
-  }
-
-  /**
-   * Call method on current query.
-   *
-   * @returns {Object}
-   */
-  call(fn, paramteres) {
-    this.query = this.query[fn].bind(this.query, paramteres)
-
-    return this
+    return query ? `${url}?${query}` : url
   }
 
   /**
@@ -38,33 +29,35 @@ class Data {
    * const users = await data.users.take(10).list()
    */
   list() {
-    const pageSize = this.query.query.page_size || 0
     let result = []
+    const { baseUrl } = this
+    const fetch = this.fetch.bind(this)
+    const pageSize = this.query.page_size || 0
 
     return new Promise((resolve, reject) => {
       function saveAndLoadNext(response) {
-        result = result.concat(response)
+        result = result.concat(response.objects)
 
         const loadNext =
           (pageSize === 0 || pageSize > result.length) &&
-          response.hasNext()
+          response.next
 
         if (loadNext) {
-          response
-            .next()
+          fetch(`${baseUrl}${response.next}`)
             .then(saveAndLoadNext)
             .catch(err => reject(err))
         } else {
           if (pageSize !== 0) {
             result = result.slice(0, pageSize)
           }
+
           const data = new Collection(result)
-          resolve(data.raw())
+
+          resolve(data)
         }
       }
 
-      this.query
-        .list()
+      fetch(this.url())
         .then(saveAndLoadNext)
         .catch(err => reject(err))
     })
@@ -79,10 +72,9 @@ class Data {
    * const users = await data.users.where('name', 'John').first()
    */
   first() {
-    return this.query
-      .pageSize(1)
+    return this
+      .take(1)
       .list()
-      .raw()
       .then(({ objects }) => objects[0] || null)
   }
 
@@ -156,21 +148,7 @@ class Data {
    * const users = await data.users.take(500).list()
    */
   take(count) {
-    return this.call('pageSize', count)
-  }
-
-  /**
-   * Filter objects using MongoDB style query.
-   *
-   * @returns {Promise}
-   *
-   * @example {@lang javascript}
-   * const users = await data.users.filter({
-   *   name: { _eq: 'John' }
-   * }).list()
-   */
-  filter(filters) {
-    return this.call('filter', filters)
+    return this.withQuery({ page_size: count })
   }
 
   /**
@@ -185,7 +163,9 @@ class Data {
     direction = direction.toLowerCase()
     direction = direction === 'desc' ? '-' : ''
 
-    return this.call('orderBy', `${direction}${column}`)
+    return this.withQuery({
+      order_by: `${direction}${column}`
+    })
   }
 
   /**
@@ -198,18 +178,17 @@ class Data {
    * @example {@lang javascript}
    * const users = await data.users.where('name', 'John').list()
    * @example {@lang javascript}
-   * const users = await data.users.where('created_at', 'gt' '13-02-2016').list()
+   * const users = await data.users.where('created_at', 'gt' '2016-02-13').list()
    */
   where(column, operator, value) {
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
-    const currentQuery = JSON.parse(this.query.query.query || '{}')
+    const currentQuery = JSON.parse(this.query.query || '{}')
     const nextQuery = { [column]: { [whereOperator]: whereValue } }
+    const query = Object.assign(currentQuery, nextQuery)
 
-    const lookup = Object.assign({}, currentQuery, nextQuery)
-
-    return this.call('filter', lookup)
+    return this.withQuery({ query: JSON.stringify(query) })
   }
 
   /**
@@ -224,8 +203,11 @@ class Data {
    *   username: 'john.doe'
    * })
    */
-  create(object) {
-    return this.query.create(object)
+  create(body) {
+    return this.fetch(this.url(), {
+      method: 'POST',
+      body: JSON.stringify(body)
+    })
   }
 
   /**
@@ -236,8 +218,11 @@ class Data {
    * @example {@lang javascript}
    * data.users.update(55, { last_name: 'Jane' })
    */
-  update(id, data) {
-    return this.query.update({ id }, data)
+  update(id, body) {
+    return this.fetch(this.url(id), {
+      method: 'PATCH',
+      body: JSON.stringify(body)
+    })
   }
 
   /**
@@ -249,7 +234,9 @@ class Data {
    * data.users.delete(55)
    */
   delete(id) {
-    return this.query.delete({ id })
+    return this.fetch(this.url(id), {
+      method: 'DELETE'
+    })
   }
 }
 
