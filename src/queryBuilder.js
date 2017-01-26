@@ -2,7 +2,9 @@ import nodeFetch from 'node-fetch'
 import { addPagination, checkStatus, parseJSON } from './utils'
 
 export default class QueryBuilder {
-  baseUrl = 'https://api.syncano.rocks'
+  constructor() {
+    this.baseUrl = 'https://api.syncano.rocks'
+  }
 
   fetch(url, options) {
     const request = nodeFetch(url, {
