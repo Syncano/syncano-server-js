@@ -130,8 +130,8 @@ class Data extends QueryBuilder {
       this
         .find(ids)
         .then(response => {
-          const shouldThrow = Array.isArray(ids) ? !response.objects.length : response
-          return shouldThrow ? resolve(response) : reject(new NotFoundError())
+          const shouldThrow = Array.isArray(ids) ? !response.data.length : response
+          return shouldThrow ? reject(new NotFoundError()) : resolve(response)
         })
         .catch(() => {
           reject(new NotFoundError())
