@@ -22,6 +22,8 @@ export default function server(options = {}) {
     users,
     data: new Proxy(new Data(), {
       get(target, className) {
+        const data = new Data()
+
         target.instance = instance(className)
 
         return target

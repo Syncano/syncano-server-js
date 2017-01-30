@@ -72,10 +72,7 @@ class Data extends QueryBuilder {
    * const users = await data.users.where('name', 'John').first()
    */
   first() {
-    return this
-      .take(1)
-      .list()
-      .then(({objects}) => objects[0] || null)
+    return this.take(1).list()
   }
 
   /**
