@@ -7,7 +7,7 @@ import Data from './data'
  */
 class Users extends Data {
   url(id) {
-    const {instanceName, className} = this.instance
+    const {instanceName} = this.instance
     const url = `https://api.syncano.rocks/v2/instances/${instanceName}/users/${id ? id + '/' : ''}`
     const query = querystring.stringify(this.query)
 

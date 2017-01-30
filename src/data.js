@@ -1,6 +1,5 @@
 import querystring from 'querystring'
 import QueryBuilder from './query-builder'
-import Collection from './collection'
 import {NotFoundError} from './errors'
 
 /**
@@ -51,9 +50,7 @@ class Data extends QueryBuilder {
             result = result.slice(0, pageSize)
           }
 
-          const data = new Collection(result)
-
-          resolve(data)
+          resolve(result)
         }
       }
 
@@ -72,7 +69,7 @@ class Data extends QueryBuilder {
    * const users = await data.users.where('name', 'John').first()
    */
   first() {
-    return this.take(1).list()
+    return this.take(1).list().then(response => response[0] || null)
   }
 
   /**
@@ -121,13 +118,17 @@ class Data extends QueryBuilder {
    * const users = await data.users.findOrFail(4)
    * @example {@lang javascript}
    * const users = await data.users.findOrFail([20, 99, 125])
+   * @example {@lang javascript}
+   * // Will throw error if at lest one of records was not found
+   * const users = await data.users.findOrFail([20, 99, 125], true)
    */
   findOrFail(ids) {
     return new Promise((resolve, reject) => {
       this
         .find(ids)
         .then(response => {
-          const shouldThrow = Array.isArray(ids) ? !response.data.length : response
+          const shouldThrow = Array.isArray(ids) ? response.length !== ids.length : response !== null
+
           return shouldThrow ? reject(new NotFoundError()) : resolve(response)
         })
         .catch(() => {
