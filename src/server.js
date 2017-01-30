@@ -24,9 +24,9 @@ export default function server(options = {}) {
       get(target, className) {
         const data = new Data()
 
-        target.instance = instance(className)
+        data.instance = instance(className)
 
-        return target
+        return data
       }
     })
   }
