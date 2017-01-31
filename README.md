@@ -11,7 +11,7 @@ const { data, events } = server()
 // OR 
 const { data, events } = server({
   token: '9-12jdiasdnfo23nrokms',
-  instance: 'example-instance-name'
+  instanceName: 'example-instance-name'
 })
 ```
 
