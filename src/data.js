@@ -1,4 +1,5 @@
 import querystring from 'querystring'
+import camelcaseKeys from 'camelcase-keys'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 
@@ -30,6 +31,7 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const {baseUrl} = this
+    const {camelCase} = this.instance
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
@@ -48,6 +50,10 @@ class Data extends QueryBuilder {
         } else {
           if (pageSize !== 0) {
             result = result.slice(0, pageSize)
+          }
+
+          if (camelCase === true) {
+            result = result.map(item => camelcaseKeys(item))
           }
 
           resolve(result)

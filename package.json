@@ -30,6 +30,7 @@
     "url": "https://github.com/Syncano/syncano-server-js.git"
   },
   "dependencies": {
+    "camelcase-keys": "^4.0.0",
     "node-fetch": "^1.6.3"
   },
   "devDependencies": {
