@@ -1,5 +1,6 @@
 import Data from './data'
 import Users from './users'
+import Account from './account'
 
 export default function server(options = {}) {
   const instance = className => {
@@ -18,8 +19,11 @@ export default function server(options = {}) {
   const users = new Users()
   users.instance = instance()
 
+  const account = new Account()
+
   return {
     users,
+    account,
     data: new Proxy(new Data(), {
       get(target, className) {
         const data = new Data()
