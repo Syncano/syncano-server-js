@@ -11,12 +11,12 @@ class Account extends QueryBuilder {
   }
 
   /**
-   * Login Syncano Account
+   * Get details of Syncano account
    *
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const account = await account.login('0aad29dd0be2bcebb741525b9c5901e55cf43e98')
+   * const account = await account.get('0aad29dd0be2bcebb741525b9c5901e55cf43e98')
    */
   get(authKey) {
     const fetch = this.nonInstanceFetch.bind(this)
