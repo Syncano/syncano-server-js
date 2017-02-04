@@ -31,7 +31,6 @@
     "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc",
     "release:beta": "npm version prerelease -m \"Bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH",
     "release": "npm version patch -m \"Bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH"
-
   },
   "repository": {
     "type": "git",
@@ -50,6 +49,7 @@
     "babel-preset-env": "^1.1.4",
     "babel-register": "^6.5.1",
     "codecov": "^1.0.1",
+    "cross-env": "^3.1.4",
     "eslint": "^1.10.3",
     "gh-pages": "^0.11.0",
     "ink-docstrap": "^1.1.1",
