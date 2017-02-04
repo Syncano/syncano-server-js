@@ -20,7 +20,7 @@
     "unit": "cross-env NODE_ENV=test mocha 'test/unit/**/*.js' --reporter spec --require babel-register",
     "test": "npm-run-all --parallel test:unit",
     "test:unit": "cross-env NODE_ENV=test nyc yarn run unit",
-    "lint": "xo src/**/*.js",
+    "lint": "xo src/**/*.js test/**/*.js",
     "test:coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "e2e": "mkdir -p e2e-tests/ && cross-env NODE_ENV=test mocha 'test/e2e/*.js' --reporter spec --require babel-register --timeout 30000 --slow 8000",
     "test:e2e": "cross-env NODE_ENV=test yarn run e2e",
@@ -50,6 +50,7 @@
     "babel-plugin-transform-strict-mode": "^6.5.0",
     "babel-preset-env": "^1.1.4",
     "babel-register": "^6.5.1",
+    "chai": "^3.5.0",
     "codecov": "^1.0.1",
     "cross-env": "^3.1.4",
     "eslint": "^1.10.3",
@@ -75,6 +76,14 @@
     ],
     "globals": [
       "CONFIG"
+    ],
+    "overrides": [
+      {
+        "files": "test/**/*.js",
+        "rules": {
+          "prefer-arrow-callback": ["off"]
+        }
+      }
     ]
   }
 }
