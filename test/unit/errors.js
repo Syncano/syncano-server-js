@@ -1,5 +1,5 @@
 import should from 'should/as-function'
-import {SyncanoError, NotFoundError} from '../src/errors'
+import {SyncanoError, NotFoundError} from '../../src/errors'
 
 describe('SyncanoError', () => {
   let error = null

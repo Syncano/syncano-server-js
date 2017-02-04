@@ -27,6 +27,7 @@ test:
   override:
     - yarn run lint
     - yarn run test
+    - yarn run test:e2e
   post:
     - yarn run report-coverage
 
