@@ -16,15 +16,22 @@
     "clean:gh-pages": "rimraf ./node_modules/gh-pages/.cache",
     "prepublish": "npm run build",
     "prebuild": "npm run clean",
-    "test": "mocha test/**/*.js --compilers js:babel-register",
+    "report-coverage": "cat ./coverage/lcov.info | codecov",
+    "unit": "cross-env NODE_ENV=test mocha 'test/**/*.js' --reporter spec --require babel-register",
+    "test": "npm-run-all --parallel test:unit",
+    "test:unit": "cross-env NODE_ENV=test nyc yarn run unit",
     "lint": "xo src/**/*.js",
     "test:coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "watch": "npm-run-all --parallel watch:*",
     "watch:lib": "npm run build:lib -- --watch",
     "watch:lib:test": "mocha --watch test/**/*.js --compilers js:babel-register",
-    "release": "npm-run-all release:*",
     "release:docs": "gh-pages -d docs -m \"Docs v${npm_package_version} [ci skip]\"",
-    "release:reset": "git reset --hard $CIRCLE_SHA1"
+    "release:reset": "git reset --hard $CIRCLE_SHA1",
+    "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
+    "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc",
+    "release:beta": "npm version prerelease -m \"Bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH",
+    "release": "npm version patch -m \"Bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH"
+
   },
   "repository": {
     "type": "git",
