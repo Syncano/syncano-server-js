@@ -1,7 +1,7 @@
 import querystring from 'querystring'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
-
+import {buildInstanceURL} from './utils'
 /**
  * Syncano server
  * @property {Function} query Instance of syncano DataObject
@@ -9,7 +9,7 @@ import {NotFoundError} from './errors'
 class Data extends QueryBuilder {
   url(id) {
     const {instanceName, className} = this.instance
-    const url = `https://api.syncano.rocks/v2/instances/${instanceName}/classes/${className}/objects/${id ? id + '/' : ''}`
+    const url = `${buildInstanceURL(instanceName)}/classes/${className}/objects/${id ? id + '/' : ''}`
     const query = querystring.stringify(this.query)
 
     return query ? `${url}?${query}` : url
