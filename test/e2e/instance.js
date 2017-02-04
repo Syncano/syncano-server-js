@@ -18,6 +18,7 @@ describe('Instance', function () {
         done()
       })
       .catch(err => {
+        console.log(err)
         done(err)
       })
   })
@@ -29,6 +30,7 @@ describe('Instance', function () {
         done()
       })
       .catch(err => {
+        console.log(err)
         done(err)
       })
   })
