@@ -1,6 +1,6 @@
 import nock from 'nock'
 import should from 'should/as-function'
-import Server from '../src/server'
+import Server from '../../src/server'
 
 import {NotFoundError} from '../src/errors'
 
