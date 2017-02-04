@@ -12,7 +12,7 @@ describe('Account', function () {
   it('can\'t get account with dummy key', function(done) {
     return account.get('dummy key')
       .then(account => {
-        done(new Error('Supprise I\'m in!'))
+        done(new Error('Surprise! I\'m in!'))
       })
       .catch(err => {
         expect(err.response.status).to.be.equal(403)
