@@ -22,11 +22,10 @@ describe('Event', function () {
       .catch(err => {
         console.log(err)
         err.response.text()
-          .then((text) => {
+          .then(text => {
             console.log(text)
             done(err)
           })
-
       })
   })
 
@@ -38,9 +37,9 @@ describe('Event', function () {
   })
 
   it('can emit event', function (done) {
-    return event.emit(testEventName, {dummy_key: 'dummy_value'})
+    return event.emit(testEventName, {dummyKey: 'dummy_value'})
       .then(event => {
-        expect(event).to.be.empty
+        expect(event).to.be.empty  // eslint-disable-line no-unused-expressions
         done()
       })
       .catch(err => {
@@ -48,5 +47,4 @@ describe('Event', function () {
         done(err)
       })
   })
-
 })
