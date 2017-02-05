@@ -1,4 +1,5 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)   [![CircleCI](https://circleci.com/gh/Syncano/syncano-server-js/tree/devel.svg?style=shield&circle-token=0340c11444db6f3dc227cf310f4d8ff1bd90dee8)](https://circleci.com/gh/Syncano/syncano-server-js/tree/devel)
+[![codecov](https://codecov.io/gh/Syncano/syncano-server-js/branch/master/graph/badge.svg)](https://codecov.io/gh/Syncano/syncano-server-js)
 
 # Syncano server
 
@@ -8,7 +9,7 @@
 import server from 'syncano-server-js'
 
 const { data, events } = server()
-// OR 
+// OR
 const { data, events } = server({
   token: '9-12jdiasdnfo23nrokms',
   instanceName: 'example-instance-name'
