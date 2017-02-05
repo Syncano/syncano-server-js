@@ -2,9 +2,10 @@ import Data from './data'
 import Users from './users'
 import Account from './account'
 import Instance from './instance'
+import Event from './event'
 
 export default function server(options = {}) {
-  const instanceConfig = className => {
+  const genInstanceConfig = className => {
     let config = {...options, className}
 
     if (global.CONFIG) {
@@ -17,8 +18,12 @@ export default function server(options = {}) {
     return config
   }
 
+  const instanceConfig = genInstanceConfig()
+
   const users = new Users()
-  users.instance = instanceConfig()
+  users.instance = instanceConfig
+  const event = new Event()
+  event.instance = instanceConfig
 
   const account = new Account({accountKey: options.accountKey})
   const instance = new Instance({accountKey: options.accountKey})
@@ -27,11 +32,12 @@ export default function server(options = {}) {
     users,
     account,
     instance,
+    event,
     data: new Proxy(new Data(), {
       get(target, className) {
         const data = new Data()
 
-        data.instance = instanceConfig(className)
+        data.instance = genInstanceConfig(className)
 
         return data
       }
