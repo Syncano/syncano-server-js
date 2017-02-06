@@ -12,7 +12,8 @@ dependencies:
       fi
   cache_directories:
     - ~/.yarn
-    - ~/.yarn-cache
+    - ~/.config/yarn
+    - ~/.cache/yarn
   override:
     - yarn install
 
