@@ -17,7 +17,7 @@ export function parseJSON(response) {
 }
 
 export function buildSyncanoURL() {
-  return `https://${SYNCANO_HOST}/${SYNCANO_API_VERSION}`
+  return `https://${SYNCANO_HOST()}/${SYNCANO_API_VERSION}`
 }
 
 export function buildInstanceURL(instanceName) {

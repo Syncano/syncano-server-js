@@ -4,7 +4,7 @@ import {SYNCANO_HOST} from './settings'
 
 export default class QueryBuilder {
   constructor() {
-    this.baseUrl = `https://${SYNCANO_HOST}`
+    this.baseUrl = `https://${SYNCANO_HOST()}`
   }
 
   fetch(url, options) {
