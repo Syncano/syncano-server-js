@@ -1,10 +1,10 @@
 import nodeFetch from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
-import {SYNCANO_HOST} from './settings'
+import {getHost} from './settings'
 
 export default class QueryBuilder {
   constructor() {
-    this.baseUrl = `https://${SYNCANO_HOST()}`
+    this.baseUrl = `https://${getHost()}`
   }
 
   fetch(url, options) {
