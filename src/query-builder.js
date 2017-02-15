@@ -30,12 +30,7 @@ export default class QueryBuilder {
       ...options
     })
       .then(checkStatus)
-      .then(resp => {
-        if (resp.bodyUsed) {
-          return parseJSON(resp)
-        }
-        return {}
-      })
+      .then(parseJSON)
 
     return request
   }
