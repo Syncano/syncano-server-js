@@ -13,7 +13,11 @@ export function checkStatus(response) {
 }
 
 export function parseJSON(response) {
-  return response.json()
+  try {
+    return response.json()
+  } catch(err) {
+    return response.text()
+  }
 }
 
 export function buildSyncanoURL() {
