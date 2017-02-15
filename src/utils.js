@@ -15,7 +15,7 @@ export function checkStatus(response) {
 export function parseJSON(response) {
   try {
     return response.json()
-  } catch(err) {
+  } catch (err) {
     return response.text()
   }
 }
