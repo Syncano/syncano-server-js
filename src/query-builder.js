@@ -8,7 +8,7 @@ export default class QueryBuilder {
   }
 
   fetch(url, options) {
-    const request = nodeFetch(url, {
+    return nodeFetch(url, {
       headers: {
         'Content-Type': 'application/json',
         'X-API-KEY': this.instance.token
@@ -17,12 +17,10 @@ export default class QueryBuilder {
     })
       .then(checkStatus)
       .then(parseJSON)
-
-    return request
   }
 
   nonInstanceFetch(url, options, headers) {
-    const request = nodeFetch(url, {
+    return nodeFetch(url, {
       headers: {
         'Content-Type': 'application/json',
         ...headers
@@ -31,8 +29,6 @@ export default class QueryBuilder {
     })
       .then(checkStatus)
       .then(parseJSON)
-
-    return request
   }
 
   get query() {

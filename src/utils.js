@@ -13,11 +13,10 @@ export function checkStatus(response) {
 }
 
 export function parseJSON(response) {
-  try {
-    return response.json()
-  } catch (err) {
-    return response.text()
+  if (response.status === 202) {
+    return Promise.resolve()
   }
+  return response.json()
 }
 
 export function buildSyncanoURL() {
