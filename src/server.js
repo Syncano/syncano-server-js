@@ -14,14 +14,13 @@ import {
 
 export default function server(options = {}) {
   const genInstanceConfig = className => {
-    let config = {...options, className}
-
-    config = Object.assign({}, {
+    const config = Object.assign({}, {
       token: getToken(),
       instanceName: getInstanceName(),
       host: getHost(),
       spaceHost: getSpaceHost(),
-      apiVersion: SYNCANO_API_VERSION
+      apiVersion: SYNCANO_API_VERSION,
+      className
     }, options)
 
     return config
@@ -48,9 +47,7 @@ export default function server(options = {}) {
     data: new Proxy(new Data(), {
       get(target, className) {
         const data = new Data()
-
         data.instance = genInstanceConfig(className)
-
         return data
       }
     })
