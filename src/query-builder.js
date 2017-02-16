@@ -19,7 +19,7 @@ export default class QueryBuilder {
       .then(parseJSON)
   }
 
-  localFetch(url, token, options) {
+  localFetch(url, options) {
     return nodeFetch(url, {
       headers: {
         'Content-Type': 'application/json',
