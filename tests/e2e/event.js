@@ -11,11 +11,8 @@ describe('Event', function () {
   before(function (done) {
     createTestInstance(instanceName)
       .then(instanceObj => {
-        if (!global.CONFIG) {
-          global.CONFIG = {}
-        }
-        global.CONFIG.SYNCANO_INSTANCE_NAME = instanceObj.name
-        global.CONFIG.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
+        process.env.SYNCANO_INSTANCE_NAME = instanceObj.name
+        process.env.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
         event = server().event
         done()
       })
@@ -37,7 +34,7 @@ describe('Event', function () {
   })
 
   it('can emit event', function (done) {
-    return event.emit(testEventName, {dummyKey: 'dummy_value'})
+    event.emit(testEventName, {dummyKey: 'dummy_value'})
       .then(event => {
         expect(event).to.be.empty  // eslint-disable-line no-unused-expressions
         done()

@@ -1,4 +1,4 @@
-import {getHost, getSpaceHost, SYNCANO_API_VERSION} from './settings'
+import {getHost, SYNCANO_API_VERSION} from './settings'
 
 export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -25,8 +25,4 @@ export function buildSyncanoURL() {
 
 export function buildInstanceURL(instanceName) {
   return `${buildSyncanoURL()}/instances/${instanceName}`
-}
-
-export function buildLocalInstanceURL(instanceName) {
-  return `https://${instanceName}.${getSpaceHost()}`
 }

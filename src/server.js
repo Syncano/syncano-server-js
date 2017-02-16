@@ -4,17 +4,25 @@ import Account from './account'
 import Instance from './instance'
 import Event from './event'
 import Endpoint from './endpoint'
+import {
+  getToken,
+  getInstanceName,
+  getHost,
+  getSpaceHost,
+  SYNCANO_API_VERSION
+} from './settings'
 
 export default function server(options = {}) {
   const genInstanceConfig = className => {
     let config = {...options, className}
 
-    if (global.CONFIG) {
-      config = Object.assign({}, {
-        token: CONFIG.SYNCANO_API_KEY,
-        instanceName: CONFIG.SYNCANO_INSTANCE_NAME
-      }, options)
-    }
+    config = Object.assign({}, {
+      token: getToken(),
+      instanceName: getInstanceName(),
+      host: getHost(),
+      spaceHost: getSpaceHost(),
+      apiVersion: SYNCANO_API_VERSION
+    }, options)
 
     return config
   }

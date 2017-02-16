@@ -1,5 +1,4 @@
 import QueryBuilder from './query-builder'
-import {buildInstanceURL} from './utils'
 
 /**
  * Syncano account query builder
@@ -7,8 +6,8 @@ import {buildInstanceURL} from './utils'
  */
 class Instance extends QueryBuilder {
   url() {
-    const {instanceName} = this.instance
-    return `${buildInstanceURL(instanceName)}/triggers/emit/`
+    const instConf = this.instance
+    return `https://${instConf.host}/${instConf.apiVersion}/instances/${instConf.instanceName}/triggers/emit/`
   }
 
   /**

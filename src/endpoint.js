@@ -1,5 +1,4 @@
 import QueryBuilder from './query-builder'
-import {buildLocalInstanceURL} from './utils'
 
 /**
  * Syncano account query builder
@@ -7,8 +6,8 @@ import {buildLocalInstanceURL} from './utils'
  */
 export default class Endpoint extends QueryBuilder {
   url(endpoint) {
-    const {instanceName} = this.instance
-    return `${buildLocalInstanceURL(instanceName)}/${endpoint}/`
+    const instConf = this.instance
+    return `https://${instConf.instanceName}.${instConf.spaceHost}/${endpoint}/`
   }
 
   parseBody(body) {

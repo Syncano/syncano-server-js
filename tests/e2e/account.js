@@ -10,7 +10,7 @@ describe('Account', function () {
   })
 
   it('can\'t get account with dummy key', function (done) {
-    return account.get('dummy key')
+    account.get('dummy key')
       .then(() => {
         done(new Error('Surprise! I\'m in!'))
       })
@@ -21,7 +21,7 @@ describe('Account', function () {
   })
 
   it('can get account details with valid key', function (done) {
-    return account.get(process.env.E2E_ACCOUNT_KEY)
+    account.get(process.env.E2E_ACCOUNT_KEY)
       .then(account => {
         expect(account.id).to.be.a('number')
         done()

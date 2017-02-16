@@ -12,7 +12,7 @@ describe('Instance', function () {
   })
 
   it('can create instance', function (done) {
-    return instance.create({name: testInstanceName})
+    instance.create({name: testInstanceName})
       .then(instance => {
         expect(instance.name).to.be.equal(testInstanceName)
         done()
@@ -24,7 +24,7 @@ describe('Instance', function () {
   })
 
   it('can delete instance', function (done) {
-    return instance.delete({name: testInstanceName})
+    instance.delete({name: testInstanceName})
       .then(resp => {
         expect(resp).to.be.empty  // eslint-disable-line no-unused-expressions
         done()

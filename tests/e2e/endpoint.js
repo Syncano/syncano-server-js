@@ -37,9 +37,10 @@ describe('Endpoint', function () {
   })
 
   // it('can call event', function (done) {
-  //   endpoint.post('openweathermap/get-three-hours-forecast', {city: 'oslo'})
+  //   endpoint.post('openweathermap/get-three-hours-forecast', {city: 'bergen'})
   //     .then(resp => resp.json())
   //     .then(data => {
+  //       console.log("XXX", data)
   //       done()
   //     })
   //     .catch(err => {
