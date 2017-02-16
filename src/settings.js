@@ -1,16 +1,22 @@
 export const getHost = function () {
+  if (process.env.SYNCANO_HOST) {
+    return process.env.SYNCANO_HOST
+  }
   try {
     return META.api_host // eslint-disable-line no-undef
   } catch (err) {
-    return process.env.SYNCANO_HOST || 'api.syncano.io'
+    return 'api.syncano.io'
   }
 }
 
 export const getSpaceHost = function () {
+  if (process.env.SYNCANO_SPACE_HOST) {
+    return process.env.SYNCANO_SPACE_HOST
+  }
   try {
     return META.space_host  // eslint-disable-line no-undef
   } catch (err) {
-    return process.env.SYNCANO_SPACE_HOST || 'syncano.space'
+    return 'syncano.space'
   }
 }
 
