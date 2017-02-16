@@ -19,6 +19,17 @@ export default class QueryBuilder {
       .then(parseJSON)
   }
 
+  localFetch(url, token, options) {
+    return nodeFetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': this.instance.token
+      },
+      ...options
+    })
+      .then(checkStatus)
+  }
+
   nonInstanceFetch(url, options, headers) {
     return nodeFetch(url, {
       headers: {
