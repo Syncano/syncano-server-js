@@ -1,6 +1,6 @@
 export const getHost = function () {
   try {
-    return META.api_host;
+    return META.api_host // eslint-disable-line no-undef
   } catch (err) {
     return process.env.SYNCANO_HOST || 'api.syncano.io'
   }
@@ -8,7 +8,7 @@ export const getHost = function () {
 
 export const getSpaceHost = function () {
   try {
-    return META.space_host;
+    return META.space_host  // eslint-disable-line no-undef
   } catch (err) {
     return process.env.SYNCANO_SPACE_HOST || 'syncano.space'
   }

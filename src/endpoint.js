@@ -7,15 +7,13 @@ import {buildLocalInstanceURL} from './utils'
  */
 export default class Endpoint extends QueryBuilder {
   url(endpoint) {
-    // const {instanceName} = this.instance
-    const instanceName = 'crimson-thunder-4761'
-    // return `https://crimson-thunder-4761.syncano.link/openweathermap/get-three-hours-forecast/`
+    const {instanceName} = this.instance
     return `${buildLocalInstanceURL(instanceName)}/${endpoint}/`
   }
 
-  parseBody (body) {
+  parseBody(body) {
     if (typeof body === 'object') {
-      let data = {
+      const data = {
         ...body
       }
       return JSON.stringify(data)
