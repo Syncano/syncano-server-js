@@ -1,11 +1,7 @@
-import {expect} from 'chai'
-
 import server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 describe('Endpoint', function () {
-  let endpoint = null
-  const testEventName = getRandomString()
   const instanceName = getRandomString()
 
   before(function (done) {
@@ -16,7 +12,7 @@ describe('Endpoint', function () {
         }
         global.CONFIG.SYNCANO_INSTANCE_NAME = instanceObj.name
         global.CONFIG.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        endpoint = server().endpoint
+        server()
         done()
       })
       .catch(err => {
