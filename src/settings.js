@@ -1,45 +1,21 @@
-export const getHost = function () {
-  if (process.env.SYNCANO_HOST) {
-    return process.env.SYNCANO_HOST
+function getMeta(envVar, metaVar, fallback = null) {
+  if (process.env[envVar]) {
+    return process.env[envVar]
   }
-  try {
-    return META.api_host // eslint-disable-line no-undef
-  } catch (err) {
-    return 'api.syncano.io'
-  }
+
+  return global.META ? global.META[metaVar] : fallback
 }
 
-export const getSpaceHost = function () {
-  if (process.env.SYNCANO_SPACE_HOST) {
-    return process.env.SYNCANO_SPACE_HOST
-  }
-  try {
-    return META.space_host  // eslint-disable-line no-undef
-  } catch (err) {
-    return 'syncano.space'
-  }
-}
+export const getHost = () =>
+  getMeta('SYNCANO_HOST', 'api_host', 'api.syncano.io')
 
-export const getInstanceName = function () {
-  if (process.env.SYNCANO_INSTANCE_NAME) {
-    return process.env.SYNCANO_INSTANCE_NAME
-  }
-  try {
-    return META.instance  // eslint-disable-line no-undef
-  } catch (err) {
-    return null
-  }
-}
+export const getSpaceHost = () =>
+  getMeta('SYNCANO_SPACE_HOST', 'space_host', 'syncano.space')
 
-export const getToken = function () {
-  if (process.env.SYNCANO_API_KEY) {
-    return process.env.SYNCANO_API_KEY
-  }
-  try {
-    return META.token  // eslint-disable-line no-undef
-  } catch (err) {
-    return null
-  }
-}
+export const getInstanceName = () =>
+  getMeta('SYNCANO_INSTANCE_NAME', 'instance')
+
+export const getToken = () =>
+  getMeta('SYNCANO_API_KEY', 'token')
 
 export const SYNCANO_API_VERSION = 'v2'

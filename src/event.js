@@ -1,4 +1,5 @@
 import QueryBuilder from './query-builder'
+import {buildInstanceURL} from './utils'
 
 /**
  * Syncano account query builder
@@ -6,8 +7,8 @@ import QueryBuilder from './query-builder'
  */
 class Instance extends QueryBuilder {
   url() {
-    const instConf = this.instance
-    return `https://${instConf.host}/${instConf.apiVersion}/instances/${instConf.instanceName}/triggers/emit/`
+    const {instanceName} = this.instance
+    return `${buildInstanceURL(instanceName)}/triggers/emit/`
   }
 
   /**
@@ -20,15 +21,13 @@ class Instance extends QueryBuilder {
    */
   emit(signal, payload) {
     const fetch = this.fetch.bind(this)
-    return new Promise((resolve, reject) => {
-      const options = {
-        method: 'POST',
-        body: JSON.stringify({signal, payload})
-      }
-      fetch(this.url(), options)
-        .then(resp => resolve(resp))
-        .catch(err => reject(err))
-    })
+
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({signal, payload})
+    }
+
+    return fetch(this.url(), options)
   }
 
 }

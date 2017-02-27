@@ -9,6 +9,7 @@ export const getRandomString = () => {
 export const createTestInstance = instanceName => {
   return accountConnection.instance.create({name: instanceName})
 }
+
 export const deleteTestInstance = instanceName => {
-  return accountConnection.instance.delete({name: instanceName})
+  return accountConnection.instance.delete(instanceName)
 }

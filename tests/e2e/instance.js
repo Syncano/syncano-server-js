@@ -24,7 +24,7 @@ describe('Instance', function () {
   })
 
   it('can delete instance', function (done) {
-    instance.delete({name: testInstanceName})
+    instance.delete(testInstanceName)
       .then(resp => {
         expect(resp).to.be.empty  // eslint-disable-line no-unused-expressions
         done()

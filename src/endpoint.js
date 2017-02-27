@@ -6,18 +6,13 @@ import QueryBuilder from './query-builder'
  */
 export default class Endpoint extends QueryBuilder {
   url(endpoint) {
-    const instConf = this.instance
-    return `https://${instConf.instanceName}.${instConf.spaceHost}/${endpoint}/`
+    const {instanceName, spaceHost} = this.instance
+    return `https://${instanceName}.${spaceHost}/${endpoint}/`
   }
 
   parseBody(body) {
-    if (typeof body === 'object') {
-      const data = {
-        ...body
-      }
-      return JSON.stringify(data)
-    }
-    return body
+    const isBodyAnObject = typeof body === 'object'
+    return isBodyAnObject ? JSON.stringify({...body}) : body
   }
 
   client(endpoint, body = {}, options = {}) {

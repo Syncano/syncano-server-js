@@ -21,11 +21,11 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * // Get all users
-   * const users = await data.users.list()
+   * // Get all posts
+   * const posts = await data.posts.list()
    * @example {@lang javascript}
-   * // Get 10 users
-   * const users = await data.users.take(10).list()
+   * // Get 10 posts
+   * const posts = await data.posts.take(10).list()
    */
   list() {
     let result = []
@@ -66,19 +66,17 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const users = await data.users.where('name', 'John').first()
+   * const posts = await data.posts.where('status', 'published').first()
    */
   first() {
     return this.take(1).list().then(response => response[0] || null)
   }
 
   /**
-   * Get first element matching query or throw error.
-   *
-   * @returns {Promise}
+   * Get first element matching query or throw erro'status', 'in', ['draft', 'published']se}
    *
    * @example {@lang javascript}
-   * const users = await data.users.where('name', 'John').firstOrFail()
+   * const posts = await data.posts.where('status', 'published').firstOrFail()
    */
   firstOrFail() {
     return new Promise((resolve, reject) => {
@@ -97,9 +95,9 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const users = await data.users.find(4)
+   * const posts = await data.posts.find(4)
    * @example {@lang javascript}
-   * const users = await data.users.find([20, 99, 125])
+   * const posts = await data.posts.find([20, 99, 125])
    */
   find(ids) {
     if (Array.isArray(ids)) {
@@ -115,12 +113,12 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const users = await data.users.findOrFail(4)
+   * const posts = await data.posts.findOrFail(4)
    * @example {@lang javascript}
-   * const users = await data.users.findOrFail([20, 99, 125])
+   * const posts = await data.posts.findOrFail([20, 99, 125])
    * @example {@lang javascript}
    * // Will throw error if at lest one of records was not found
-   * const users = await data.users.findOrFail([20, 99, 125], true)
+   * const posts = await data.posts.findOrFail([20, 99, 125], true)
    */
   findOrFail(ids) {
     return new Promise((resolve, reject) => {
@@ -143,7 +141,7 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const users = await data.users.take(500).list()
+   * const posts = await data.posts.take(500).list()
    */
   take(count) {
     return this.withQuery({page_size: count}) // eslint-disable-line camelcase
@@ -155,7 +153,7 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const users = await data.users.orderBy('created_at', 'DESC').list()
+   * const posts = await data.posts.orderBy('created_at', 'DESC').list()
    */
   orderBy(column, direction = 'asc') {
     direction = direction.toLowerCase()
@@ -172,11 +170,11 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const users = await data.users.where('name', 'eq' 'John').list()
+   * const posts = await data.posts.where('status', 'in', ['draft', 'published']).list()
    * @example {@lang javascript}
-   * const users = await data.users.where('name', 'John').list()
+   * const posts = await data.posts.where('status', 'published').list()
    * @example {@lang javascript}
-   * const users = await data.users.where('created_at', 'gt' '2016-02-13').list()
+   * const posts = await data.posts.where('created_at', 'gt' '2016-02-13').list()
    */
   where(column, operator, value) {
     const whereOperator = value ? `_${operator}` : '_eq'
@@ -195,10 +193,9 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * const users = await data.users.create({
-   *   name: 'John Doe',
-   *   email: 'john.doe@example.com'
-   *   username: 'john.doe'
+   * const posts = await data.posts.create({
+   *   title: 'Example post title',
+   *   content: 'Lorem ipsum dolor sit amet.'
    * })
    */
   create(body) {
@@ -214,7 +211,7 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * data.users.update(55, { last_name: 'Jane' })
+   * data.posts.update(55, { content: 'No more lorem ipsum!' })
    */
   update(id, body) {
     return this.fetch(this.url(id), {
@@ -229,7 +226,7 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * data.users.delete(55)
+   * data.posts.delete(55)
    */
   delete(id) {
     return this.fetch(this.url(id), {

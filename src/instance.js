@@ -10,11 +10,11 @@ class Instance extends QueryBuilder {
     super()
     this.accountKey = options.accountKey
   }
+
   url(instanceName) {
-    if (instanceName) {
-      return `${buildSyncanoURL()}/instances/${instanceName}/`
-    }
-    return `${buildSyncanoURL()}/instances/`
+    const baseUrl = `${buildSyncanoURL()}/instances/`
+
+    return instanceName ? `${baseUrl}${instanceName}` : baseUrl
   }
 
   /**
@@ -27,18 +27,15 @@ class Instance extends QueryBuilder {
    */
   create(params) {
     const fetch = this.nonInstanceFetch.bind(this)
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.accountKey
-      }
-      const options = {
-        method: 'POST',
-        body: JSON.stringify(params)
-      }
-      fetch(this.url(), options, headers)
-        .then(resp => resolve(resp))
-        .catch(err => reject(err))
-    })
+    const headers = {
+      'X-API-KEY': this.accountKey
+    }
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(params)
+    }
+
+    return fetch(this.url(), options, headers)
   }
 
   /**
@@ -47,21 +44,18 @@ class Instance extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * await instance.delete({name: 'new-instance'})
+   * await instance.delete('new-instance')
    */
-  delete(params) {
+  delete(instanceName) {
     const fetch = this.nonInstanceFetch.bind(this)
-    return new Promise((resolve, reject) => {
-      const headers = {
-        'X-API-KEY': this.accountKey
-      }
-      const options = {
-        method: 'DELETE'
-      }
-      fetch(this.url(params.name), options, headers)
-        .then(resp => resolve(resp))
-        .catch(err => reject(err))
-    })
+    const headers = {
+      'X-API-KEY': this.accountKey
+    }
+    const options = {
+      method: 'DELETE'
+    }
+
+    return fetch(this.url(instanceName), options, headers)
   }
 }
 
