@@ -9,3 +9,5 @@ npm-debug.log
 docs
 *.sublime-*
 coverage.lcov
+.nyc_output
+e2e-tests

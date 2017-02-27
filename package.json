@@ -22,7 +22,7 @@
     "test:e2e": "cross-env NODE_ENV=test nyc yarn run e2e",
     "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "lint": "xo src/**/*.js test/**/*.js",
-    "e2e": "mkdir -p e2e-tests/ && cross-env NODE_ENV=test mocha tests/e2e/*.js --reporter spec --require babel-register --timeout 30000 --slow 8000",
+    "e2e": "mkdir e2e-tests || 1 && cross-env NODE_ENV=test mocha tests/e2e/*.js --reporter spec --require babel-register --timeout 30000 --slow 8000",
     "watch": "npm-run-all --parallel watch:*",
     "watch:lib": "npm run build:lib -- --watch",
     "watch:lib:test": "mocha --watch tests/**/*.js --compilers js:babel-register",

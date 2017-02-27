@@ -31,6 +31,9 @@ describe('Event', function () {
       .then(() => {
         done()
       })
+      .catch(() => {
+        done()
+      })
   })
 
   it('can emit event', function (done) {

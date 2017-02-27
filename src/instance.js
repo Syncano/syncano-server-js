@@ -14,7 +14,7 @@ class Instance extends QueryBuilder {
   url(instanceName) {
     const baseUrl = `${buildSyncanoURL()}/instances/`
 
-    return instanceName ? `${baseUrl}${instanceName}` : baseUrl
+    return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
 
   /**

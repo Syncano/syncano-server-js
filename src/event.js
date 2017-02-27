@@ -5,7 +5,7 @@ import {buildInstanceURL} from './utils'
  * Syncano account query builder
  * @property {Function}
  */
-class Instance extends QueryBuilder {
+class Event extends QueryBuilder {
   url() {
     const {instanceName} = this.instance
     return `${buildInstanceURL(instanceName)}/triggers/emit/`
@@ -35,4 +35,4 @@ class Instance extends QueryBuilder {
 
 }
 
-export default Instance
+export default Event
