@@ -27,15 +27,19 @@ class Instance extends QueryBuilder {
    */
   create(params) {
     const fetch = this.nonInstanceFetch.bind(this)
-    const headers = {
-      'X-API-KEY': this.accountKey
-    }
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(params)
-    }
 
-    return fetch(this.url(), options, headers)
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.accountKey
+      }
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(params)
+      }
+      fetch(this.url(), options, headers)
+        .then(resolve)
+        .catch(reject)
+    })
   }
 
   /**
@@ -48,14 +52,18 @@ class Instance extends QueryBuilder {
    */
   delete(instanceName) {
     const fetch = this.nonInstanceFetch.bind(this)
-    const headers = {
-      'X-API-KEY': this.accountKey
-    }
-    const options = {
-      method: 'DELETE'
-    }
 
-    return fetch(this.url(instanceName), options, headers)
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'X-API-KEY': this.accountKey
+      }
+      const options = {
+        method: 'DELETE'
+      }
+      fetch(this.url(instanceName), options, headers)
+        .then(resolve)
+        .catch(reject)
+    })
   }
 }
 

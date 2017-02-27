@@ -22,12 +22,15 @@ class Instance extends QueryBuilder {
   emit(signal, payload) {
     const fetch = this.fetch.bind(this)
 
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({signal, payload})
-    }
-
-    return fetch(this.url(), options)
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({signal, payload})
+      }
+      fetch(this.url(), options)
+        .then(resolve)
+        .catch(reject)
+    })
   }
 
 }
