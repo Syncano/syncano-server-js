@@ -36,6 +36,14 @@ const { data, events } = server({
 In this example `tags` is a name of a class (data model) configured for that instance.
 
 ```js
+// Create new object in tags class
+data.tags
+  .create({
+    name: 'javascript',
+    usage_count: 0
+  })
+  .then(tag => {});
+
 // Get list of 140 tags used more than 100 times
 data.tags
   .where('usage_count', 'gt', 100)
