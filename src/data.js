@@ -175,13 +175,26 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.where('status', 'published').list()
    * @example {@lang javascript}
    * const posts = await data.posts.where('created_at', 'gt' '2016-02-13').list()
+   * @example {@lang javascript}
+   * const posts = await data.posts.where('user.id', 30).list()
+   * @example {@lang javascript}
+   * const posts = await data.posts.where('user.full_name', 'contains', 'John').list()
    */
   where(column, operator, value) {
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
     const currentQuery = JSON.parse(this.query.query || '{}')
-    const nextQuery = {[column]: {[whereOperator]: whereValue}}
+
+    const nextQuery = column.split('.').reverse()
+      .reduce((child, item) => ({
+        [item]: child === null ? {
+          [whereOperator]: whereValue
+        } : {
+          _is: child
+        }
+      }), null)
+
     const query = Object.assign(currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
