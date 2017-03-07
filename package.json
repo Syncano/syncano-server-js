@@ -14,6 +14,7 @@
     "clean:lib": "rimraf ./lib",
     "clean:docs": "rimraf ./docs",
     "clean:gh-pages": "rimraf ./node_modules/gh-pages/.cache",
+    "commit": "git-cz",
     "prepublish": "npm run build",
     "prebuild": "npm run clean",
     "unit": "cross-env NODE_ENV=test mocha tests/unit/**/*.js --reporter spec --require babel-register",
@@ -52,6 +53,7 @@
     "chai": "^3.5.0",
     "codecov": "^1.0.1",
     "cross-env": "^3.1.4",
+    "cz-conventional-changelog": "^2.0.0",
     "eslint": "^1.10.3",
     "gh-pages": "^0.11.0",
     "ink-docstrap": "^1.1.1",
@@ -87,5 +89,10 @@
         }
       }
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
