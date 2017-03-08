@@ -46,8 +46,18 @@ export default class QueryBuilder {
     return this._query || {}
   }
 
+  get relationships() {
+    return this._relationships || []
+  }
+
   withQuery(query) {
     this._query = Object.assign({}, this.query, query)
+
+    return this
+  }
+
+  withRelationships(relationships) {
+    this._relationships = this.relationships.concat(relationships)
 
     return this
   }

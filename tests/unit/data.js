@@ -254,6 +254,18 @@ describe('Data', () => {
     })
   })
 
+  describe('#with()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('with').which.is.Function()
+    })
+
+    it('should add query parameter to the query', () => {
+      const query = data.users.with('posts')
+
+      should(query).have.propertyByPath('_relationships', 0).which.is.String()
+    })
+  })
+
   describe('#create()', () => {
     it('should be a method of the model', () => {
       should(data.users).have.property('create').which.is.Function()

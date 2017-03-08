@@ -7,6 +7,8 @@ describe('Instance', function () {
   let instance = null
   const testInstanceName = getRandomString()
 
+  this.timeout(5000)
+
   before(function () {
     instance = server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
   })

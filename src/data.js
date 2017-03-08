@@ -9,7 +9,12 @@ import {buildInstanceURL} from './utils'
 class Data extends QueryBuilder {
   url(id) {
     const {instanceName, className} = this.instance
-    const url = `${buildInstanceURL(instanceName)}/classes/${className}/objects/${id ? id + '/' : ''}`
+    let url = `${buildInstanceURL(instanceName)}/classes/${className}/objects/${id ? id + '/' : ''}`
+
+    if (this._url !== undefined) {
+      url = this._url
+    }
+
     const query = querystring.stringify(this.query)
 
     return query ? `${url}?${query}` : url
@@ -29,23 +34,115 @@ class Data extends QueryBuilder {
    */
   list() {
     let result = []
-    const {baseUrl} = this
+    const self = this
+    const {baseUrl, relationships, instance} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
     return new Promise((resolve, reject) => {
-      function saveAndLoadNext(response) {
+      function request(url) {
+        fetch(url)
+          .then(saveToResult)
+          .then(loadNextPage)
+          .then(resolveRelatedModels)
+          .then(resolveIfFinished)
+          .catch(err => reject(err))
+      }
+
+      function saveToResult(response) {
         result = result.concat(response.objects)
 
-        const loadNext =
-          (pageSize === 0 || pageSize > result.length) &&
-          response.next
+        return response
+      }
 
-        if (loadNext) {
-          fetch(`${baseUrl}${response.next}`)
-            .then(saveAndLoadNext)
-            .catch(err => reject(err))
+      function loadNextPage(response) {
+        const hasNextPageMeta = response.next
+        const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
+
+        if (hasNextPageMeta && hasNotEnoughResults) {
+          request(`${baseUrl}${response.next}`)
         } else {
+          return true
+        }
+      }
+
+      function resolveRelatedModels(shouldResolve) {
+        if (shouldResolve === false) {
+          return
+        }
+
+        return new Promise((resolve, reject) => {
+          if (relationships.length === 0) {
+            resolve(true)
+          }
+
+          const resolvers = relationships.map(reference => {
+            return new Promise((resolve, reject) => {
+              const empty = {
+                target: reference,
+                items: []
+              }
+
+              if (result[0] === undefined) {
+                resolve(empty)
+              }
+
+              if (result[0][reference] === undefined) {
+                throw new Error(`Invalid reference name "${reference}"`)
+              }
+
+              // Search for rows with references
+              const references = result
+                .filter(row => row[reference])
+                .map(row => {
+                  return row[reference]
+                })
+
+              // No references so resolve with empty array
+              if (references.length === 0) {
+                resolve(empty)
+              }
+
+              const {target} = references[0]
+              const ids = references.map(item => item.value)
+
+              const load = new Data()
+
+              if (target === 'user') {
+                load._url = `${buildInstanceURL(instance.instanceName)}/users/`
+              }
+
+              load.instance = self.instance
+              load.instance.className = target
+
+              load.where('id', 'in', ids).list().then(items => {
+                resolve({target: reference, items})
+              }).catch(reject)
+            })
+          })
+
+          Promise.all(resolvers)
+            .then(models => {
+              result = result.map(item => {
+                models.forEach(({target, items}) => {
+                  const related = items.find(obj =>
+                    item[target] && obj.id === item[target].value
+                  )
+
+                  item[target] = related || item[target]
+                })
+
+                return item
+              })
+
+              resolve(true)
+            })
+            .catch(reject)
+        })
+      }
+
+      function resolveIfFinished(shouldResolve) {
+        if (shouldResolve) {
           if (pageSize !== 0) {
             result = result.slice(0, pageSize)
           }
@@ -54,9 +151,7 @@ class Data extends QueryBuilder {
         }
       }
 
-      fetch(this.url())
-        .then(saveAndLoadNext)
-        .catch(err => reject(err))
+      request(this.url())
     })
   }
 
@@ -198,6 +293,22 @@ class Data extends QueryBuilder {
     const query = Object.assign(currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
+  }
+
+  /**
+   * Expand references and relationships.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.posts.with('author').list()
+   * @example {@lang javascript}
+   * data.posts.with(['author', 'last_editor']).list()
+   */
+  with(...models) {
+    const relationships = Array.isArray(models[0]) ? models[0] : models
+
+    return this.withRelationships(relationships)
   }
 
   /**
