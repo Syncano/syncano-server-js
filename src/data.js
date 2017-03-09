@@ -40,11 +40,14 @@ class Data extends QueryBuilder {
     const pageSize = this.query.page_size || 0
 
     return new Promise((resolve, reject) => {
+      request(this.url())
+
       function request(url) {
         fetch(url)
           .then(saveToResult)
           .then(loadNextPage)
           .then(resolveRelatedModels)
+          .then(replaceCustomTypesWithValue)
           .then(resolveIfFinished)
           .catch(err => reject(err))
       }
@@ -141,6 +144,30 @@ class Data extends QueryBuilder {
         })
       }
 
+      function replaceCustomTypesWithValue(shouldResolve) {
+        if (shouldResolve === false) {
+          return
+        }
+
+        result = result.map(item => {
+          Object.keys(item).forEach(key => {
+            const value = item[key]
+            const isObject = value instanceof Object && !Array.isArray(value)
+            const hasType = isObject && value.type !== undefined
+            const hasTarget = isObject && value.target !== undefined
+            const hasValue = isObject && value.value !== undefined
+
+            if (isObject && hasType && hasTarget && hasValue) {
+              item[key] = value.value
+            }
+          })
+
+          return item
+        })
+
+        return true
+      }
+
       function resolveIfFinished(shouldResolve) {
         if (shouldResolve) {
           if (pageSize !== 0) {
@@ -150,8 +177,6 @@ class Data extends QueryBuilder {
           resolve(result)
         }
       }
-
-      request(this.url())
     })
   }
 
