@@ -3,7 +3,11 @@ function getMeta(envVar, metaVar, fallback = null) {
     return process.env[envVar]
   }
 
-  return global.META ? global.META[metaVar] : fallback
+  try {
+    return META[metaVar]
+  } catch (err) {
+    return fallback
+  }
 }
 
 export const getHost = () =>
