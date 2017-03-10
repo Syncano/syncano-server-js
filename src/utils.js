@@ -13,10 +13,30 @@ export function checkStatus(response) {
 }
 
 export function parseJSON(response) {
-  if (response.status === 202) {
+  const mimetype = response.headers.get('Content-Type')
+
+  if (response.status === 204 || mimetype === null) {
     return Promise.resolve()
   }
-  return response.json()
+
+  // Parse JSON
+  if (
+    /^.*\/.*\+json/.test(mimetype) ||
+    /^application\/json/.test(mimetype)
+  ) {
+    return response.json()
+  }
+
+  // Parse XML and plain text
+  if (
+    /^text\/.*/.test(mimetype) ||
+    /^.*\/.*\+xml/.test(mimetype) ||
+    mimetype === 'text/plain'
+  ) {
+    return response.text()
+  }
+
+  return response.arraybuffer()
 }
 
 export function buildSyncanoURL() {

@@ -16,7 +16,8 @@ export default class Endpoint extends QueryBuilder {
   }
 
   client(endpoint, body = {}, options = {}) {
-    const fetch = this.localFetch.bind(this)
+    const fetch = this.fetch.bind(this)
+
     return fetch(this.url(endpoint), {
       method: 'POST',
       body: this.parseBody(body),
