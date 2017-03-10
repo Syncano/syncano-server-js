@@ -1,7 +1,7 @@
 import server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
-describe('Endpoint', function () {
+describe('Socket', function () {
   const instanceName = getRandomString()
 
   before(function (done) {
@@ -33,7 +33,7 @@ describe('Endpoint', function () {
   })
 
   // it('can call event', function (done) {
-  //   endpoint.post('openweathermap/get-three-hours-forecast', {city: 'bergen'})
+  //   socket.post('openweathermap/get-three-hours-forecast', {city: 'bergen'})
   //     .then(resp => resp.json())
   //     .then(data => {
   //       console.log("XXX", data)

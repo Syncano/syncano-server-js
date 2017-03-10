@@ -4,10 +4,10 @@ import QueryBuilder from './query-builder'
  * Syncano account query builder
  * @property {Function}
  */
-export default class Endpoint extends QueryBuilder {
-  url(endpoint) {
+export default class Socket extends QueryBuilder {
+  url(socket) {
     const {instanceName, spaceHost} = this.instance
-    return `https://${instanceName}.${spaceHost}/${endpoint}/`
+    return `https://${instanceName}.${spaceHost}/${socket}/`
   }
 
   parseBody(body) {
@@ -15,10 +15,10 @@ export default class Endpoint extends QueryBuilder {
     return isBodyAnObject ? JSON.stringify({...body}) : body
   }
 
-  client(endpoint, body = {}, options = {}) {
+  client(socket, body = {}, options = {}) {
     const fetch = this.fetch.bind(this)
 
-    return fetch(this.url(endpoint), {
+    return fetch(this.url(socket), {
       method: 'POST',
       body: this.parseBody(body),
       ...options

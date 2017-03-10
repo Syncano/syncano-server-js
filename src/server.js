@@ -3,7 +3,7 @@ import Users from './users'
 import Account from './account'
 import Instance from './instance'
 import Event from './event'
-import Endpoint from './endpoint'
+import Socket from './socket'
 import {
   getToken,
   getInstanceName,
@@ -32,8 +32,8 @@ export default function server(options = {}) {
   users.instance = instanceConfig
   const event = new Event()
   event.instance = instanceConfig
-  const endpoint = new Endpoint()
-  endpoint.instance = instanceConfig
+  const socket = new Socket()
+  socket.instance = instanceConfig
 
   const account = new Account({accountKey: options.accountKey})
   const instance = new Instance({accountKey: options.accountKey})
@@ -43,7 +43,7 @@ export default function server(options = {}) {
     account,
     instance,
     event,
-    endpoint,
+    socket,
     data: new Proxy(new Data(), {
       get(target, className) {
         const data = new Data()
