@@ -51,6 +51,19 @@ data.tags
   .list()
   .then(tags => {})
 
+// Get list of post where author is reference to other class 
+// and author email is john@example.com
+data.posts
+  .where('author.email', 'john@example.com')
+  .list()
+  .then(posts => {})
+
+// Get list of post - author column will be expanded with data from target class
+data.posts
+  .with('author')
+  .list()
+  .then(posts => {})
+
 // Delete tags with with given array of ids
 data.tags.delete([8735, 8733])
 
