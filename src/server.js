@@ -43,7 +43,7 @@ export default function server(options = {}) {
     account,
     instance,
     event,
-    socket,
+    socket: socket.connect.bind(socket),
     data: new Proxy(new Data(), {
       get(target, className) {
         const data = new Data()

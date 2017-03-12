@@ -103,4 +103,13 @@ event.emit('my_signal', {dummyKey: 'dummy_value'})
   })
 ```
 
+### Socket connection 
+
+```js
+const Tags = socket('tags')
+
+Tags.get('list', {sort: 'latest'}).then(latestTags => {})
+Tags.post('create', {name: 'nature'}).then(createdTag => {})
+```
+
 Check [documentation](http://syncano.github.io/syncano-server-js/) to learn more.
