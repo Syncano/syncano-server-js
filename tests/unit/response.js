@@ -46,6 +46,7 @@ describe('Response', () => {
 
     it('should add X-TEST to _headers', () => {
       res.header('X-TEST', 'Hello World')
+
       should(res).have.property('_headers').which.is.deepEqual({
         'X-TEST': 'Hello World'
       })

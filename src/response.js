@@ -41,6 +41,8 @@ class Response {
     this._content = JSON.stringify(content)
 
     this._make()
+
+    return this
   }
 }
 
