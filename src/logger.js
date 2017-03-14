@@ -17,6 +17,7 @@ const TYPES = {
 class Logger {
   constructor() {
     this._start = null
+    this._callback = null
 
     Object.keys(TYPES).forEach(level => {
       this[level] = (...args) => {
@@ -48,10 +49,12 @@ class Logger {
 
   listen(callback) {
     if (typeof callback !== 'function') {
-      throw new Error('Callback must be a function')
+      throw new Error('Callback must be a function.')
     }
 
     this._callback = callback
+
+    return this
   }
 
   _print(...args) {
