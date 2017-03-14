@@ -5,6 +5,7 @@ import Instance from './instance'
 import Event from './event'
 import Socket from './socket'
 import Response from './response'
+import Logger from './logger'
 import {
   getToken,
   getInstanceName,
@@ -45,6 +46,7 @@ function server(options = {}) {
     instance,
     event,
     socket,
+    logger: Logger,
     response: Response,
     data: new Proxy(new Data(), {
       get(target, className) {

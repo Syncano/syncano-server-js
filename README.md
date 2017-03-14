@@ -14,7 +14,7 @@ to communicate with **Syncano Core Services**. Syncano provides various Core Ser
 
 To initialize library simply type:
 ```js
-import { data, users, socket, response, event } from 'syncano-server'
+import { data, users, socket, response, event, logger } from 'syncano-server'
 ```
 
 Library initiated that way will grab necessary information from the context of you Socket Script - it means that you don't need to provide additional information such as Instance name or authentication key (token) to your Instance.
@@ -133,6 +133,33 @@ data.posts
   .catch(err => {
     // error is thrown if post was not found
   })
+```
+
+### Logging
+
+The logger provides the eight logging levels defined in [RFC 5424](https://tools.ietf.org/html/rfc5424): emergency, alert, critical, error, warning, notice, info and debug.
+
+```js
+import {logger} from 'syncano-server'
+
+// Basic logger
+logger('Message without logging level')
+logger({hello: 'World'}, 'Hello world object')
+
+// Specific level loggers
+logger().emergency('This is emergency message!')
+logger().alert('This is alert message!')
+logger().critical('This is critical message!')
+logger().error('This is error message!')
+logger().warning('This is warning message!')
+logger().notice('This is notice message!')
+logger().info('This is info message!')
+logger().debug('This is debug message!')
+
+// Listening on logged messages
+logger().listen(event => {
+  // Handle event
+})
 ```
 
 Check [documentation](http://syncano.github.io/syncano-server-js/) to learn more.
