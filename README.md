@@ -14,16 +14,15 @@ to communicate with **Syncano Core Services**. Syncano provides various Core Ser
 
 To initialize library simply type:
 ```js
-import server from 'syncano-server-js'
-
-const { data, events } = server()
+import { data, users, socket, response, event } from 'syncano-server'
 ```
 
 Library initiated that way will grab necessary information from the context of you Socket Script - it means that you don't need to provide additional information such as Instance name or authentication key (token) to your Instance.
 
 If you want to force the library to connect to specified instance type:
 ```js
-const { data, events } = server({
+import { connect } from 'syncano-server'
+const { data, events } = connect({
   token: '9-12jdiasdnfo23nrokms',
   instanceName: 'example-instance-name'
 })

@@ -13,7 +13,7 @@ import {
   SYNCANO_API_VERSION
 } from './settings'
 
-export default function server(options = {}) {
+function server(options = {}) {
   const genInstanceConfig = className => {
     const config = Object.assign({}, {
       token: getToken(),
@@ -55,3 +55,11 @@ export default function server(options = {}) {
     })
   }
 }
+
+const initialized = server()
+
+Object.keys(initialized).forEach(key => {
+  module.exports[key] = initialized[key]
+})
+
+export default server
