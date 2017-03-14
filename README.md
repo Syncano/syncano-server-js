@@ -88,7 +88,7 @@ data.users
   .where('email', 'john.doe@example.com')
   .firstOrFail()
   .then(user => {})
-  .then(err => {
+  .catch(err => {
     // error is thrown if user was not found
   })
 ```
@@ -110,6 +110,31 @@ const Tags = socket('tags')
 
 Tags.get('list', {sort: 'latest'}).then(latestTags => {})
 Tags.post('create', {name: 'nature'}).then(createdTag => {})
+```
+
+### HTTP Responses
+
+```js
+// Simple text/plain response
+// response(content, status, contentType, headers)
+response('Hello world')
+
+// Respond with custom header
+response('Check headers')
+  .header('X-RATE-LIMIT', 50)
+  .header('X-USAGE', 35)
+
+// Fetch latest post and return it as json
+data.posts
+  .where('status', 'published')
+  .where('is_featured', true)
+  .firstOrFail()
+  .then(post => {
+    response().json(post)
+  })
+  .catch(err => {
+    // error is thrown if post was not found
+  })
 ```
 
 Check [documentation](http://syncano.github.io/syncano-server-js/) to learn more.

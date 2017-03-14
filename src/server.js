@@ -4,6 +4,7 @@ import Account from './account'
 import Instance from './instance'
 import Event from './event'
 import Socket from './socket'
+import Response from './response'
 import {
   getToken,
   getInstanceName,
@@ -43,6 +44,7 @@ export default function server(options = {}) {
     account,
     instance,
     event,
+    response: Response,
     socket: socket.connect.bind(socket),
     data: new Proxy(new Data(), {
       get(target, className) {
