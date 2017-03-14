@@ -10,7 +10,9 @@ class Response {
     this._mimetype = mimetype
     this._headers = headers
 
-    setTimeout(this._make.bind(this), 50)
+    if (content) {
+      this._make()
+    }
   }
 
   _make() {
@@ -18,6 +20,7 @@ class Response {
     const args = [this._content, this._status, this._mimetype, this._headers]
 
     if (isLocal) {
+      console.log(args)
       return args
     }
 
@@ -37,7 +40,7 @@ class Response {
     this._mimetype = 'application/json'
     this._content = JSON.stringify(content)
 
-    return this
+    this._make()
   }
 }
 
