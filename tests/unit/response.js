@@ -1,7 +1,7 @@
 import should from 'should/as-function'
 import Server from '../../src/server'
 
-describe.only('Response', () => {
+describe('Response', () => {
   const {response} = new Server({
     token: 'testKey',
     instanceName: 'testInstance'
