@@ -106,10 +106,8 @@ event.emit('my_signal', {dummyKey: 'dummy_value'})
 ### Socket connection 
 
 ```js
-const Tags = socket('tags')
-
-Tags.get('list', {sort: 'latest'}).then(latestTags => {})
-Tags.post('create', {name: 'nature'}).then(createdTag => {})
+const latestTags = await socket.get('tags/list', { sort: 'latest' })
+const createdTag = await socket.post('tags/create', { name: 'nature' })
 ```
 
 ### HTTP Responses
