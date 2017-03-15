@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 
-import server from '../../src'
+import {server} from '../../src'
 import {getRandomString} from '../utils'
 
 describe('Instance', function () {
