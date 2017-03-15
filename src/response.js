@@ -17,7 +17,7 @@ class Response {
 
   _make() {
     const isLocal = !global.setResponse || !global.HttpResponse
-    const args = [this._content, this._status, this._mimetype, this._headers]
+    const args = [this._status, this._content, this._mimetype, this._headers]
 
     if (isLocal) {
       console.log(args)
