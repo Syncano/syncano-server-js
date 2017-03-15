@@ -137,29 +137,33 @@ data.posts
 
 ### Logging
 
-The logger provides the eight logging levels defined in [RFC 5424](https://tools.ietf.org/html/rfc5424): emergency, alert, critical, error, warning, notice, info and debug.
+The DEBUG environment variable is used to enable logging. 
+
+On Windows:
+```
+set DEBUG=*,-not_this
+```
 
 ```js
 import {logger} from 'syncano-server'
 
-// Basic logger
-logger('Message without logging level')
-logger({hello: 'World'}, 'Hello world object')
+// Listen for all events 
+logger.listen(event => {
+  // Handle event - save to db or send email 
+})
+
+// Create custom logger levels - optionally 
+// Defaults are: error, warn, debug, info
+logger.levels(['error', 'notice', 'fatal'])
+
+// Initialize logger with scope "User Socket"
+const log = logger('User Socket')
 
 // Specific level loggers
-logger().emergency('This is emergency message!')
-logger().alert('This is alert message!')
-logger().critical('This is critical message!')
-logger().error('This is error message!')
-logger().warning('This is warning message!')
-logger().notice('This is notice message!')
-logger().info('This is info message!')
-logger().debug('This is debug message!')
-
-// Listening on logged messages
-logger().listen(event => {
-  // Handle event
-})
+log.error('This is error message!')
+log.warn('This is warning message!')
+log.info('This is info message!', {hello: "world"})
+log.debug('This is debug message!')
 ```
 
 Check [documentation](http://syncano.github.io/syncano-server-js/) to learn more.
