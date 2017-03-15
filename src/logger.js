@@ -4,7 +4,7 @@
  */
 import chalk from 'chalk'
 
-const LEVELS = ['fatal', 'error', 'warn', 'info', 'debug']
+const LEVELS = ['error', 'warn', 'info', 'debug']
 const COLORS = {
   error: 'red',
   warn: 'yellow',
@@ -118,7 +118,7 @@ const logger = function (scope) {
 }
 
 logger.levels = function (levels) {
-  if (Array.isArray(levels)) {
+  if (!Array.isArray(levels)) {
     throw new Error('Levels must be array of strings.')
   }
 
