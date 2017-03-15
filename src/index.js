@@ -1,6 +1,6 @@
 import server from './server'
 
-const initializedServer = server();
+const initializedServer = server()
 
 const users = initializedServer.users
 const account = initializedServer.account
