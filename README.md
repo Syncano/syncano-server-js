@@ -117,21 +117,27 @@ const createdTag = await socket.post('tags/create', { name: 'nature' })
 // response(content, status, contentType, headers)
 response('Hello world')
 
+response('Hello world', 200, 'text/plain', {
+  'X-RATE-LIMIT': 50
+})
+
 // Respond with custom header
-response('Check headers')
+response
   .header('X-RATE-LIMIT', 50)
   .header('X-USAGE', 35)
+  ('Check headers')
 
-// Fetch latest post and return it as json
-data.posts
-  .where('status', 'published')
-  .where('is_featured', true)
-  .firstOrFail()
-  .then(post => {
-    response().json(post)
-  })
-  .catch(err => {
-    // error is thrown if post was not found
+// Respond with json string
+response.json({
+  title: "Post title",
+  content: "Lorem ipsum dolor sit amet."
+})
+
+response
+  .header('X-RATE-LIMIT', 50)
+  .json({
+    title: "Post title",
+    content: "Lorem ipsum dolor sit amet."
   })
 ```
 

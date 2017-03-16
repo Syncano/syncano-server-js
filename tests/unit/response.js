@@ -41,13 +41,13 @@ describe('Response', () => {
 
   describe('#header()', () => {
     it('should be a method of the model', () => {
-      should(res).have.property('header').which.is.Function()
+      should(response).have.property('header').which.is.Function()
     })
 
     it('should add X-TEST to _headers', () => {
-      res.header('X-TEST', 'Hello World')
+      response.header('X-TEST', 'Hello World')
 
-      should(res).have.property('_headers').which.is.deepEqual({
+      should(response).have.property('_headers').which.is.deepEqual({
         'X-TEST': 'Hello World'
       })
     })
@@ -55,16 +55,16 @@ describe('Response', () => {
 
   describe('#json()', () => {
     it('should be a method of the model', () => {
-      should(res).have.property('json').which.is.Function()
+      should(response).have.property('json').which.is.Function()
     })
 
     it('should change mimetype to application/json', () => {
-      should(res.json())
+      should(response.json())
         .have.property('_mimetype').which.is.equal('application/json')
     })
 
     it('should parse content to json', () => {
-      should(res.json({hello: 'World'}))
+      should(response.json({hello: 'World'}))
         .have.property('_content').which.is.equal('{"hello":"World"}')
     })
   })

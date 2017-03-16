@@ -26,26 +26,28 @@ class Response {
 
     global.setResponse(new global.HttpResponse(...args))
   }
-
-  header(key, value) {
-    this._headers = {
-      ...this._headers,
-      [key]: value
-    }
-
-    return this
-  }
-
-  json(content) {
-    this._mimetype = 'application/json'
-    this._content = JSON.stringify(content)
-
-    this._make()
-
-    return this
-  }
 }
 
-export default (content, status, mimetype, headers) => {
+const response = (content, status, mimetype, headers) => {
   return new Response(content, status, mimetype, headers)
 }
+
+response.header = (key, value) => {
+  response._headers = {
+    ...response._headers,
+    [key]: value
+  }
+
+  return response
+}
+
+response.json = (content, status = 200) => {
+  return new Response(
+    JSON.stringify(content),
+    status,
+    'application/json',
+    response._headers
+  )
+}
+
+export default response
