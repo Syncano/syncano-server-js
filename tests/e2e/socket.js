@@ -1,4 +1,3 @@
-import {Server} from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 describe('Socket', function () {
@@ -12,7 +11,6 @@ describe('Socket', function () {
         }
         global.CONFIG.SYNCANO_INSTANCE_NAME = instanceObj.name
         global.CONFIG.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        Server()
         done()
       })
       .catch(err => {

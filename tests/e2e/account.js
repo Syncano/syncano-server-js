@@ -1,12 +1,12 @@
 import {expect} from 'chai'
 
-import {Server} from '../../src'
+import Server from '../../src'
 
 describe('Account', function () {
   let account = null
 
   before(function () {
-    account = Server().account
+    account = new Server().account
   })
 
   it('can\'t get account with dummy key', function (done) {

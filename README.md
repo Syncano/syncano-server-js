@@ -21,9 +21,9 @@ Library initiated that way will grab necessary information from the context of y
 
 If you want to force the library to connect to specified instance type:
 ```js
-import server from 'syncano-server'
+import Server from 'syncano-server'
 
-const { data, events } = server({
+const { data, events } = new Server({
   token: '9-12jdiasdnfo23nrokms',
   instanceName: 'example-instance-name'
 })
