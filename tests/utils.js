@@ -1,4 +1,4 @@
-import {server} from '../src'
+import {Server} from '../src'
 
 const accountConnection = server({accountKey: process.env.E2E_ACCOUNT_KEY})
 
