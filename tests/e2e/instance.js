@@ -10,7 +10,7 @@ describe('Instance', function () {
   this.timeout(5000)
 
   before(function () {
-    instance = server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
+    instance = Server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
   })
 
   it('can create instance', function (done) {
