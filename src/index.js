@@ -1,15 +1,15 @@
-import server from './server'
+import Server from './server'
 
-const initializedServer = server()
+const server = new Server()
 
-const users = initializedServer.users
-const account = initializedServer.account
-const instance = initializedServer.instance
-const event = initializedServer.event
-const socket = initializedServer.socket
-const logger = initializedServer.logger
-const response = initializedServer.response
-const data = initializedServer.data
+const users = server.users
+const account = server.account
+const instance = server.instance
+const event = server.event
+const socket = server.socket
+const logger = server.logger
+const response = server.response
+const data = server.data
 
 export {
   users,
@@ -20,5 +20,5 @@ export {
   logger,
   response,
   data,
-  server
+  Server
 }

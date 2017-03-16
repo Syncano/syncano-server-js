@@ -46,10 +46,10 @@ class Logger {
     }
 
     // Level
-    const levelName = this._pad(5, `${this._level}`, ' ')
+    const level = this._pad(5, `${this._level}`, ' ')
     args = args.map(this._parseArg).join(' ')
 
-    console.log(levelName + ':', time, this._scope, args, diff, 'ms')
+    console.log(`${level}:`, time, this._scope, args, diff, 'ms')
 
     return now
   }
@@ -76,7 +76,7 @@ class Logger {
   }
 
   _parseArg(arg) {
-    const isObject = typeof (arg) === 'object'
+    const isObject = arg !== null && typeof (arg) === 'object'
 
     if (isObject) {
       return `\n\n  ${JSON.stringify(arg, null, 2).split('\n').join('\n  ')}\n\n`
