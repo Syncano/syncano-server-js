@@ -41,9 +41,9 @@ class Logger {
     const diff = `+${this._calculateDiff(this._start, now)}`
     const time = this._getNowString(now).split(' ')[1]
 
-    if (!this._shouldLog(this._scope)) {
-      return
-    }
+    // if (!this._shouldLog(this._scope)) {
+    //   return
+    // }
 
     // Level
     const level = this._pad(5, `${this._level}`, ' ')
