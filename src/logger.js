@@ -3,6 +3,8 @@
  * @property {Function}
  */
 
+/* global ARGS */
+
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
 class Logger {
@@ -74,7 +76,7 @@ class Logger {
   }
 
   _parseArg(arg) {
-    const isObject = typeof(arg) === 'object';
+    const isObject = typeof (arg) === 'object'
 
     if (isObject) {
       return `\n\n  ${JSON.stringify(arg, null, 2).split('\n').join('\n  ')}\n\n`
