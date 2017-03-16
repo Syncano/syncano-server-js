@@ -3,7 +3,8 @@
     "transform-strict-mode",
     "transform-export-extensions",
     "transform-object-rest-spread",
-    "transform-class-properties"
+    "transform-class-properties",
+    "add-module-exports"
   ],
   "presets": [
     [
