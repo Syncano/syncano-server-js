@@ -1,4 +1,4 @@
-import {server} from '../../src'
+import {Server} from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 describe('Socket', function () {

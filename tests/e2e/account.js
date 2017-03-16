@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 
-import {server} from '../../src'
+import {Server} from '../../src'
 
 describe('Account', function () {
   let account = null
