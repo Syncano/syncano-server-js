@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 
-import server from '../../src'
+import Server from '../../src'
 import {getRandomString} from '../utils'
 
 describe('Instance', function () {
@@ -10,7 +10,7 @@ describe('Instance', function () {
   this.timeout(5000)
 
   before(function () {
-    instance = server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
+    instance = new Server({accountKey: process.env.E2E_ACCOUNT_KEY}).instance
   })
 
   it('can create instance', function (done) {

@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 
-import server from '../../src'
+import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 describe('Event', function () {
@@ -13,7 +13,7 @@ describe('Event', function () {
       .then(instanceObj => {
         process.env.SYNCANO_INSTANCE_NAME = instanceObj.name
         process.env.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        event = server().event
+        event = new Server().event
         done()
       })
       .catch(err => {

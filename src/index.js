@@ -1,3 +1,14 @@
-import server from './server'
+import Server from './server'
 
-export default server
+export const {
+  users,
+  account,
+  instance,
+  event,
+  socket,
+  logger,
+  response,
+  data
+} = new Server()
+
+export default Server

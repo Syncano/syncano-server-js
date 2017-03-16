@@ -2,15 +2,10 @@
  * Debug your code.
  * @property {Function}
  */
-import chalk from 'chalk'
+
+/* global ARGS */
 
 const LEVELS = ['error', 'warn', 'info', 'debug']
-const COLORS = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'gray',
-  debug: 'blue'
-}
 
 class Logger {
   constructor({scope, callback, levels}) {
@@ -37,39 +32,35 @@ class Logger {
   }
 
   _pad(width, string, padding) {
-    return (width <= string.length) ? string : this._pad(width, string + padding, padding)
+    return (width <= string.length) ? string : this._pad(width, padding + string, padding)
   }
 
   _print(...args) {
-    const color = COLORS[this._level]
-
     // Time
     const now = this._getNow()
-    const diff = chalk[color](`+${this._calculateDiff(this._start, now)}`)
-    const time = chalk.gray(this._getNowString(now).split(' ')[1])
+    const diff = `+${this._calculateDiff(this._start, now)}`
+    const time = this._getNowString(now).split(' ')[1]
 
     if (!this._shouldLog(this._scope)) {
       return
     }
 
     // Level
-    const levelName = this._pad(5, `${this._level}`, ' ')
-    const level = color ? chalk[color](levelName) : levelName
-
+    const level = this._pad(5, `${this._level}`, ' ')
     args = args.map(this._parseArg).join(' ')
 
-    console.log(level, this._scope, time, diff, args)
+    console.log(`${level}:`, time, this._scope, args, diff, 'ms')
 
     return now
   }
 
   _shouldLog(scope) {
-    if (global.ARGS && global.ARGS.DEBUG) {
-      if (typeof global.ARGS.DEBUG === 'boolean') {
-        return global.ARGS.DEBUG
+    if (ARGS && ARGS.DEBUG) {
+      if (typeof ARGS.DEBUG === 'boolean') {
+        return ARGS.DEBUG
       }
 
-      const vars = global.ARGS.DEBUG.split(',')
+      const vars = ARGS.DEBUG.split(',')
       const excluded = vars
         .filter(item => /^-/.test(item))
         .map(item => item.replace(/^-/, ''))
@@ -85,10 +76,10 @@ class Logger {
   }
 
   _parseArg(arg) {
-    const isObject = arg instanceof Object && arg !== null
+    const isObject = arg !== null && typeof (arg) === 'object'
 
     if (isObject) {
-      return `\n\n  ${JSON.stringify(arg, null, 2).split('\n').join('\n  ')}\n`
+      return `\n\n  ${JSON.stringify(arg, null, 2).split('\n').join('\n  ')}\n\n`
     }
 
     return arg
