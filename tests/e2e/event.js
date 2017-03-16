@@ -13,7 +13,7 @@ describe('Event', function () {
       .then(instanceObj => {
         process.env.SYNCANO_INSTANCE_NAME = instanceObj.name
         process.env.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        event = server().event
+        event = Server().event
         done()
       })
       .catch(err => {

@@ -12,7 +12,7 @@ describe('Socket', function () {
         }
         global.CONFIG.SYNCANO_INSTANCE_NAME = instanceObj.name
         global.CONFIG.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        server()
+        Server()
         done()
       })
       .catch(err => {

@@ -6,7 +6,7 @@ describe('Account', function () {
   let account = null
 
   before(function () {
-    account = server().account
+    account = Server().account
   })
 
   it('can\'t get account with dummy key', function (done) {
