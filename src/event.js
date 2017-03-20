@@ -25,8 +25,12 @@ class Event extends QueryBuilder {
     return new Promise((resolve, reject) => {
       const options = {
         method: 'POST',
-        body: JSON.stringify({signal, payload})
+        body: JSON.stringify({
+          signal: `${META.socket}.${signal}`,
+          payload
+        })
       }
+
       fetch(this.url(), options)
         .then(resolve)
         .catch(reject)
