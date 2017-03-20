@@ -103,6 +103,14 @@ event.emit('my_signal', {dummyKey: 'dummy_value'})
   })
 ```
 
+### Publishing to channels
+
+```js
+channel.publish('my_channel', {dummyKey: 'dummy_value'})
+  .then(res => {})
+  .catch(err => {})
+```
+
 ### Socket connection 
 
 ```js
