@@ -40,7 +40,6 @@
     "url": "https://github.com/Syncano/syncano-server-js.git"
   },
   "dependencies": {
-    "chalk": "^1.1.3",
     "node-fetch": "2.0.0-alpha.3"
   },
   "devDependencies": {
