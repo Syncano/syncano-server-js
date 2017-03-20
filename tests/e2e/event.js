@@ -1,7 +1,12 @@
 import {expect} from 'chai'
-
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
+
+global.META = {
+  socket: {
+    name: 'test-socket'
+  }
+}
 
 describe('Event', function () {
   let event = null
