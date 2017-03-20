@@ -6,6 +6,7 @@ import Event from './event'
 import Socket from './socket'
 import Response from './response'
 import Logger from './logger'
+import Channel from './channel'
 import {
   getToken,
   getInstanceName,
@@ -34,6 +35,8 @@ const server = (options = {}) => {
   users.instance = instanceConfig
   const event = new Event()
   event.instance = instanceConfig
+  const channel = new Channel()
+  channel.instance = instanceConfig
   const socket = new Socket()
   socket.instance = instanceConfig
 
@@ -45,6 +48,7 @@ const server = (options = {}) => {
     account,
     instance,
     event,
+    channel,
     socket,
     logger: Logger,
     response: Response,
