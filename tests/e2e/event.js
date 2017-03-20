@@ -3,9 +3,7 @@ import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 global.META = {
-  socket: {
-    name: 'test-socket'
-  }
+  socket: 'test-socket'
 }
 
 describe('Event', function () {

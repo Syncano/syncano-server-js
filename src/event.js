@@ -26,7 +26,7 @@ class Event extends QueryBuilder {
       const options = {
         method: 'POST',
         body: JSON.stringify({
-          signal: `${META.socket.name}.${signal}`,
+          signal: `${META.socket}.${signal}`,
           payload
         })
       }
