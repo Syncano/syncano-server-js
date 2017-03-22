@@ -10,4 +10,5 @@ docs
 *.sublime-*
 coverage.lcov
 .nyc_output
+.envrc
 e2e-tests
