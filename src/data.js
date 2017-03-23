@@ -20,12 +20,7 @@ class Data extends QueryBuilder {
     return query ? `${url}?${query}` : url
   }
 
-  batchUrl() {
-    const {baseUrl, instance} = this
-    return `${baseUrl}/v1/instances/${instance.instanceName}/batch/`
-  }
-
-  batchBodyBuilder(body) {
+  _batchBodyBuilder(body) {
     const {instanceName, className} = this.instance
     const batchBody = {requests: []}
 
@@ -50,6 +45,16 @@ class Data extends QueryBuilder {
       batchBody.requests.push(singleRequest)
     })
     return batchBody
+  }
+
+  _batchFetchObject(body) {
+    const {baseUrl, instance} = this
+
+    return {
+      url: `${baseUrl}/v1/instances/${instance.instanceName}/batch/`,
+      method: 'POST',
+      body: JSON.stringify(this._batchBodyBuilder(body))
+    }
   }
 
   /**
@@ -378,20 +383,23 @@ class Data extends QueryBuilder {
    *   title: 'Example post title',
    *   content: 'Lorem ipsum dolor sit amet.'
    * })
+   * data.posts.create([
+   *  { content: 'Lorem ipsum!' },
+   *  { content: 'More lorem ipsum!' }
+   * ])
    */
   create(body) {
-    let fetchBody = body
-    let fetchUrl = this.url()
-
-    if (Array.isArray(body)) {
-      fetchUrl = this.batchUrl()
-      fetchBody = this.batchBodyBuilder(body)
+    let fetchObject = {
+      url: this.url(),
+      method: 'POST',
+      body: JSON.stringify(body)
     }
 
-    return this.fetch(fetchUrl, {
-      method: 'POST',
-      body: JSON.stringify(fetchBody)
-    })
+    if (Array.isArray(body)) {
+      fetchObject = this._batchFetchObject(body)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject)
   }
 
   /**
@@ -401,22 +409,23 @@ class Data extends QueryBuilder {
    *
    * @example {@lang javascript}
    * data.posts.update(55, { content: 'No more lorem ipsum!' })
+   * data.posts.update([
+   *  [55, { content: 'No more lorem ipsum!' }],
+   *  [56, { content: 'No more lorem ipsum!' }]
+   * ])
    */
   update(id, body) {
-    if (Array.isArray(id)) {
-      const fetchUrl = this.batchUrl()
-      const fetchBody = this.batchBodyBuilder(id)
-
-      return this.fetch(fetchUrl, {
-        method: 'POST',
-        body: JSON.stringify(fetchBody)
-      })
-    }
-
-    return this.fetch(this.url(id), {
+    let fetchObject = {
+      url: this.url(id),
       method: 'PATCH',
       body: JSON.stringify(body)
-    })
+    }
+
+    if (Array.isArray(id)) {
+      fetchObject = this._batchFetchObject(id)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject)
   }
 
   /**
@@ -425,12 +434,19 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * data.posts.delete(55)
+   * data.posts.delete(55) || data.posts.delete([55, 56, 57])
    */
   delete(id) {
-    return this.fetch(this.url(id), {
+    let fetchObject = {
+      url: this.url(id),
       method: 'DELETE'
-    })
+    }
+
+    if (Array.isArray(id)) {
+      fetchObject = this._batchFetchObject(id)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject)
   }
 }
 

@@ -283,6 +283,22 @@ describe('Data', () => {
         should(object).have.property('name').equal('John')
       })
     })
+
+    it('should be able to create multiple objects', () => {
+      const users = [
+        {name: 'John'},
+        {name: 'Joe'}
+      ]
+
+      api.post(`/v1/instances/${instanceName}/batch/`)
+        .query(users)
+        .reply(200, users)
+
+      data.users.create(users).then(object => {
+        should(object).be.Array()
+        should(object).have.property('name').equal('John')
+      })
+    })
   })
 
   describe('#update()', () => {
