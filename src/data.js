@@ -20,6 +20,11 @@ class Data extends QueryBuilder {
     return query ? `${url}?${query}` : url
   }
 
+  batchUrl() {
+    const {baseUrl, instance} = this
+    return `${baseUrl}/v1/instances/${instance.instanceName}/batch/`
+  }
+
   batchBodyBuilder(body) {
     const {instanceName, className} = this.instance
     const batchBody = {requests: []}
@@ -32,6 +37,7 @@ class Data extends QueryBuilder {
       }
 
       if (Array.isArray(item)) {
+        singleRequest.method = 'PATCH'
         singleRequest.path = `${path}${item[0]}/`
         singleRequest.body = JSON.stringify(item[1])
       } else if (isNaN(item) === false) {
@@ -43,7 +49,6 @@ class Data extends QueryBuilder {
 
       batchBody.requests.push(singleRequest)
     })
-    // console.log(batchBody)
     return batchBody
   }
 
@@ -375,20 +380,17 @@ class Data extends QueryBuilder {
    * })
    */
   create(body) {
-    if (Array.isArray(body)) {
-      const {baseUrl, instance} = this
-      const batchUrl = `${baseUrl}/v1/instances/${instance.instanceName}/batch/`
-      const batchBody = this.batchBodyBuilder(body)
+    let fetchBody = body
+    let fetchUrl = this.url()
 
-      return this.fetch(batchUrl, {
-        method: 'POST',
-        body: JSON.stringify(batchBody)
-      })
+    if (Array.isArray(body)) {
+      fetchUrl = this.batchUrl()
+      fetchBody = this.batchBodyBuilder(body)
     }
 
-    return this.fetch(this.url(), {
+    return this.fetch(fetchUrl, {
       method: 'POST',
-      body: JSON.stringify(body)
+      body: JSON.stringify(fetchBody)
     })
   }
 
@@ -401,6 +403,16 @@ class Data extends QueryBuilder {
    * data.posts.update(55, { content: 'No more lorem ipsum!' })
    */
   update(id, body) {
+    if (Array.isArray(id)) {
+      const fetchUrl = this.batchUrl()
+      const fetchBody = this.batchBodyBuilder(id)
+
+      return this.fetch(fetchUrl, {
+        method: 'POST',
+        body: JSON.stringify(fetchBody)
+      })
+    }
+
     return this.fetch(this.url(id), {
       method: 'PATCH',
       body: JSON.stringify(body)
