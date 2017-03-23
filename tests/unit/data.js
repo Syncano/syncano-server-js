@@ -292,11 +292,14 @@ describe('Data', () => {
 
       api.post(`/v1/instances/${instanceName}/batch/`)
         .query(users)
-        .reply(200, users)
+        .reply(200, [
+          {content: {name: 'John'}, code: 201},
+          {content: {name: 'Joe'}, code: 201}
+        ])
 
-      data.users.create(users).then(object => {
-        should(object).be.Array()
-        should(object).have.property('name').equal('John')
+      data.users.create(users).then(items => {
+        should(items).be.Array()
+        should(items).have.propertyByPath('content', 'name').equal('John')
       })
     })
   })

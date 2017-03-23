@@ -22,10 +22,9 @@ class Data extends QueryBuilder {
 
   _batchBodyBuilder(body) {
     const {instanceName, className} = this.instance
-    const batchBody = {requests: []}
+    const path = `/v1/instances/${instanceName}/classes/${className}/objects/`
 
-    body.forEach(item => {
-      const path = `/v1/instances/${instanceName}/classes/${className}/objects/`
+    return body.reduce((data, item) => {
       const singleRequest = {
         method: 'POST',
         path
@@ -42,9 +41,10 @@ class Data extends QueryBuilder {
         singleRequest.body = JSON.stringify(item)
       }
 
-      batchBody.requests.push(singleRequest)
-    })
-    return batchBody
+      data.requests.push(singleRequest)
+
+      return data
+    }, {requests: []})
   }
 
   _batchFetchObject(body) {
@@ -434,7 +434,8 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * data.posts.delete(55) || data.posts.delete([55, 56, 57])
+   * data.posts.delete(55)
+   * data.posts.delete([55, 56, 57])
    */
   delete(id) {
     let fetchObject = {
