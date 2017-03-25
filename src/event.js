@@ -34,7 +34,7 @@ class Event extends QueryBuilder {
       const options = {
         method: 'POST',
         body: JSON.stringify({
-          signal: signalParams.join(),
+          signal: signalParams.join(''),
           payload
         })
       }
