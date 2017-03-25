@@ -41,7 +41,7 @@ describe('Event', function () {
   })
 
   it('can emit event with socket name', function (done) {
-    event.emit(testEventName, {dummyKey: 'dummy_value'})
+    event.emit(`${testSocketName}.${testEventName}`, {dummyKey: 'dummy_value'})
       .then(event => {
         expect(event).to.be.empty  // eslint-disable-line no-unused-expressions
         done()
