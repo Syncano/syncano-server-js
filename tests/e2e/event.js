@@ -9,6 +9,7 @@ global.META = {
 describe('Event', function () {
   let event = null
   const testEventName = getRandomString()
+  const testSocketName = getRandomString()
   const instanceName = getRandomString()
 
   before(function (done) {
@@ -39,7 +40,19 @@ describe('Event', function () {
       })
   })
 
-  it('can emit event', function (done) {
+  it('can emit event with socket name', function (done) {
+    event.emit(testEventName, {dummyKey: 'dummy_value'})
+      .then(event => {
+        expect(event).to.be.empty  // eslint-disable-line no-unused-expressions
+        done()
+      })
+      .catch(err => {
+        console.log(err)
+        done(err)
+      })
+  })
+
+  it('can emit event without socket', function (done) {
     event.emit(testEventName, {dummyKey: 'dummy_value'})
       .then(event => {
         expect(event).to.be.empty  // eslint-disable-line no-unused-expressions

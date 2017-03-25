@@ -41,10 +41,6 @@ class Logger {
     const diff = `+${this._calculateDiff(this._start, now)}`
     const time = this._getNowString(now).split(' ')[1]
 
-    // if (!this._shouldLog(this._scope)) {
-    //   return
-    // }
-
     // Level
     const level = this._pad(5, `${this._level}`, ' ')
     args = args.map(this._parseArg).join(' ')
@@ -62,7 +58,7 @@ class Logger {
 
       const vars = ARGS.DEBUG.split(',')
       const excluded = vars
-        .filter(item => /^-/.test(item))
+        .filter(item => item.startsWith('-'))
         .map(item => item.replace(/^-/, ''))
 
       const matchAll = vars.filter(item => item === '*').length
@@ -91,8 +87,8 @@ class Logger {
 
   _getNowString(date) {
     return date.toISOString()
-      .replace(/T/, ' ')      // replace T with a space
-      .replace(/\..+/, '')    // delete the dot and everything after
+      .replace(/T/, ' ')      // Replace T with a space
+      .replace(/\..+/, '')    // Delete the dot and everything after
   }
 
   _calculateDiff(t1, t2) {
@@ -110,7 +106,7 @@ const logger = function (scope) {
 
 logger.levels = function (levels) {
   if (!Array.isArray(levels)) {
-    throw new Error('Levels must be array of strings.')
+    throw new TypeError('Levels must be array of strings.')
   }
 
   logger._levels = levels
@@ -118,7 +114,7 @@ logger.levels = function (levels) {
 
 logger.listen = function (callback) {
   if (typeof callback !== 'function') {
-    throw new Error('Callback must be a function.')
+    throw new TypeError('Callback must be a function.')
   }
 
   logger._callback = callback
