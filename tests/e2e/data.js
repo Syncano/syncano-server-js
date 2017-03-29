@@ -1,8 +1,7 @@
 import nodeFetch from 'node-fetch'
-import {checkStatus, parseJSON} from '../../src/utils'
+import {checkStatus} from '../../src/utils'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 import Server from '../../src/server'
-
 
 describe('Data', function () {
   const instanceName = getRandomString()
@@ -56,6 +55,7 @@ describe('Data', function () {
         done()
       })
   })
+
   it('can create multiple objects', function (done) {
     data.tests
       .create([
@@ -72,6 +72,7 @@ describe('Data', function () {
         done(err)
       })
   })
+
   it('can create single object', function (done) {
     data.tests
       .create(
@@ -84,6 +85,7 @@ describe('Data', function () {
         done(err)
       })
   })
+
   it('can update single object', function (done) {
     data.tests
       .update(1, {test: 'updated', test2: 'secret'})
@@ -95,6 +97,7 @@ describe('Data', function () {
         done(err)
       })
   })
+
   it('can update multiple objects', function (done) {
     data.tests
       .update([
@@ -111,6 +114,7 @@ describe('Data', function () {
         done(err)
       })
   })
+
   it('can delete single object', function (done) {
     data.tests
       .delete(1)
@@ -122,6 +126,7 @@ describe('Data', function () {
         done(err)
       })
   })
+
   it('can delete multiple objects', function (done) {
     data.tests
       .delete([2, 3, 4, 5])
