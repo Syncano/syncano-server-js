@@ -37,7 +37,7 @@ describe('Data', function () {
           body: JSON.stringify(testClass)
         })
           .then(checkStatus)
-          .then(done())
+          .then(() => done())
       })
       .catch(err => {
         console.log(err)
@@ -53,6 +53,19 @@ describe('Data', function () {
     deleteTestInstance(instanceName)
       .then(() => {
         done()
+      })
+  })
+
+  it('can create single object', function (done) {
+    data.tests
+      .create(
+        {test: 'single', test2: 'secret'})
+      .then(() => {
+        done()
+      })
+      .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
       })
   })
 
@@ -73,22 +86,9 @@ describe('Data', function () {
       })
   })
 
-  it('can create single object', function (done) {
-    data.tests
-      .create(
-        {test: 'single', test2: 'secret'})
-      .then(() => {
-        done()
-      })
-      .catch(err => {
-        console.log('ERROR: ', err)
-        done(err)
-      })
-  })
-
   it('can update single object', function (done) {
     data.tests
-      .update(1, {test: 'updated', test2: 'secret'})
+      .update(1, {test: 'Updated', test2: 'secret'})
       .then(() => {
         done()
       })

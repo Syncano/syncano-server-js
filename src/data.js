@@ -21,8 +21,8 @@ class Data extends QueryBuilder {
   }
 
   _batchBodyBuilder(body) {
-    const {instanceName, className} = this.instance
-    const path = `/v1/instances/${instanceName}/classes/${className}/objects/`
+    const {instanceName, className, apiVersion} = this.instance
+    const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
 
     return body.reduce((data, item) => {
       const singleRequest = {
@@ -48,10 +48,10 @@ class Data extends QueryBuilder {
   }
 
   _batchFetchObject(body) {
-    const {baseUrl, instance} = this
+    const {instanceName} = this.instance
 
     return {
-      url: `${baseUrl}/v1/instances/${instance.instanceName}/batch/`,
+      url: `${buildInstanceURL(instanceName)}/batch/`,
       method: 'POST',
       body: JSON.stringify(this._batchBodyBuilder(body))
     }
