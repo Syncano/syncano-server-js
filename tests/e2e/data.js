@@ -1,5 +1,5 @@
 import nodeFetch from 'node-fetch'
-import {checkStatus} from '../../src/utils'
+import {checkStatus, buildInstanceURL} from '../../src/utils'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 import Server from '../../src/server'
 
@@ -28,7 +28,7 @@ describe('Data', function () {
           ]
         }
 
-        nodeFetch(`https://api.syncano.io/v2/instances/${instanceObj.name}/classes/`, {
+        nodeFetch(`${buildInstanceURL(instanceObj.name)}/classes/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,18 +51,14 @@ describe('Data', function () {
 
   after(function (done) {
     deleteTestInstance(instanceName)
-      .then(() => {
-        done()
-      })
+      .then(() => done())
   })
 
   it('can create single object', function (done) {
     data.tests
       .create(
         {test: 'single', test2: 'secret'})
-      .then(() => {
-        done()
-      })
+      .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
         done(err)
@@ -77,9 +73,7 @@ describe('Data', function () {
         {test: 'batch3', test2: 'secret'},
         {test: 'batch4', test2: 'secret'}
       ])
-      .then(() => {
-        done()
-      })
+      .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
         done(err)
@@ -89,9 +83,7 @@ describe('Data', function () {
   it('can update single object', function (done) {
     data.tests
       .update(1, {test: 'Updated', test2: 'secret'})
-      .then(() => {
-        done()
-      })
+      .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
         done(err)
@@ -106,9 +98,7 @@ describe('Data', function () {
         [4, {test: 'Updated3', test2: 'secret'}],
         [5, {test: 'Updated4', test2: 'secret'}]
       ])
-      .then(() => {
-        done()
-      })
+      .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
         done(err)
@@ -118,9 +108,7 @@ describe('Data', function () {
   it('can delete single object', function (done) {
     data.tests
       .delete(1)
-      .then(() => {
-        done()
-      })
+      .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
         done(err)
@@ -130,9 +118,7 @@ describe('Data', function () {
   it('can delete multiple objects', function (done) {
     data.tests
       .delete([2, 3, 4, 5])
-      .then(() => {
-        done()
-      })
+      .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
         done(err)
