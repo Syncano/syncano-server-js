@@ -24,10 +24,14 @@ class Event extends QueryBuilder {
     const {socket, signal} = Event._splitSignal(signalString)
 
     const signalParams = []
+
     if (socket) {
       signalParams.push(socket)
-      signalParams.push('.')
+    } else {
+      signalParams.push(META.socket)
     }
+
+    signalParams.push('.')
     signalParams.push(signal)
 
     return new Promise((resolve, reject) => {
