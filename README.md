@@ -75,7 +75,7 @@ data.tags.delete(7652)
 
 ```js
 // Get first user with given mail
-data.users
+users
   .where('email', 'john.doe@example.com')
   .first()
   .then(user => {
@@ -84,7 +84,7 @@ data.users
   })
 
 // Get first user with given mail, throws error if user was not found
-data.users
+users
   .where('email', 'john.doe@example.com')
   .firstOrFail()
   .then(user => {})
@@ -151,12 +151,9 @@ response
 
 ### Logging
 
-The DEBUG environment variable is used to enable logging. 
+For debug purposes you can use `logger`:
 
-On Windows:
-```
-set DEBUG=*,-not_this
-```
+Example:
 
 ```js
 import {logger} from 'syncano-server'
