@@ -7,6 +7,7 @@ import Socket from './socket'
 import Response from './response'
 import Logger from './logger'
 import Channel from './channel'
+import Class from './class'
 import {
   getToken,
   getInstanceName,
@@ -39,6 +40,8 @@ const server = (options = {}) => {
   channel.instance = instanceConfig
   const socket = new Socket()
   socket.instance = instanceConfig
+  const _class = new Class()
+  _class.instance = instanceConfig
 
   const account = new Account({accountKey: options.accountKey})
   const instance = new Instance({accountKey: options.accountKey})
@@ -50,6 +53,7 @@ const server = (options = {}) => {
     event,
     channel,
     socket,
+    _class,
     logger: Logger,
     response: Response,
     data: new Proxy(new Data(), {
