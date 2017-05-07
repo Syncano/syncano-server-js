@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
+
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
@@ -105,9 +106,8 @@ describe('Data object', function () {
   })
 
   it('can be sorted', function (done) {
-
-    let firstObject = null;
-    let secondObject = null;
+    let firstObject = null
+    let secondObject = null
 
     // Create objects
     Promise.all([
@@ -116,8 +116,7 @@ describe('Data object', function () {
       data[testClassName].create({field_string: 'bcdefg'})
     ])
     .then(objects => {
-      firstObject = objects[0]
-      secondObject = objects[1]
+      [firstObject, secondObject] = objects
 
       return data[testClassName]
         .orderBy('field_string')

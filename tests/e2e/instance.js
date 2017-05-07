@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
 
 import Server from '../../src'
@@ -27,8 +28,8 @@ describe('Instance', function () {
 
   it('can delete instance', function (done) {
     instance.delete(testInstanceName)
-      .then(resp => {
-        expect(resp).to.be.empty  // eslint-disable-line no-unused-expressions
+      .then(res => {
+        expect(res).to.be.empty
         done()
       })
       .catch(err => {

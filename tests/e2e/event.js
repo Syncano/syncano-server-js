@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
+
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
@@ -43,7 +45,7 @@ describe('Event', function () {
   it('can emit event with socket name', function (done) {
     event.emit(`${testSocketName}.${testEventName}`, {dummyKey: 'dummy_value'})
       .then(event => {
-        expect(event).to.be.empty  // eslint-disable-line no-unused-expressions
+        expect(event).to.be.empty
         done()
       })
       .catch(err => {
@@ -55,7 +57,7 @@ describe('Event', function () {
   it('can emit event without socket', function (done) {
     event.emit(testEventName, {dummyKey: 'dummy_value'})
       .then(event => {
-        expect(event).to.be.empty  // eslint-disable-line no-unused-expressions
+        expect(event).to.be.empty
         done()
       })
       .catch(err => {

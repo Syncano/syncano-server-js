@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
+
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
@@ -41,9 +43,8 @@ describe('Class', function () {
 
   it('can create a class', function (done) {
     _class.create({name: testClassName, schema: [{"type": "string", "name": "parameter_name"}]})
-      .then(resp => {
-        console.log(resp)
-        expect(resp.name).to.be.equal(testClassName)  // eslint-disable-line no-unused-expressions
+      .then(res => {
+        expect(res.name).to.be.equal(testClassName)
         done()
       })
       .catch(err => {
@@ -60,7 +61,7 @@ describe('Class', function () {
   it('can delete a class', function (done) {
     _class.delete(testClassName)
       .then(classObj => {
-        expect(classObj).to.be.empty  // eslint-disable-line no-unused-expressions
+        expect(classObj).to.be.empty
         done()
       })
       .catch(err => {
