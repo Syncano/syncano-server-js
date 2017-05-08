@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-expressions */
+import fs from 'fs'
+import FormData from 'form-data'
 import {expect} from 'chai'
 
 import Server from '../../src'
@@ -96,8 +98,8 @@ describe('Data object', function () {
           .where('field_string', dummyStringFieldValue)
           .first()
       })
-      .then((resp) => {
-        expect(resp).to.be.null
+      .then((res) => {
+        expect(res).to.be.null
         done()
       })
       .catch(err => {
@@ -140,7 +142,26 @@ describe('Data object', function () {
   it.skip('can be created with relation', function (done) {})
   it.skip('can be created with reference', function (done) {})
   it.skip('can be created with reference', function (done) {})
-  it.skip('can be created with file field', function (done) {})
+
+  it('can be created with file field', function (done) {
+    const form = new FormData();
+    form.append('field_file', fs.createReadStream(__dirname + '/assets/test.jpg'));
+
+    data[testClassName].create(form)
+    .then((res) => {
+      expect(res['field_file']['type']).to.be.equal('file')
+      done()
+    })
+    .catch(err => {
+      console.log(err)
+      err.response.text()
+        .then(text => {
+          console.log(text)
+          done(err)
+        })
+    })
+  })
+
   it.skip('can be listed with one filter', function (done) {})
   it.skip('can be listed with two filters', function (done) {})
   it.skip('can be listed with order', function (done) {})

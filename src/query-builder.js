@@ -7,12 +7,14 @@ export default class QueryBuilder {
     this.baseUrl = `https://${getHost()}`
   }
 
-  fetch(url, options) {
+  fetch(url, options, headers = {}) {
+    const headersToSend = Object.assign({
+      'content-type': 'application/json',
+      'x-api-key': this.instance.token
+    }, headers)
+
     return nodeFetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': this.instance.token
-      },
+      headers: headersToSend,
       ...options
     })
       .then(checkStatus)
@@ -22,7 +24,7 @@ export default class QueryBuilder {
   nonInstanceFetch(url, options, headers) {
     return nodeFetch(url, {
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
         ...headers
       },
       ...options
