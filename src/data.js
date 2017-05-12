@@ -368,7 +368,6 @@ class Data extends QueryBuilder {
     if (body instanceof FormData) {
       params.body = body
       headers = body.getHeaders()
-      // params.headers = body.getHeaders()
     }
     return this.fetch(this.url(), params, headers)
   }
