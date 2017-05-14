@@ -142,7 +142,6 @@ describe('Data object', function () {
   it.skip('can be created with relation', function (done) {})
   it.skip('can be created with reference', function (done) {})
   it.skip('can be created with reference', function (done) {})
-
   it('can be created with file field', function (done) {
     const form = new FormData();
     form.append('field_file', fs.createReadStream(__dirname + '/assets/test.jpg'));
@@ -161,7 +160,7 @@ describe('Data object', function () {
         })
     })
   })
-
+  
   it.skip('can be listed with one filter', function (done) {})
   it.skip('can be listed with two filters', function (done) {})
   it.skip('can be listed with order', function (done) {})
