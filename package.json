@@ -41,6 +41,7 @@
     "url": "https://github.com/Syncano/syncano-server-js.git"
   },
   "dependencies": {
+    "form-data": "^2.1.4",
     "node-fetch": "2.0.0-alpha.3"
   },
   "devDependencies": {

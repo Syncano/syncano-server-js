@@ -1,5 +1,5 @@
-import FormData from 'form-data'
 import querystring from 'querystring'
+import FormData from 'form-data'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
@@ -360,7 +360,7 @@ class Data extends QueryBuilder {
    * })
    */
   create(body) {
-    let headers = null;
+    let headers = null
     const params = {
       method: 'POST',
       body: JSON.stringify(body)
