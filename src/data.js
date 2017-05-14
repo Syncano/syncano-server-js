@@ -1,3 +1,4 @@
+import FormData from 'form-data'
 import querystring from 'querystring'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
@@ -359,10 +360,16 @@ class Data extends QueryBuilder {
    * })
    */
   create(body) {
-    return this.fetch(this.url(), {
+    let headers = null;
+    const params = {
       method: 'POST',
       body: JSON.stringify(body)
-    })
+    }
+    if (body instanceof FormData) {
+      params.body = body
+      headers = body.getHeaders()
+    }
+    return this.fetch(this.url(), params, headers)
   }
 
   /**
