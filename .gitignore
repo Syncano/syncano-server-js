@@ -11,3 +11,4 @@ docs
 coverage.lcov
 .nyc_output
 e2e-tests
+.envrc
