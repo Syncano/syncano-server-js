@@ -21,6 +21,43 @@ class Data extends QueryBuilder {
     return query ? `${url}?${query}` : url
   }
 
+  _batchBodyBuilder(body) {
+    const {instanceName, className, apiVersion} = this.instance
+    const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
+
+    return body.reduce((data, item) => {
+      const singleRequest = {
+        method: 'POST',
+        path
+      }
+
+      if (Array.isArray(item)) {
+        singleRequest.method = 'PATCH'
+        singleRequest.path = `${path}${item[0]}/`
+        singleRequest.body = JSON.stringify(item[1])
+      } else if (isNaN(item) === false) {
+        singleRequest.method = 'DELETE'
+        singleRequest.path = `${path}${item}/`
+      } else {
+        singleRequest.body = JSON.stringify(item)
+      }
+
+      data.requests.push(singleRequest)
+
+      return data
+    }, {requests: []})
+  }
+
+  _batchFetchObject(body) {
+    const {instanceName} = this.instance
+
+    return {
+      url: `${buildInstanceURL(instanceName)}/batch/`,
+      method: 'POST',
+      body: JSON.stringify(this._batchBodyBuilder(body))
+    }
+  }
+
   /**
    * List objects matching query.
    *
@@ -358,18 +395,27 @@ class Data extends QueryBuilder {
    *   title: 'Example post title',
    *   content: 'Lorem ipsum dolor sit amet.'
    * })
+   * data.posts.create([
+   *  { content: 'Lorem ipsum!' },
+   *  { content: 'More lorem ipsum!' }
+   * ])
    */
   create(body) {
     let headers = null
-    const params = {
+    let fetchObject = {
+      url: this.url(),
       method: 'POST',
       body: JSON.stringify(body)
     }
+
     if (body instanceof FormData) {
-      params.body = body
+      fetchObject.body = body
       headers = body.getHeaders()
+    } else if (Array.isArray(body)) {
+      fetchObject = this._batchFetchObject(body)
     }
-    return this.fetch(this.url(), params, headers)
+
+    return this.fetch(fetchObject.url, fetchObject, headers)
   }
 
   /**
@@ -379,12 +425,23 @@ class Data extends QueryBuilder {
    *
    * @example {@lang javascript}
    * data.posts.update(55, { content: 'No more lorem ipsum!' })
+   * data.posts.update([
+   *  [55, { content: 'No more lorem ipsum!' }],
+   *  [56, { content: 'No more lorem ipsum!' }]
+   * ])
    */
   update(id, body) {
-    return this.fetch(this.url(id), {
+    let fetchObject = {
+      url: this.url(id),
       method: 'PATCH',
       body: JSON.stringify(body)
-    })
+    }
+
+    if (Array.isArray(id)) {
+      fetchObject = this._batchFetchObject(id)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject)
   }
 
   /**
@@ -394,11 +451,19 @@ class Data extends QueryBuilder {
    *
    * @example {@lang javascript}
    * data.posts.delete(55)
+   * data.posts.delete([55, 56, 57])
    */
   delete(id) {
-    return this.fetch(this.url(id), {
+    let fetchObject = {
+      url: this.url(id),
       method: 'DELETE'
-    })
+    }
+
+    if (Array.isArray(id)) {
+      fetchObject = this._batchFetchObject(id)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject)
   }
 }
 

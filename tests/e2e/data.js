@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-expressions */
 import fs from 'fs'
+import nodeFetch from 'node-fetch'
 import FormData from 'form-data'
 import {expect} from 'chai'
 
 import Server from '../../src'
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
+import {getRandomString, createTestInstance, deleteTestInstance, checkStatus, buildInstanceURL} from '../utils'
 
 global.META = {
   socket: 'test-socket'
@@ -58,17 +59,28 @@ describe('Data object', function () {
       })
   })
 
-  it('can be created', function (done) {
-    data[testClassName].create({field_string: dummyStringFieldValue})
-      .then(dataObj => {
-        expect(dataObj.field_string).to.be.equal(dummyStringFieldValue)
-        expect(dataObj.revision).to.be.equal(1)
-        expect(dataObj).to.not.be.empty
-        done()
-      })
+  it('can create single object', function (done) {
+    data[testClassName]
+      .create(
+        {test: 'single', test2: 'secret', 'field_string': dummyStringFieldValue})
+      .then(() => done())
       .catch(err => {
-        console.log(err)
+        console.log('ERROR: ', err)
         done(err)
+      })
+  })
+
+  it('can create multiple objects', function (done) {
+    data[testClassName]
+      .create([
+        {test: 'batch1', test2: 'secret'},
+        {test: 'batch2', test2: 'secret'},
+        {test: 'batch3', test2: 'secret'},
+        {test: 'batch4', test2: 'secret'}
+      ])
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
       })
   })
 
@@ -85,24 +97,47 @@ describe('Data object', function () {
       })
   })
 
-  it('can be deleted', function (done) {
+  it('can update single object', function (done) {
     data[testClassName]
-      .where('field_string', dummyStringFieldValue)
-      .first()
-      .then(dataObj => {
-        expect(dataObj).to.not.be.empty
-        return data[testClassName].delete(dataObj.id)
-      })
-      .then(() => {
-        return data[testClassName]
-          .where('field_string', dummyStringFieldValue)
-          .first()
-      })
-      .then((res) => {
-        expect(res).to.be.null
-        done()
-      })
+      .update(1, {test: 'Updated', test2: 'secret'})
+      .then(() => done())
       .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
+      })
+  })
+
+  it('can update multiple objects', function (done) {
+    data[testClassName]
+      .update([
+        [2, {test: 'Updated1', test2: 'secret'}],
+        [3, {test: 'Updated2', test2: 'secret'}],
+        [4, {test: 'Updated3', test2: 'secret'}],
+        [5, {test: 'Updated4', test2: 'secret'}]
+      ])
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
+      })
+  })
+
+  it('can delete single object', function (done) {
+    data[testClassName]
+      .delete(1)
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
+      })
+  })
+
+  it('can delete multiple objects', function (done) {
+    data[testClassName]
+      .delete([2, 3, 4, 5])
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
         done(err)
       })
   })
@@ -160,9 +195,8 @@ describe('Data object', function () {
         })
     })
   })
-  
+
   it.skip('can be listed with one filter', function (done) {})
   it.skip('can be listed with two filters', function (done) {})
   it.skip('can be listed with order', function (done) {})
-
 })
