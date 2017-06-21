@@ -4,7 +4,7 @@ function getMeta(envVar, metaVar, fallback = null) {
   }
 
   try {
-    return META[metaVar]
+    return META[metaVar] || fallback
   } catch (err) {
     return fallback
   }

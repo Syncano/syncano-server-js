@@ -19,18 +19,45 @@ class Event extends QueryBuilder {
    * @example {@lang javascript}
    * const instance = await event.emit('signal_name', payload={})
    */
-  emit(signal, payload) {
+  emit(signalString, payload) {
     const fetch = this.fetch.bind(this)
+    const {socket, signal} = Event._splitSignal(signalString)
+
+    const signalParams = []
+
+    if (socket) {
+      signalParams.push(socket)
+    } else {
+      signalParams.push(META.socket)
+    }
+
+    signalParams.push('.')
+    signalParams.push(signal)
 
     return new Promise((resolve, reject) => {
       const options = {
         method: 'POST',
-        body: JSON.stringify({signal, payload})
+        body: JSON.stringify({
+          signal: signalParams.join(''),
+          payload
+        })
       }
+
       fetch(this.url(), options)
         .then(resolve)
         .catch(reject)
     })
+  }
+
+  static _splitSignal(signalString) {
+    const splited = signalString.split('.')
+    if (splited.length === 1) {
+      return {signal: splited[0]}
+    }
+    return {
+      socket: splited[0],
+      signal: splited[1]
+    }
   }
 
 }

@@ -1,4 +1,5 @@
 import querystring from 'querystring'
+import FormData from 'form-data'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
@@ -144,9 +145,10 @@ class Data extends QueryBuilder {
               }
 
               const {target} = references[0]
-              const ids = references.map(item => item.value)
-
               const load = new Data()
+              let ids = references.map(item => item.value)
+
+              ids = Array.isArray(ids[0]) ? ids[0] : ids
 
               if (target === 'user') {
                 load._url = `${buildInstanceURL(instance.instanceName)}/users/`
@@ -165,9 +167,7 @@ class Data extends QueryBuilder {
             .then(models => {
               result = result.map(item => {
                 models.forEach(({target, items}) => {
-                  const related = items.find(obj =>
-                    item[target] && obj.id === item[target].value
-                  )
+                  const related = self._getRelatedObjects(item[target], items)
 
                   item[target] = related || item[target]
                 })
@@ -215,6 +215,18 @@ class Data extends QueryBuilder {
         }
       }
     })
+  }
+
+  _getRelatedObjects(reference, items) {
+    if (!reference) {
+      return null
+    }
+
+    if (Array.isArray(reference.value)) {
+      return items.filter(obj => reference.value.indexOf(obj.id) >= 0)
+    }
+
+    return items.find(obj => obj.id === reference.value)
   }
 
   /**
@@ -389,17 +401,21 @@ class Data extends QueryBuilder {
    * ])
    */
   create(body) {
+    let headers = null
     let fetchObject = {
       url: this.url(),
       method: 'POST',
       body: JSON.stringify(body)
     }
 
-    if (Array.isArray(body)) {
+    if (body instanceof FormData) {
+      fetchObject.body = body
+      headers = body.getHeaders()
+    } else if (Array.isArray(body)) {
       fetchObject = this._batchFetchObject(body)
     }
 
-    return this.fetch(fetchObject.url, fetchObject)
+    return this.fetch(fetchObject.url, fetchObject, headers)
   }
 
   /**

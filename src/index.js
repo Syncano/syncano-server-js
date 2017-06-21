@@ -4,11 +4,13 @@ export const {
   users,
   account,
   instance,
+  channel,
   event,
   socket,
   logger,
   response,
-  data
+  data,
+  _class
 } = new Server()
 
 export default Server
