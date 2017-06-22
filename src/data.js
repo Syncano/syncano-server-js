@@ -429,12 +429,30 @@ class Data extends QueryBuilder {
    *  [55, { content: 'No more lorem ipsum!' }],
    *  [56, { content: 'No more lorem ipsum!' }]
    * ])
+   * data.posts.update({title: 'Update all posts title'})
+   * data.flights
+   *   .where('active', 1)
+   *   .where('destination', 'Warsaw')
+   *   .update({delayed: 1})
    */
   update(id, body) {
+    const isQueryUpdate = typeof id === 'object' && id !== null && !Array.isArray(id)
     let fetchObject = {
       url: this.url(id),
       method: 'PATCH',
       body: JSON.stringify(body)
+    }
+
+    if (isQueryUpdate) {
+      return this
+        .list()
+        .then(items => {
+          const ids = items.map(item => [item.id, id])
+
+          fetchObject = this._batchFetchObject(ids)
+
+          return this.fetch(fetchObject.url, fetchObject)
+        })
     }
 
     if (Array.isArray(id)) {
@@ -452,11 +470,26 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * data.posts.delete(55)
    * data.posts.delete([55, 56, 57])
+   * data.posts.delete()
+   * data.posts.where('draft', 1).delete()
    */
   delete(id) {
+    const isQueryDelete = id === undefined
     let fetchObject = {
       url: this.url(id),
       method: 'DELETE'
+    }
+
+    if (isQueryDelete) {
+      return this
+        .list()
+        .then(items => {
+          const ids = items.map(item => item.id)
+
+          fetchObject = this._batchFetchObject(ids)
+
+          return this.fetch(fetchObject.url, fetchObject)
+        })
     }
 
     if (Array.isArray(id)) {
