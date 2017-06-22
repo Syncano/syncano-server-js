@@ -1,6 +1,7 @@
 import querystring from 'querystring'
 import FormData from 'form-data'
 import QueryBuilder from './query-builder'
+import merge from 'lodash.merge'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
 /**
@@ -242,7 +243,7 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get first element matching query or throw erro'status', 'in', ['draft', 'published']se}
+   * Get first element matching query or throw error
    *
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'published').firstOrFail()
@@ -255,6 +256,24 @@ class Data extends QueryBuilder {
         .catch(() => {
           reject(new NotFoundError())
         })
+    })
+  }
+
+  /**
+   * Get first element matching query or create it.
+   *
+   * @example {@lang javascript}
+   * const posts = await data.posts.where('status', 'published').firstOrFail()
+   */
+  firstOrCreate(query, params = {}) {
+    return new Promise(resolve => {
+      const queryArray = Object.keys(query).map(key => [key, 'eq', query[key]])
+
+      this
+        .where(queryArray)
+        .firstOrFail()
+        .catch(() => this.create(merge(query, params)))
+        .then(resolve)
     })
   }
 
@@ -350,6 +369,14 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.where('user.full_name', 'contains', 'John').list()
    */
   where(column, operator, value) {
+    if (Array.isArray(column)) {
+      column.map(([itemColumn, itemOperator, itemValue]) =>
+        this.where(itemColumn, itemOperator, itemValue)
+      )
+
+      return this
+    }
+
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
@@ -364,7 +391,7 @@ class Data extends QueryBuilder {
         }
       }), null)
 
-    const query = Object.assign(currentQuery, nextQuery)
+    const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
   }
