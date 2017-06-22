@@ -283,6 +283,8 @@ describe('Data', () => {
         should(object).have.property('name').equal('John')
       })
     })
+
+    it.skip('should be able to create multiple objects')
   })
 
   describe('#update()', () => {
@@ -306,6 +308,9 @@ describe('Data', () => {
         should(object).have.property('first_name').equal(firstName)
       })
     })
+
+    it.skip('should be able to update multiple objects')
+    it.skip('should be able to update objects by query')
   })
 
   describe('#delete()', () => {
@@ -325,5 +330,8 @@ describe('Data', () => {
         should(object).have.property('id').equal(id)
       })
     })
+
+    it.skip('should be able to delete objects by array of ids')
+    it.skip('should be able to delete objects by query')
   })
 })

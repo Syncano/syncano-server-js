@@ -122,6 +122,17 @@ describe('Data object', function () {
       })
   })
 
+  it('can update multiple objects by query', function (done) {
+    data[testClassName]
+      .where('id', 'gte', 4)
+      .update({test: 'Query update', test2: 'secret query update'})
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
+      })
+  })
+
   it('can delete single object', function (done) {
     data[testClassName]
       .delete(1)
@@ -134,7 +145,18 @@ describe('Data object', function () {
 
   it('can delete multiple objects', function (done) {
     data[testClassName]
-      .delete([2, 3, 4, 5])
+      .delete([2, 3])
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
+      })
+  })
+
+  it('can delete multiple objects by query', function (done) {
+    data[testClassName]
+      .where('id', 'gte', 4)
+      .delete()
       .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
