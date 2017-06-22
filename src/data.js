@@ -1,7 +1,7 @@
 import querystring from 'querystring'
 import FormData from 'form-data'
-import QueryBuilder from './query-builder'
 import merge from 'lodash.merge'
+import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
 /**
