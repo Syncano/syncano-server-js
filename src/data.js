@@ -371,7 +371,7 @@ class Data extends QueryBuilder {
     return this.withQuery({query: JSON.stringify(query)})
   }
 
-  _normalizeWhereOperator (operator) {
+  _normalizeWhereOperator(operator) {
     const operators = {
       '<': 'lt',
       '<=': 'lte',
@@ -379,7 +379,7 @@ class Data extends QueryBuilder {
       '>=': 'gte',
       '=': 'eq',
       '!=': 'neq',
-      '<>': 'neq',
+      '<>': 'neq'
     }
 
     return operators[operator] || operator
