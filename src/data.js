@@ -438,7 +438,7 @@ class Data extends QueryBuilder {
   pluck(column) {
     return this.list().then(items => items.map(item => item[column]))
   }
-  
+
   /**
    * Get value of single record column field.
    *
