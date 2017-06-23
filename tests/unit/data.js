@@ -334,4 +334,13 @@ describe('Data', () => {
     it.skip('should be able to delete objects by array of ids')
     it.skip('should be able to delete objects by query')
   })
+
+  describe('#fields()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('fields').which.is.Function()
+    })
+
+    it.skip('should be able to whitelist fields')
+    it.skip('should be able to map field names')
+  })
 })

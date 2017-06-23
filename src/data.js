@@ -1,6 +1,8 @@
 import querystring from 'querystring'
 import FormData from 'form-data'
 import QueryBuilder from './query-builder'
+import set from 'lodash.set'
+import get from 'lodash.get'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
 /**
@@ -73,7 +75,7 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const self = this
-    const {baseUrl, relationships, instance, mappedFields} = this
+    const {baseUrl, relationships, instance, mappedFields, _mapFields} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
@@ -86,7 +88,7 @@ class Data extends QueryBuilder {
           .then(loadNextPage)
           .then(resolveRelatedModels)
           .then(replaceCustomTypesWithValue)
-          .then(mapFields)
+          .then(mapResultFields)
           .then(resolveIfFinished)
           .catch(err => reject(err))
       }
@@ -206,17 +208,12 @@ class Data extends QueryBuilder {
         return true
       }
 
-      function mapFields(shouldResolve) {
+      function mapResultFields(shouldResolve) {
         if (shouldResolve === false) {
           return
         }
 
-        result = result.map(item =>
-          Object.keys(item).reduce((all, key) => ({
-            ...all,
-            [mappedFields[key] || key]: item[key]
-          }), {})
-        )
+        result = _mapFields(result, mappedFields)
 
         return true
       }
@@ -231,6 +228,14 @@ class Data extends QueryBuilder {
         }
       }
     })
+  }
+
+  _mapFields(items, fields) {
+    return fields.length === 0 ? items : items.map(item =>
+      Object.keys(fields).reduce((all, key) =>
+        set(all, fields[key] || key, get(item, key))
+      , {})
+    )
   }
 
   _getRelatedObjects(reference, items) {
@@ -398,21 +403,16 @@ class Data extends QueryBuilder {
       fields = fields[0]
     }
 
-    const fieldToMap = fields
-      .filter(field => /\sas\s/.test(field))
+    const fieldsToMap = fields
       .map(field => {
-        const [,from,to] = field.match(/(\w*)\sas\s(\w*)/)
-
-        fields[fields.indexOf(field)] = from
+        const [,from,,to] = field.match(/([\w\_\-\.]*)(\sas\s)?(.*)?/)
 
         return {[from]: to}
       })
 
-    this.withMappedFields(fieldToMap)
+    this.withMappedFields(fieldsToMap)
 
-    fields = fields.join(',')
-
-    return this.withQuery({fields})
+    return this
   }
 
   /**
