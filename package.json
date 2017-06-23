@@ -1,6 +1,6 @@
 {
   "name": "syncano-server",
-  "version": "0.8.1-4",
+  "version": "0.8.1-5",
   "description": "A library to intereact with the Syncano API on a server side",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "form-data": "^2.1.4",
+    "lodash.merge": "^4.6.0",
     "node-fetch": "2.0.0-alpha.3"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import querystring from 'querystring'
 import FormData from 'form-data'
+import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
@@ -242,7 +243,7 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get first element matching query or throw erro'status', 'in', ['draft', 'published']se}
+   * Get first element matching query or throw error
    *
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'published').firstOrFail()
@@ -255,6 +256,24 @@ class Data extends QueryBuilder {
         .catch(() => {
           reject(new NotFoundError())
         })
+    })
+  }
+
+  /**
+   * Get first element matching query or create it.
+   *
+   * @example {@lang javascript}
+   * const posts = await data.posts.where('status', 'published').firstOrFail()
+   */
+  firstOrCreate(query, params = {}) {
+    return new Promise(resolve => {
+      const queryArray = Object.keys(query).map(key => [key, 'eq', query[key]])
+
+      this
+        .where(queryArray)
+        .firstOrFail()
+        .catch(() => this.create(merge(query, params)))
+        .then(resolve)
     })
   }
 
@@ -350,6 +369,15 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.where('user.full_name', 'contains', 'John').list()
    */
   where(column, operator, value) {
+    if (Array.isArray(column)) {
+      column.map(([itemColumn, itemOperator, itemValue]) =>
+        this.where(itemColumn, itemOperator, itemValue)
+      )
+
+      return this
+    }
+    operator = this._normalizeWhereOperator(operator)
+
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
@@ -364,9 +392,23 @@ class Data extends QueryBuilder {
         }
       }), null)
 
-    const query = Object.assign(currentQuery, nextQuery)
+    const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
+  }
+
+  _normalizeWhereOperator(operator) {
+    const operators = {
+      '<': 'lt',
+      '<=': 'lte',
+      '>': 'gt',
+      '>=': 'gte',
+      '=': 'eq',
+      '!=': 'neq',
+      '<>': 'neq'
+    }
+
+    return operators[operator] || operator
   }
 
   /**
@@ -391,10 +433,22 @@ class Data extends QueryBuilder {
    * @returns {Promise}
    *
    * @example {@lang javascript}
-   * data.posts.where('id', 10).value('title')
+   * data.posts.where('id', 10).pluck('title')
    */
   pluck(column) {
     return this.list().then(items => items.map(item => item[column]))
+  }
+  
+  /**
+   * Get value of single record column field.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.posts.where('id', 10).value('title')
+   */
+  value(column) {
+    return this.first().then(item => item[column])
   }
 
   /**
