@@ -1,6 +1,6 @@
 {
   "name": "syncano-server",
-  "version": "0.8.1-6",
+  "version": "0.8.1-7",
   "description": "A library to intereact with the Syncano API on a server side",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
