@@ -376,6 +376,7 @@ class Data extends QueryBuilder {
 
       return this
     }
+    operator = this._normalizeWhereOperator(operator)
 
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
@@ -396,6 +397,20 @@ class Data extends QueryBuilder {
     return this.withQuery({query: JSON.stringify(query)})
   }
 
+  _normalizeWhereOperator(operator) {
+    const operators = {
+      '<': 'lt',
+      '<=': 'lte',
+      '>': 'gt',
+      '>=': 'gte',
+      '=': 'eq',
+      '!=': 'neq',
+      '<>': 'neq'
+    }
+
+    return operators[operator] || operator
+  }
+
   /**
    * Expand references and relationships.
    *
@@ -410,6 +425,18 @@ class Data extends QueryBuilder {
     const relationships = Array.isArray(models[0]) ? models[0] : models
 
     return this.withRelationships(relationships)
+  }
+
+  /**
+   * Get value of single record column field.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.posts.where('id', 10).value('title')
+   */
+  value(column) {
+    return this.first().then(item => item[column])
   }
 
   /**
