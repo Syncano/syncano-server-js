@@ -41,6 +41,10 @@ export default class QueryBuilder {
     return this._relationships || []
   }
 
+  get mappedFields() {
+    return this._mappedFields || []
+  }
+
   withQuery(query) {
     this._query = Object.assign({}, this.query, query)
 
@@ -49,6 +53,12 @@ export default class QueryBuilder {
 
   withRelationships(relationships) {
     this._relationships = this.relationships.concat(relationships)
+
+    return this
+  }
+
+  withMappedFields(fields) {
+    this._mappedFields = Object.assign({}, this.mappedFields, ...fields)
 
     return this
   }

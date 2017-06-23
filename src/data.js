@@ -73,7 +73,7 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const self = this
-    const {baseUrl, relationships, instance} = this
+    const {baseUrl, relationships, instance, mappedFields} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
@@ -86,6 +86,7 @@ class Data extends QueryBuilder {
           .then(loadNextPage)
           .then(resolveRelatedModels)
           .then(replaceCustomTypesWithValue)
+          .then(mapFields)
           .then(resolveIfFinished)
           .catch(err => reject(err))
       }
@@ -201,6 +202,21 @@ class Data extends QueryBuilder {
 
           return item
         })
+
+        return true
+      }
+
+      function mapFields(shouldResolve) {
+        if (shouldResolve === false) {
+          return
+        }
+
+        result = result.map(item =>
+          Object.keys(item).reduce((all, key) => ({
+            ...all,
+            [mappedFields[key] || key]: item[key]
+          }), {})
+        )
 
         return true
       }
@@ -367,6 +383,36 @@ class Data extends QueryBuilder {
     const query = Object.assign(currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
+  }
+
+  /**
+   * Whitelist returned keys.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * const posts = await data.users.fields('name', 'email as username')->list()
+   */
+  fields(...fields) {
+    if (Array.isArray(fields[0])) {
+      fields = fields[0]
+    }
+
+    const fieldToMap = fields
+      .filter(field => /\sas\s/.test(field))
+      .map(field => {
+        const [,from,to] = field.match(/(\w*)\sas\s(\w*)/)
+
+        fields[fields.indexOf(field)] = from
+
+        return {[from]: to}
+      })
+
+    this.withMappedFields(fieldToMap)
+
+    fields = fields.join(',')
+
+    return this.withQuery({fields})
   }
 
   /**
