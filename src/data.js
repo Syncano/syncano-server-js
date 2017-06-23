@@ -350,6 +350,8 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.where('user.full_name', 'contains', 'John').list()
    */
   where(column, operator, value) {
+    operator = this._normalizeWhereOperator(operator)
+
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
@@ -367,6 +369,20 @@ class Data extends QueryBuilder {
     const query = Object.assign(currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
+  }
+
+  _normalizeWhereOperator(operator) {
+    const operators = {
+      '<': 'lt',
+      '<=': 'lte',
+      '>': 'gt',
+      '>=': 'gte',
+      '=': 'eq',
+      '!=': 'neq',
+      '<>': 'neq'
+    }
+
+    return operators[operator] || operator
   }
 
   /**
