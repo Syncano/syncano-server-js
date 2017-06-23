@@ -1,8 +1,8 @@
 import querystring from 'querystring'
 import FormData from 'form-data'
-import QueryBuilder from './query-builder'
 import set from 'lodash.set'
 import get from 'lodash.get'
+import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
 /**
@@ -405,7 +405,7 @@ class Data extends QueryBuilder {
 
     const fieldsToMap = fields
       .map(field => {
-        const [,from,,to] = field.match(/([\w\_\-\.]*)(\sas\s)?(.*)?/)
+        const [, from,, to] = field.match(/([\w_\-.]*)(\sas\s)?(.*)?/)
 
         return {[from]: to}
       })
