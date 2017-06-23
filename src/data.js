@@ -402,6 +402,18 @@ class Data extends QueryBuilder {
   }
 
   /**
+   * Get value of single record column field.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.posts.where('id', 10).value('title')
+   */
+  value(column) {
+    return this.first().then(item => item[column])
+  }
+
+  /**
    * Create new object.
    *
    * @returns {Promise}
