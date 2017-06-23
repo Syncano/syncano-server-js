@@ -334,4 +334,12 @@ describe('Data', () => {
     it.skip('should be able to delete objects by array of ids')
     it.skip('should be able to delete objects by query')
   })
+
+  describe('#pluck()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('pluck').which.is.Function()
+    })
+
+    it.skip('should be able to take column values')
+  })
 })
