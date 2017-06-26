@@ -17,8 +17,8 @@ export default class QueryBuilder {
       headers: headersToSend,
       ...options
     })
-      .then(checkStatus)
       .then(parseJSON)
+      .then(checkStatus)
   }
 
   nonInstanceFetch(url, options, headers) {
@@ -29,8 +29,8 @@ export default class QueryBuilder {
       },
       ...options
     })
-      .then(checkStatus)
       .then(parseJSON)
+      .then(checkStatus)
   }
 
   get query() {
