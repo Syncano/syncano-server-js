@@ -106,6 +106,15 @@ describe('Data', () => {
     })
   })
 
+  describe('#firstOrCreate()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('firstOrCreate').which.is.Function()
+    })
+
+    it.skip('should be able to fetch single existing object')
+    it.skip('should create and return object when it was not found')
+  })
+
   describe('#find()', () => {
     it('should be a method of the model', () => {
       should(data.users).have.property('find').which.is.Function()
@@ -342,5 +351,21 @@ describe('Data', () => {
 
     it.skip('should be able to whitelist fields')
     it.skip('should be able to map field names')
+  })
+
+  describe('#pluck()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('pluck').which.is.Function()
+    })
+
+    it.skip('should be able to take column values')
+  })
+
+  describe('#value()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('value').which.is.Function()
+    })
+
+    it.skip('should be able to take column value of single record')
   })
 })
