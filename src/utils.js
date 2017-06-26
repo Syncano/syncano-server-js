@@ -2,12 +2,24 @@ import {getHost, SYNCANO_API_VERSION} from './settings'
 
 export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
-    return response
+    return response.data
   }
 
-  const error = new Error(response.statusText)
+  let error
+
+  try {
+    error = new Error(response.data.detail)
+  } catch (e) {
+    error = new Error(response.statusText)
+  }
 
   error.response = response
+  error.data = response.data
+  error.status = response.status
+  error.headers = response.headers
+  error.size = response.size
+  error.timeout = response.timeout
+  error.url = response.url
 
   throw error
 }
@@ -24,7 +36,10 @@ export function parseJSON(response) {
     /^.*\/.*\+json/.test(mimetype) ||
     /^application\/json/.test(mimetype)
   ) {
-    return response.json()
+    return response.json().then(res => ({
+      data: res,
+      ...response
+    }))
   }
 
   // Parse XML and plain text
@@ -33,7 +48,10 @@ export function parseJSON(response) {
     /^.*\/.*\+xml/.test(mimetype) ||
     mimetype === 'text/plain'
   ) {
-    return response.text()
+    return response.text().then(res => ({
+      data: res,
+      ...response
+    }))
   }
 
   return response.arraybuffer()
