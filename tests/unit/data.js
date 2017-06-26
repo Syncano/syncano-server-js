@@ -115,6 +115,15 @@ describe('Data', () => {
     it.skip('should create and return object when it was not found')
   })
 
+  describe('#updateOrCreate()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('updateOrCreate').which.is.Function()
+    })
+
+    it.skip('should be able to update existing object')
+    it.skip('should create object when it was not found')
+  })
+
   describe('#find()', () => {
     it('should be a method of the model', () => {
       should(data.users).have.property('find').which.is.Function()
@@ -351,7 +360,7 @@ describe('Data', () => {
 
     it.skip('should be able to take column values')
   })
-  
+
   describe('#value()', () => {
     it('should be a method of the model', () => {
       should(data.users).have.property('value').which.is.Function()
