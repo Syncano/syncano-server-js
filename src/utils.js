@@ -9,7 +9,7 @@ export function checkStatus(response) {
 
   try {
     error = new Error(response.data.detail)
-  } catch (e) {
+  } catch (err) {
     error = new Error(response.statusText)
   }
 
