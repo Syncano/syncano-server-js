@@ -264,7 +264,7 @@ class Data extends QueryBuilder {
    *
    * @example {@lang javascript}
    * const post = await data.posts
-   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update})
+   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update'})
    */
   firstOrCreate(attributes, values = {}) {
     const query = this._toWhereArray(attributes)
@@ -280,7 +280,7 @@ class Data extends QueryBuilder {
    *
    * @example {@lang javascript}
    * const post = await data.posts
-   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update})
+   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update'})
    */
   updateOrCreate(attributes, values = {}) {
     const query = this._toWhereArray(attributes)
