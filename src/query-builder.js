@@ -29,8 +29,8 @@ export default class QueryBuilder {
       },
       ...options
     })
-      .then(checkStatus)
       .then(parseJSON)
+      .then(checkStatus)
   }
 
   get query() {

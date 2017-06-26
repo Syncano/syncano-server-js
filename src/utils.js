@@ -28,7 +28,10 @@ export function parseJSON(response) {
   const mimetype = response.headers.get('Content-Type')
 
   if (response.status === 204 || mimetype === null) {
-    return Promise.resolve()
+    return Promise.resolve({
+      data: undefined,
+      ...response
+    })
   }
 
   // Parse JSON

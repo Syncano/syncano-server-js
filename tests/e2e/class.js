@@ -23,11 +23,7 @@ describe('Class', function () {
       })
       .catch(err => {
         console.log(err)
-        err.response.text()
-          .then(text => {
-            console.log(text)
-            done(err)
-          })
+        done(err)
       })
   })
 
@@ -49,11 +45,6 @@ describe('Class', function () {
       })
       .catch(err => {
         console.log(err)
-        err.response.text()
-          .then(str => {
-            console.log(str)
-            done(err)
-          })
         done(err)
       })
   })
