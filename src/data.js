@@ -1,5 +1,7 @@
 import querystring from 'querystring'
 import FormData from 'form-data'
+import set from 'lodash.set'
+import get from 'lodash.get'
 import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
@@ -74,7 +76,7 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const self = this
-    const {baseUrl, relationships, instance} = this
+    const {baseUrl, relationships, instance, mappedFields, _mapFields} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
@@ -87,6 +89,7 @@ class Data extends QueryBuilder {
           .then(loadNextPage)
           .then(resolveRelatedModels)
           .then(replaceCustomTypesWithValue)
+          .then(mapResultFields)
           .then(resolveIfFinished)
           .catch(err => reject(err))
       }
@@ -206,6 +209,16 @@ class Data extends QueryBuilder {
         return true
       }
 
+      function mapResultFields(shouldResolve) {
+        if (shouldResolve === false) {
+          return
+        }
+
+        result = _mapFields(result, mappedFields)
+
+        return true
+      }
+
       function resolveIfFinished(shouldResolve) {
         if (shouldResolve) {
           if (pageSize !== 0) {
@@ -216,6 +229,14 @@ class Data extends QueryBuilder {
         }
       }
     })
+  }
+
+  _mapFields(items, fields) {
+    return fields.length === 0 ? items : items.map(item =>
+      Object.keys(fields).reduce((all, key) =>
+        set(all, fields[key] || key, get(item, key))
+      , {})
+    )
   }
 
   _getRelatedObjects(reference, items) {
@@ -428,6 +449,31 @@ class Data extends QueryBuilder {
     }
 
     return operators[operator] || operator
+  }
+
+  /**
+   * Whitelist returned keys.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * const posts = await data.users.fields('name', 'email as username')->list()
+   */
+  fields(...fields) {
+    if (Array.isArray(fields[0])) {
+      fields = fields[0]
+    }
+
+    const fieldsToMap = fields
+      .map(field => {
+        const [, from,, to] = field.match(/([\w_\-.]*)(\sas\s)?(.*)?/)
+
+        return {[from]: to}
+      })
+
+    this.withMappedFields(fieldsToMap)
+
+    return this
   }
 
   /**
