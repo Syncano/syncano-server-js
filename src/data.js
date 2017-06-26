@@ -278,6 +278,27 @@ class Data extends QueryBuilder {
   }
 
   /**
+   * Create or update a record matching the attributes, and fill it with values.
+   *
+   * @example {@lang javascript}
+   * const posts = await data.posts
+   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update})
+   */
+  updateOrCreate(attributes, values = {}) {
+    const query = this._toWhereArray(attributes)
+
+    return this
+      .where(query)
+      .firstOrFail()
+      .then(res => this.update(res.id, values))
+      .catch(() => this.create(merge(attributes, values)))
+  }
+
+  _toWhereArray(attributes) {
+    return Object.keys(attributes).map(key => [key, 'eq', attributes[key]])
+  }
+
+  /**
    * Get single object by id or objects list if ids passed as array.
    *
    * @returns {Promise}
