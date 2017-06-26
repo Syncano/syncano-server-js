@@ -260,28 +260,26 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get first element matching query or create it.
+   * Get the first record matching the attributes or create it.
    *
    * @example {@lang javascript}
-   * const posts = await data.posts.where('status', 'published').firstOrFail()
+   * const post = await data.posts
+   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update})
    */
-  firstOrCreate(query, params = {}) {
-    return new Promise(resolve => {
-      const queryArray = Object.keys(query).map(key => [key, 'eq', query[key]])
+  firstOrCreate(attributes, values = {}) {
+    const query = this._toWhereArray(attributes)
 
-      this
-        .where(queryArray)
-        .firstOrFail()
-        .catch(() => this.create(merge(query, params)))
-        .then(resolve)
-    })
+    return this
+      .where(query)
+      .firstOrFail()
+      .catch(() => this.create(merge(attributes, values)))
   }
 
   /**
    * Create or update a record matching the attributes, and fill it with values.
    *
    * @example {@lang javascript}
-   * const posts = await data.posts
+   * const post = await data.posts
    *   .updateOrCreate({name: 'value to match'}, {content: 'value to update})
    */
   updateOrCreate(attributes, values = {}) {
