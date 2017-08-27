@@ -26,7 +26,7 @@ class Response {
 
     global.setResponse(new global.HttpResponse(...args))
 
-    process.exit(0)
+    process.exit(0) // eslint-disable-line unicorn/no-process-exit
   }
 }
 
