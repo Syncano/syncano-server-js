@@ -25,6 +25,8 @@ class Response {
     }
 
     global.setResponse(new global.HttpResponse(...args))
+
+    process.exit(0)
   }
 }
 
