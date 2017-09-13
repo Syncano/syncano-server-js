@@ -1,4 +1,8 @@
 import querystring from 'querystring'
+import FormData from 'form-data'
+import set from 'lodash.set'
+import get from 'lodash.get'
+import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
@@ -20,6 +24,43 @@ class Data extends QueryBuilder {
     return query ? `${url}?${query}` : url
   }
 
+  _batchBodyBuilder(body) {
+    const {instanceName, className, apiVersion} = this.instance
+    const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
+
+    return body.reduce((data, item) => {
+      const singleRequest = {
+        method: 'POST',
+        path
+      }
+
+      if (Array.isArray(item)) {
+        singleRequest.method = 'PATCH'
+        singleRequest.path = `${path}${item[0]}/`
+        singleRequest.body = JSON.stringify(item[1])
+      } else if (isNaN(item) === false) {
+        singleRequest.method = 'DELETE'
+        singleRequest.path = `${path}${item}/`
+      } else {
+        singleRequest.body = JSON.stringify(item)
+      }
+
+      data.requests.push(singleRequest)
+
+      return data
+    }, {requests: []})
+  }
+
+  _batchFetchObject(body) {
+    const {instanceName} = this.instance
+
+    return {
+      url: `${buildInstanceURL(instanceName)}/batch/`,
+      method: 'POST',
+      body: JSON.stringify(this._batchBodyBuilder(body))
+    }
+  }
+
   /**
    * List objects matching query.
    *
@@ -35,7 +76,7 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const self = this
-    const {baseUrl, relationships, instance} = this
+    const {baseUrl, relationships, instance, mappedFields, _mapFields} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
@@ -48,6 +89,7 @@ class Data extends QueryBuilder {
           .then(loadNextPage)
           .then(resolveRelatedModels)
           .then(replaceCustomTypesWithValue)
+          .then(mapResultFields)
           .then(resolveIfFinished)
           .catch(err => reject(err))
       }
@@ -167,6 +209,16 @@ class Data extends QueryBuilder {
         return true
       }
 
+      function mapResultFields(shouldResolve) {
+        if (shouldResolve === false) {
+          return
+        }
+
+        result = _mapFields(result, mappedFields)
+
+        return true
+      }
+
       function resolveIfFinished(shouldResolve) {
         if (shouldResolve) {
           if (pageSize !== 0) {
@@ -177,6 +229,14 @@ class Data extends QueryBuilder {
         }
       }
     })
+  }
+
+  _mapFields(items, fields) {
+    return fields.length === 0 ? items : items.map(item =>
+      Object.keys(fields).reduce((all, key) =>
+        set(all, fields[key] || key, get(item, key))
+      , {})
+    )
   }
 
   _getRelatedObjects(reference, items) {
@@ -204,7 +264,7 @@ class Data extends QueryBuilder {
   }
 
   /**
-   * Get first element matching query or throw erro'status', 'in', ['draft', 'published']se}
+   * Get first element matching query or throw error
    *
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'published').firstOrFail()
@@ -218,6 +278,43 @@ class Data extends QueryBuilder {
           reject(new NotFoundError())
         })
     })
+  }
+
+  /**
+   * Get the first record matching the attributes or create it.
+   *
+   * @example {@lang javascript}
+   * const post = await data.posts
+   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update'})
+   */
+  firstOrCreate(attributes, values = {}) {
+    const query = this._toWhereArray(attributes)
+
+    return this
+      .where(query)
+      .firstOrFail()
+      .catch(() => this.create(merge(attributes, values)))
+  }
+
+  /**
+   * Create or update a record matching the attributes, and fill it with values.
+   *
+   * @example {@lang javascript}
+   * const post = await data.posts
+   *   .updateOrCreate({name: 'value to match'}, {content: 'value to update'})
+   */
+  updateOrCreate(attributes, values = {}) {
+    const query = this._toWhereArray(attributes)
+
+    return this
+      .where(query)
+      .firstOrFail()
+      .then(res => this.update(res.id, values))
+      .catch(() => this.create(merge(attributes, values)))
+  }
+
+  _toWhereArray(attributes) {
+    return Object.keys(attributes).map(key => [key, 'eq', attributes[key]])
   }
 
   /**
@@ -312,6 +409,15 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.where('user.full_name', 'contains', 'John').list()
    */
   where(column, operator, value) {
+    if (Array.isArray(column)) {
+      column.map(([itemColumn, itemOperator, itemValue]) =>
+        this.where(itemColumn, itemOperator, itemValue)
+      )
+
+      return this
+    }
+    operator = this._normalizeWhereOperator(operator)
+
     const whereOperator = value ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
@@ -326,9 +432,48 @@ class Data extends QueryBuilder {
         }
       }), null)
 
-    const query = Object.assign(currentQuery, nextQuery)
+    const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
+  }
+
+  _normalizeWhereOperator(operator) {
+    const operators = {
+      '<': 'lt',
+      '<=': 'lte',
+      '>': 'gt',
+      '>=': 'gte',
+      '=': 'eq',
+      '!=': 'neq',
+      '<>': 'neq'
+    }
+
+    return operators[operator] || operator
+  }
+
+  /**
+   * Whitelist returned keys.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * const posts = await data.users.fields('name', 'email as username')->list()
+   */
+  fields(...fields) {
+    if (Array.isArray(fields[0])) {
+      fields = fields[0]
+    }
+
+    const fieldsToMap = fields
+      .map(field => {
+        const [, from,, to] = field.match(/([\w_\-.]*)(\sas\s)?(.*)?/)
+
+        return {[from]: to}
+      })
+
+    this.withMappedFields(fieldsToMap)
+
+    return this
   }
 
   /**
@@ -348,6 +493,30 @@ class Data extends QueryBuilder {
   }
 
   /**
+   * Get values of single column.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.posts.where('id', 10).pluck('title')
+   */
+  pluck(column) {
+    return this.list().then(items => items.map(item => item[column]))
+  }
+
+  /**
+   * Get value of single record column field.
+   *
+   * @returns {Promise}
+   *
+   * @example {@lang javascript}
+   * data.posts.where('id', 10).value('title')
+   */
+  value(column) {
+    return this.first().then(item => item[column])
+  }
+
+  /**
    * Create new object.
    *
    * @returns {Promise}
@@ -357,12 +526,27 @@ class Data extends QueryBuilder {
    *   title: 'Example post title',
    *   content: 'Lorem ipsum dolor sit amet.'
    * })
+   * data.posts.create([
+   *  { content: 'Lorem ipsum!' },
+   *  { content: 'More lorem ipsum!' }
+   * ])
    */
   create(body) {
-    return this.fetch(this.url(), {
+    let headers = null
+    let fetchObject = {
+      url: this.url(),
       method: 'POST',
       body: JSON.stringify(body)
-    })
+    }
+
+    if (body instanceof FormData) {
+      fetchObject.body = body
+      headers = body.getHeaders()
+    } else if (Array.isArray(body)) {
+      fetchObject = this._batchFetchObject(body)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject, headers)
   }
 
   /**
@@ -372,12 +556,41 @@ class Data extends QueryBuilder {
    *
    * @example {@lang javascript}
    * data.posts.update(55, { content: 'No more lorem ipsum!' })
+   * data.posts.update([
+   *  [55, { content: 'No more lorem ipsum!' }],
+   *  [56, { content: 'No more lorem ipsum!' }]
+   * ])
+   * data.posts.update({title: 'Update all posts title'})
+   * data.flights
+   *   .where('active', 1)
+   *   .where('destination', 'Warsaw')
+   *   .update({delayed: 1})
    */
   update(id, body) {
-    return this.fetch(this.url(id), {
+    const isQueryUpdate = typeof id === 'object' && id !== null && !Array.isArray(id)
+    let fetchObject = {
+      url: this.url(id),
       method: 'PATCH',
       body: JSON.stringify(body)
-    })
+    }
+
+    if (isQueryUpdate) {
+      return this
+        .list()
+        .then(items => {
+          const ids = items.map(item => [item.id, id])
+
+          fetchObject = this._batchFetchObject(ids)
+
+          return this.fetch(fetchObject.url, fetchObject)
+        })
+    }
+
+    if (Array.isArray(id)) {
+      fetchObject = this._batchFetchObject(id)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject)
   }
 
   /**
@@ -387,11 +600,34 @@ class Data extends QueryBuilder {
    *
    * @example {@lang javascript}
    * data.posts.delete(55)
+   * data.posts.delete([55, 56, 57])
+   * data.posts.delete()
+   * data.posts.where('draft', 1).delete()
    */
   delete(id) {
-    return this.fetch(this.url(id), {
+    const isQueryDelete = id === undefined
+    let fetchObject = {
+      url: this.url(id),
       method: 'DELETE'
-    })
+    }
+
+    if (isQueryDelete) {
+      return this
+        .list()
+        .then(items => {
+          const ids = items.map(item => item.id)
+
+          fetchObject = this._batchFetchObject(ids)
+
+          return this.fetch(fetchObject.url, fetchObject)
+        })
+    }
+
+    if (Array.isArray(id)) {
+      fetchObject = this._batchFetchObject(id)
+    }
+
+    return this.fetch(fetchObject.url, fetchObject)
   }
 }
 

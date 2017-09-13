@@ -25,7 +25,7 @@ class Account extends QueryBuilder {
         'X-API-KEY': authKey
       }
       fetch(this.url(), {}, headers)
-        .then(resp => resolve(resp))
+        .then(res => resolve(res))
         .catch(err => reject(err))
     })
   }

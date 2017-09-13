@@ -34,7 +34,6 @@ describe('Socket', function () {
   //   socket.post('openweathermap/get-three-hours-forecast', {city: 'bergen'})
   //     .then(resp => resp.json())
   //     .then(data => {
-  //       console.log("XXX", data)
   //       done()
   //     })
   //     .catch(err => {

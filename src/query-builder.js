@@ -7,28 +7,30 @@ export default class QueryBuilder {
     this.baseUrl = `https://${getHost()}`
   }
 
-  fetch(url, options) {
+  fetch(url, options, headers = {}) {
+    const headersToSend = Object.assign({
+      'content-type': 'application/json',
+      'x-api-key': this.instance.token
+    }, headers)
+
     return nodeFetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': this.instance.token
-      },
+      headers: headersToSend,
       ...options
     })
-      .then(checkStatus)
       .then(parseJSON)
+      .then(checkStatus)
   }
 
   nonInstanceFetch(url, options, headers) {
     return nodeFetch(url, {
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
         ...headers
       },
       ...options
     })
-      .then(checkStatus)
       .then(parseJSON)
+      .then(checkStatus)
   }
 
   get query() {
@@ -39,6 +41,10 @@ export default class QueryBuilder {
     return this._relationships || []
   }
 
+  get mappedFields() {
+    return this._mappedFields || []
+  }
+
   withQuery(query) {
     this._query = Object.assign({}, this.query, query)
 
@@ -47,6 +53,12 @@ export default class QueryBuilder {
 
   withRelationships(relationships) {
     this._relationships = this.relationships.concat(relationships)
+
+    return this
+  }
+
+  withMappedFields(fields) {
+    this._mappedFields = Object.assign({}, this.mappedFields, ...fields)
 
     return this
   }

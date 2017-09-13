@@ -106,6 +106,24 @@ describe('Data', () => {
     })
   })
 
+  describe('#firstOrCreate()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('firstOrCreate').which.is.Function()
+    })
+
+    it.skip('should be able to fetch single existing object')
+    it.skip('should create and return object when it was not found')
+  })
+
+  describe('#updateOrCreate()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('updateOrCreate').which.is.Function()
+    })
+
+    it.skip('should be able to update existing object')
+    it.skip('should create object when it was not found')
+  })
+
   describe('#find()', () => {
     it('should be a method of the model', () => {
       should(data.users).have.property('find').which.is.Function()
@@ -283,6 +301,8 @@ describe('Data', () => {
         should(object).have.property('name').equal('John')
       })
     })
+
+    it.skip('should be able to create multiple objects')
   })
 
   describe('#update()', () => {
@@ -306,6 +326,9 @@ describe('Data', () => {
         should(object).have.property('first_name').equal(firstName)
       })
     })
+
+    it.skip('should be able to update multiple objects')
+    it.skip('should be able to update objects by query')
   })
 
   describe('#delete()', () => {
@@ -325,5 +348,33 @@ describe('Data', () => {
         should(object).have.property('id').equal(id)
       })
     })
+
+    it.skip('should be able to delete objects by array of ids')
+    it.skip('should be able to delete objects by query')
+  })
+
+  describe('#fields()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('fields').which.is.Function()
+    })
+
+    it.skip('should be able to whitelist fields')
+    it.skip('should be able to map field names')
+  })
+
+  describe('#pluck()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('pluck').which.is.Function()
+    })
+
+    it.skip('should be able to take column values')
+  })
+
+  describe('#value()', () => {
+    it('should be a method of the model', () => {
+      should(data.users).have.property('value').which.is.Function()
+    })
+
+    it.skip('should be able to take column value of single record')
   })
 })
