@@ -25,6 +25,7 @@ export default ({
     meta.space_host ||
     'syncano.space',
   apiVersion: 'v2',
+  socket: global.META.socket || meta.socket,
   meta,
   setResponse,
   HttpResponse,
