@@ -28,7 +28,7 @@ class Event extends QueryBuilder {
     if (socket) {
       signalParams.push(socket)
     } else {
-      signalParams.push(this.instance.meta.socket)
+      signalParams.push(this.instance.socket)
     }
 
     signalParams.push('.')
