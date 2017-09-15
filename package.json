@@ -1,6 +1,6 @@
 {
   "name": "syncano-server",
-  "version": "0.8.2-1",
+  "version": "0.8.2-2",
   "description": "A library to intereact with the Syncano API on a server side",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
@@ -76,7 +76,9 @@
     "xo": "^0.18.0"
   },
   "standard": {
-    "env": [ "mocha" ]
+    "env": [
+      "mocha"
+    ]
   },
   "config": {
     "commitizen": {
