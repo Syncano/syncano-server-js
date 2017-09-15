@@ -1,4 +1,4 @@
-export default ({meta = {}, token, instanceName, setResponse, HttpResponse}) => ({
+export default ({meta = {}, token, instanceName, setResponse, HttpResponse, ...props}) => ({
   token: process.env.TOKEN || meta.token || token,
   instanceName: process.env.INSTANCE_NAME || meta.instance || instanceName,
   host: process.env.SYNCANO_HOST || meta.api_host || 'api.syncano.io',
@@ -6,5 +6,6 @@ export default ({meta = {}, token, instanceName, setResponse, HttpResponse}) => 
   apiVersion: 'v2',
   meta,
   setResponse,
-  HttpResponse
+  HttpResponse,
+  ...props
 })
