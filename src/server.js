@@ -21,8 +21,8 @@ const server = (ctx = {}) => {
   const channel = new Channel(config)
   const socket = new Socket(config)
   const response = new Response(config)
-  const account = new Account({accountKey: ctx.accountKey})
-  const instance = new Instance({accountKey: ctx.accountKey})
+  const account = new Account(config)
+  const instance = new Instance(config)
 
   return {
     _class,
