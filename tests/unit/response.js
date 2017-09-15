@@ -33,11 +33,11 @@ describe('Response', () => {
     should(res).have.property('_headers').which.is.Object()
   })
 
-  describe('#_make()', () => {
-    it('should be a method of the model', () => {
-      should(res).have.property('_make').which.is.Function()
-    })
-  })
+  // describe('#_make()', () => {
+  //   it('should be a method of the model', () => {
+  //     should(res).have.property('_make').which.is.Function()
+  //   })
+  // })
 
   describe('#header()', () => {
     it('should be a method of the model', () => {

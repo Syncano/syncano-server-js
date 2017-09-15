@@ -25,7 +25,10 @@ describe('SyncanoError', () => {
   })
 
   it('has defaults', () => {
-    should(new SyncanoError()).have.property('message').which.is.String().equal('')
+    should(new SyncanoError()).have
+      .property('message')
+      .which.is.String()
+      .equal('')
   })
 })
 
@@ -53,6 +56,9 @@ describe('NotFoundError', () => {
   })
 
   it('has defaults', () => {
-    should(new NotFoundError()).have.property('message').which.is.String().equal('No results for given query.')
+    should(new NotFoundError()).have
+      .property('message')
+      .which.is.String()
+      .equal('No results for given query.')
   })
 })

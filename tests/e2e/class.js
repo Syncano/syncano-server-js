@@ -38,7 +38,11 @@ describe('Class', function () {
   })
 
   it('can create a class', function (done) {
-    _class.create({name: testClassName, schema: [{"type": "string", "name": "parameter_name"}]})
+    _class
+      .create({
+        name: testClassName,
+        schema: [{type: 'string', name: 'parameter_name'}]
+      })
       .then(res => {
         expect(res.name).to.be.equal(testClassName)
         done()
@@ -50,7 +54,8 @@ describe('Class', function () {
   })
 
   it('can delete a class', function (done) {
-    _class.delete(testClassName)
+    _class
+      .delete(testClassName)
       .then(classObj => {
         expect(classObj).to.be.empty
         done()

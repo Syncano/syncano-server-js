@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-expressions */
 import fs from 'fs'
-import nodeFetch from 'node-fetch'
+import {join} from 'path'
 import FormData from 'form-data'
 import {expect} from 'chai'
 
 import Server from '../../src'
-import {getRandomString, createTestInstance, deleteTestInstance, checkStatus, buildInstanceURL} from '../utils'
+import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 global.META = {
   socket: 'test-socket'
@@ -15,7 +15,6 @@ describe('Data object', function () {
   let data = null
   let dummyStringFieldValue = getRandomString()
   const testClassName = getRandomString()
-  const testSocketName = getRandomString()
   const instanceName = getRandomString()
 
   before(function (done) {
@@ -26,7 +25,12 @@ describe('Data object', function () {
         return new Server()._class.create({
           name: testClassName,
           schema: [
-            {type: 'string', name: 'field_string', filter_index: true, order_index: true},
+            {
+              type: 'string',
+              name: 'field_string',
+              filter_index: true,
+              order_index: true
+            },
             {type: 'text', name: 'field_text'},
             {type: 'integer', name: 'field_integer'},
             {type: 'float', name: 'field_float'},
@@ -41,11 +45,10 @@ describe('Data object', function () {
       })
       .catch(err => {
         console.log(err)
-        err.response.text()
-          .then(text => {
-            console.log(text)
-            done(err)
-          })
+        err.response.text().then(text => {
+          console.log(text)
+          done(err)
+        })
       })
   })
 
@@ -61,8 +64,11 @@ describe('Data object', function () {
 
   it('can create single object', function (done) {
     data[testClassName]
-      .create(
-        {test: 'single', test2: 'secret', 'field_string': dummyStringFieldValue})
+      .create({
+        test: 'single',
+        test2: 'secret',
+        field_string: dummyStringFieldValue
+      })
       .then(() => done())
       .catch(err => {
         console.log('ERROR: ', err)
@@ -134,23 +140,17 @@ describe('Data object', function () {
   })
 
   it('can delete single object', function (done) {
-    data[testClassName]
-      .delete(1)
-      .then(() => done())
-      .catch(err => {
-        console.log('ERROR: ', err)
-        done(err)
-      })
+    data[testClassName].delete(1).then(() => done()).catch(err => {
+      console.log('ERROR: ', err)
+      done(err)
+    })
   })
 
   it('can delete multiple objects', function (done) {
-    data[testClassName]
-      .delete([2, 3])
-      .then(() => done())
-      .catch(err => {
-        console.log('ERROR: ', err)
-        done(err)
-      })
+    data[testClassName].delete([2, 3]).then(() => done()).catch(err => {
+      console.log('ERROR: ', err)
+      done(err)
+    })
   })
 
   it('can delete multiple objects by query', function (done) {
@@ -165,31 +165,22 @@ describe('Data object', function () {
   })
 
   it('can be sorted', function (done) {
-    let firstObject = null
-    let secondObject = null
-
     // Create objects
     Promise.all([
       data[testClassName].create({field_string: 'abcdef'}),
       data[testClassName].create({field_string: 'cdefgh'}),
       data[testClassName].create({field_string: 'bcdefg'})
     ])
-    .then(objects => {
-      [firstObject, secondObject] = objects
-
-      return data[testClassName]
-        .orderBy('field_string')
-        .list()
-    })
-    .then((sortedObjects) => {
-      expect(sortedObjects[0]['field_string']).to.be.equal('abcdef')
-      expect(sortedObjects[1]['field_string']).to.be.equal('bcdefg')
-      expect(sortedObjects[2]['field_string']).to.be.equal('cdefgh')
-      done()
-    })
-    .catch(err => {
-      done(err)
-    })
+      .then(objects => data[testClassName].orderBy('field_string').list())
+      .then(sortedObjects => {
+        expect(sortedObjects[0]['field_string']).to.be.equal('abcdef')
+        expect(sortedObjects[1]['field_string']).to.be.equal('bcdefg')
+        expect(sortedObjects[2]['field_string']).to.be.equal('cdefgh')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
   })
 
   it.skip('can be updated', function (done) {})
@@ -200,22 +191,25 @@ describe('Data object', function () {
   it.skip('can be created with reference', function (done) {})
   it.skip('can be created with reference', function (done) {})
   it('can be created with file field', function (done) {
-    const form = new FormData();
-    form.append('field_file', fs.createReadStream(__dirname + '/assets/test.jpg'));
+    const form = new FormData()
+    form.append(
+      'field_file',
+      fs.createReadStream(join(__dirname, '/assets/test.jpg'))
+    )
 
-    data[testClassName].create(form)
-    .then((res) => {
-      expect(res['field_file']['type']).to.be.equal('file')
-      done()
-    })
-    .catch(err => {
-      console.log(err)
-      err.response.text()
-        .then(text => {
+    data[testClassName]
+      .create(form)
+      .then(res => {
+        expect(res['field_file']['type']).to.be.equal('file')
+        done()
+      })
+      .catch(err => {
+        console.log(err)
+        err.response.text().then(text => {
           console.log(text)
           done(err)
         })
-    })
+      })
   })
 
   it.skip('can be listed with one filter', function (done) {})

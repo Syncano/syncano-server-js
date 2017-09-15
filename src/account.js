@@ -1,13 +1,12 @@
 import QueryBuilder from './query-builder'
-import {buildSyncanoURL} from './utils'
 
 /**
  * Syncano account query builder
  * @property {Function}
  */
 class Account extends QueryBuilder {
-  url() {
-    return `${buildSyncanoURL()}/account/`
+  url () {
+    return `${this._getSyncanoURL()}/account/`
   }
 
   /**
@@ -18,12 +17,13 @@ class Account extends QueryBuilder {
    * @example {@lang javascript}
    * const account = await account.get('0aad29dd0be2bcebb741525b9c5901e55cf43e98')
    */
-  get(authKey) {
+  get (authKey) {
     const fetch = this.nonInstanceFetch.bind(this)
     return new Promise((resolve, reject) => {
       const headers = {
         'X-API-KEY': authKey
       }
+
       fetch(this.url(), {}, headers)
         .then(res => resolve(res))
         .catch(err => reject(err))

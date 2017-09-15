@@ -1,14 +1,14 @@
 import QueryBuilder from './query-builder'
-import {buildInstanceURL} from './utils'
 
 /**
  * Syncano account query builder
  * @property {Function}
  */
 class Event extends QueryBuilder {
-  url() {
+  url () {
     const {instanceName} = this.instance
-    return `${buildInstanceURL(instanceName)}/triggers/emit/`
+
+    return `${this._getInstanceURL(instanceName)}/triggers/emit/`
   }
 
   /**
@@ -19,7 +19,7 @@ class Event extends QueryBuilder {
    * @example {@lang javascript}
    * const instance = await event.emit('signal_name', payload={})
    */
-  emit(signalString, payload) {
+  emit (signalString, payload) {
     const fetch = this.fetch.bind(this)
     const {socket, signal} = Event._splitSignal(signalString)
 
@@ -28,7 +28,7 @@ class Event extends QueryBuilder {
     if (socket) {
       signalParams.push(socket)
     } else {
-      signalParams.push(META.socket)
+      signalParams.push(this.instance.meta.socket)
     }
 
     signalParams.push('.')
@@ -43,13 +43,11 @@ class Event extends QueryBuilder {
         })
       }
 
-      fetch(this.url(), options)
-        .then(resolve)
-        .catch(reject)
+      fetch(this.url(), options).then(resolve).catch(reject)
     })
   }
 
-  static _splitSignal(signalString) {
+  static _splitSignal (signalString) {
     const splited = signalString.split('.')
     if (splited.length === 1) {
       return {signal: splited[0]}
@@ -59,7 +57,6 @@ class Event extends QueryBuilder {
       signal: splited[1]
     }
   }
-
 }
 
 export default Event

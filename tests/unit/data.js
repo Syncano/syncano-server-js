@@ -29,7 +29,8 @@ describe('Data', () => {
     })
 
     it('should be able to fetch objects list', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({page_size: 10}) // eslint-disable-line camelcase
         .reply(200, {
           objects: [{name: 'John Doe', id: 3}],
@@ -44,7 +45,8 @@ describe('Data', () => {
     })
 
     it('should return [] when no objects were not found', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({page_size: 5}) // eslint-disable-line camelcase
         .reply(200, {objects: [], next: null})
 
@@ -60,7 +62,8 @@ describe('Data', () => {
     })
 
     it('should be able to fetch single object', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
@@ -72,7 +75,8 @@ describe('Data', () => {
     })
 
     it('should return null when object was not found', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: []})
 
@@ -86,7 +90,8 @@ describe('Data', () => {
     })
 
     it('should be able to fetch single object', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
@@ -98,7 +103,8 @@ describe('Data', () => {
     })
 
     it('should throw error when object was not found', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(404)
 
@@ -130,7 +136,8 @@ describe('Data', () => {
     })
 
     it('should be able to fetch single object', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
           page_size: 1 // eslint-disable-line camelcase
@@ -145,14 +152,15 @@ describe('Data', () => {
     })
 
     it('should be able to fetch objects list', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
-        .reply(200, {objects: [
-          {name: 'John Doe', id: 7},
-          {name: 'Jane Doe', id: 8}
-        ], next: null})
+        .reply(200, {
+          objects: [{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}],
+          next: null
+        })
 
       data.users.find([7, 8]).then(objects => {
         should(objects).be.Array().length(2)
@@ -164,7 +172,8 @@ describe('Data', () => {
     })
 
     it('should return null when object was not found', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({id: {_eq: 5}}),
           page_size: 1 // eslint-disable-line camelcase
@@ -175,13 +184,16 @@ describe('Data', () => {
     })
 
     it('should return [] when no objects were found', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
         .reply(200, {objects: [], next: null})
 
-      data.users.find([7, 8]).then(objects => should(objects).be.Array().empty())
+      data.users
+        .find([7, 8])
+        .then(objects => should(objects).be.Array().empty())
     })
   })
 
@@ -191,7 +203,8 @@ describe('Data', () => {
     })
 
     it('should be able to fetch single object', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
           page_size: 1 // eslint-disable-line camelcase
@@ -206,14 +219,15 @@ describe('Data', () => {
     })
 
     it('should be able to fetch objects list', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
-        .reply(200, {objects: [
-          {name: 'John Doe', id: 7},
-          {name: 'Jane Doe', id: 8}
-        ], next: null})
+        .reply(200, {
+          objects: [{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}],
+          next: null
+        })
 
       data.users.find([7, 8]).then(objects => {
         should(objects).be.Array().length(2)
@@ -225,7 +239,8 @@ describe('Data', () => {
     })
 
     it('should throw error when object was not found', () => {
-      api.get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query({
           page_size: 1, // eslint-disable-line camelcase
           query: JSON.stringify({id: {_eq: 5}})
@@ -292,7 +307,8 @@ describe('Data', () => {
     it('should be able to create object', () => {
       const user = {name: 'John'}
 
-      api.post(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+      api
+        .post(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
         .query(user)
         .reply(200, user)
 
@@ -314,17 +330,23 @@ describe('Data', () => {
       const id = 9900
       const firstName = 'Jane'
 
-      api.patch(`/v2/instances/${instanceName}/classes/users/objects/${id}/`, '*')
+      api
+        .patch(
+          `/v2/instances/${instanceName}/classes/users/objects/${id}/`,
+          '*'
+        )
         .query({id})
         .reply(200, {id, first_name: firstName}) // eslint-disable-line camelcase
 
-      data.users.update(id, {
-        first_name: 'Jane' // eslint-disable-line camelcase
-      }).then(object => {
-        should(object).be.Object()
-        should(object).have.property('id').equal(id)
-        should(object).have.property('first_name').equal(firstName)
-      })
+      data.users
+        .update(id, {
+          first_name: 'Jane' // eslint-disable-line camelcase
+        })
+        .then(object => {
+          should(object).be.Object()
+          should(object).have.property('id').equal(id)
+          should(object).have.property('first_name').equal(firstName)
+        })
     })
 
     it.skip('should be able to update multiple objects')
@@ -339,7 +361,11 @@ describe('Data', () => {
     it('should be able to delete object by id', () => {
       const id = 9900
 
-      api.delete(`/v2/instances/${instanceName}/classes/users/objects/${id}/`, '*')
+      api
+        .delete(
+          `/v2/instances/${instanceName}/classes/users/objects/${id}/`,
+          '*'
+        )
         .query({id})
         .reply(200, {id})
 

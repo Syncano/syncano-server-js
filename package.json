@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npm-run-all build:*",
     "build:lib": "babel src --out-dir lib",
-    "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src -u ./tutorials",
+    "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src",
     "clean": "npm-run-all clean:*",
     "clean:lib": "rimraf ./lib",
     "clean:docs": "rimraf ./docs",
@@ -75,28 +75,8 @@
     "should": "^8.2.2",
     "xo": "^0.18.0"
   },
-  "xo": {
-    "semicolon": false,
-    "space": true,
-    "esnext": true,
-    "envs": [
-      "node",
-      "mocha"
-    ],
-    "globals": [
-      "CONFIG",
-      "META"
-    ],
-    "overrides": [
-      {
-        "files": "tests/**/*.js",
-        "rules": {
-          "prefer-arrow-callback": [
-            "off"
-          ]
-        }
-      }
-    ]
+  "standard": {
+    "env": [ "mocha" ]
   },
   "config": {
     "commitizen": {

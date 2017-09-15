@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "**/lib": true,
+    "**/.vscode": true,
+    "**/.nyc_output": true,
+    "**/docs": true,
+    "**/coverage": true,
+    "**/e2e-tests": true
+  },
+  "standard.options": {
+    "env": ["mocha"]
+  }
+}

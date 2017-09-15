@@ -8,7 +8,7 @@
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
 class Logger {
-  constructor({scope, callback, levels}) {
+  constructor ({scope, callback, levels}) {
     this._start = null
     this._scope = scope
     this._callback = callback
@@ -18,7 +18,7 @@ class Logger {
     })
   }
 
-  _makePrinter(...args) {
+  _makePrinter (...args) {
     this._start = this._start || this._getNow()
     this._level = args.shift()
 
@@ -31,11 +31,13 @@ class Logger {
     this._level = null
   }
 
-  _pad(width, string, padding) {
-    return (width <= string.length) ? string : this._pad(width, padding + string, padding)
+  _pad (width, string, padding) {
+    return width <= string.length
+      ? string
+      : this._pad(width, padding + string, padding)
   }
 
-  _print(...args) {
+  _print (...args) {
     // Time
     const now = this._getNow()
     const diff = `+${this._calculateDiff(this._start, now)}`
@@ -50,7 +52,7 @@ class Logger {
     return now
   }
 
-  _shouldLog(scope) {
+  _shouldLog (scope) {
     if (ARGS && ARGS.DEBUG) {
       if (typeof ARGS.DEBUG === 'boolean') {
         return ARGS.DEBUG
@@ -71,27 +73,30 @@ class Logger {
     return false
   }
 
-  _parseArg(arg) {
-    const isObject = arg !== null && typeof (arg) === 'object'
+  _parseArg (arg) {
+    const isObject = arg !== null && typeof arg === 'object'
 
     if (isObject) {
-      return `\n\n  ${JSON.stringify(arg, null, 2).split('\n').join('\n  ')}\n\n`
+      return `\n\n  ${JSON.stringify(arg, null, 2)
+        .split('\n')
+        .join('\n  ')}\n\n`
     }
 
     return arg
   }
 
-  _getNow() {
+  _getNow () {
     return new Date()
   }
 
-  _getNowString(date) {
-    return date.toISOString()
-      .replace(/T/, ' ')      // Replace T with a space
-      .replace(/\..+/, '')    // Delete the dot and everything after
+  _getNowString (date) {
+    return date
+      .toISOString()
+      .replace(/T/, ' ') // Replace T with a space
+      .replace(/\..+/, '') // Delete the dot and everything after
   }
 
-  _calculateDiff(t1, t2) {
+  _calculateDiff (t1, t2) {
     return (t2.getTime() - t1.getTime()) / 1000
   }
 }
