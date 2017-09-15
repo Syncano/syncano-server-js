@@ -9,7 +9,7 @@ export default ({
   ...props
 }) => ({
   token: process.env.TOKEN || global.META.token || meta.token || token,
-  instanceName: process.env.INSTANCE_NAME ||
+  instanceName: process.env.SYNCANO_INSTANCE_NAME ||
     global.META.instance ||
     meta.instance ||
     instanceName,

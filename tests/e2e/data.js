@@ -1,15 +1,14 @@
 /* eslint-disable no-unused-expressions */
+global.META = {
+  socket: 'test-socket'
+}
+
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
 import {expect} from 'chai'
-
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
-
-global.META = {
-  socket: 'test-socket'
-}
 
 describe('Data object', function () {
   let data = null

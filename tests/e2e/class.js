@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-expressions */
-import {expect} from 'chai'
-
-import Server from '../../src'
-import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
-
 global.META = {
   socket: 'test-socket'
 }
+
+import {expect} from 'chai'
+import Server from '../../src'
+import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
 describe('Class', function () {
   let _class = null
