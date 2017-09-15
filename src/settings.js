@@ -8,7 +8,10 @@ export default ({
   HttpResponse,
   ...props
 }) => ({
-  token: process.env.TOKEN || global.META.token || meta.token || token,
+  token: process.env.SYNCANO_API_KEY ||
+    global.META.token ||
+    meta.token ||
+    token,
   instanceName: process.env.SYNCANO_INSTANCE_NAME ||
     global.META.instance ||
     meta.instance ||
