@@ -107,9 +107,9 @@ class Data extends QueryBuilder {
         if (hasNextPageMeta && hasNotEnoughResults) {
           request(`${baseUrl}${response.next}`)
           return false
-        } else {
-          return true
         }
+
+        return true
       }
 
       function resolveRelatedModels(shouldResolve) {
