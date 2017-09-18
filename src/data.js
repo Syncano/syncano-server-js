@@ -106,6 +106,7 @@ class Data extends QueryBuilder {
 
         if (hasNextPageMeta && hasNotEnoughResults) {
           request(`${baseUrl}${response.next}`)
+          return false
         } else {
           return true
         }
@@ -113,7 +114,7 @@ class Data extends QueryBuilder {
 
       function resolveRelatedModels(shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         return new Promise((resolve, reject) => {
@@ -187,7 +188,7 @@ class Data extends QueryBuilder {
 
       function replaceCustomTypesWithValue(shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         result = result.map(item => {
@@ -211,7 +212,7 @@ class Data extends QueryBuilder {
 
       function mapResultFields(shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         result = _mapFields(result, mappedFields)
