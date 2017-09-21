@@ -24,7 +24,7 @@ const server = (ctx = {}) => {
   const account = new Account(config)
   const instance = new Instance(config)
 
-  Logger.config = ctx.meta.debug
+  Logger.config = ctx.meta ? ctx.meta.debug : ''
 
   return {
     _class,
