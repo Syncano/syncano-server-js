@@ -8,10 +8,12 @@
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
 class Logger {
-  constructor ({scope, callback, levels}) {
+  constructor ({scope, callback, levels, config}) {
     this._start = null
     this._scope = scope
     this._callback = callback
+
+    this.config = config
 
     levels.forEach(level => {
       this[level] = this._makePrinter.bind(this, level)
@@ -47,18 +49,21 @@ class Logger {
     const level = this._pad(5, `${this._level}`, ' ')
     args = args.map(this._parseArg).join(' ')
 
-    console.log(`${level}:`, time, this._scope, args, diff, 'ms')
+    if (this.config !== false) {
+      console.log(`${level}:`, time, this._scope, args, diff, 'ms')
+    }
 
     return now
   }
 
+  // TODO: this is not used anyhow right now
   _shouldLog (scope) {
-    if (ARGS && ARGS.DEBUG) {
-      if (typeof ARGS.DEBUG === 'boolean') {
-        return ARGS.DEBUG
+    if (this.config) {
+      if (typeof this.config === 'boolean') {
+        return this.config
       }
 
-      const vars = ARGS.DEBUG.split(',')
+      const vars = this.config.split(',')
       const excluded = vars
         .filter(item => item.startsWith('-'))
         .map(item => item.replace(/^-/, ''))
@@ -104,6 +109,7 @@ class Logger {
 const logger = function (scope) {
   return new Logger({
     scope,
+    config: logger.config,
     callback: logger._callback,
     levels: logger._levels || LEVELS
   })
