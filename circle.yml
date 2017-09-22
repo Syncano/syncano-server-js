@@ -23,8 +23,9 @@ general:
 
 test:
   override:
-    - yarn run test
-  post:
+    - yarn run test:unit
+    - yarn run test:coverage
+    - yarn run test:e2e
     - yarn run test:coverage
 
 deployment:
