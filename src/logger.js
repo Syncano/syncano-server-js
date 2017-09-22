@@ -6,12 +6,11 @@
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
 class Logger {
-  constructor({scope, callback, levels, config}) {
+  constructor(instance, {scope, callback, levels, config}) {
     this._start = null
     this._scope = scope
     this._callback = callback
-
-    this.config = config
+    this.config = instance.meta.debug
 
     levels.forEach(level => {
       this[level] = this._makePrinter.bind(this, level)
@@ -54,28 +53,6 @@ class Logger {
     return now
   }
 
-  // TODO: this is not used anyhow right now
-  _shouldLog(scope) {
-    if (this.config) {
-      if (typeof this.config === 'boolean') {
-        return this.config
-      }
-
-      const vars = this.config.split(',')
-      const excluded = vars
-        .filter(item => item.startsWith('-'))
-        .map(item => item.replace(/^-/, ''))
-
-      const matchAll = vars.filter(item => item === '*').length
-      const isWhitelisted = vars.indexOf(scope) >= 0
-      const isExcluded = excluded.indexOf(scope) >= 0
-
-      return (matchAll || isWhitelisted) && !isExcluded
-    }
-
-    return false
-  }
-
   _parseArg(arg) {
     const isObject = arg !== null && typeof arg === 'object'
 
@@ -104,29 +81,30 @@ class Logger {
   }
 }
 
-const logger = function(scope) {
-  return new Logger({
-    scope,
-    config: logger.config,
-    callback: logger._callback,
-    levels: logger._levels || LEVELS
-  })
-}
-
-logger.levels = function(levels) {
-  if (!Array.isArray(levels)) {
-    throw new TypeError('Levels must be array of strings.')
+export default instance => {
+  const logger = function(scope) {
+    return new Logger(instance, {
+      scope,
+      callback: logger._callback,
+      levels: logger._levels || LEVELS
+    })
   }
 
-  logger._levels = levels
-}
+  logger.levels = function(levels) {
+    if (!Array.isArray(levels)) {
+      throw new TypeError('Levels must be array of strings.')
+    }
 
-logger.listen = function(callback) {
-  if (typeof callback !== 'function') {
-    throw new TypeError('Callback must be a function.')
+    logger._levels = levels
   }
 
-  logger._callback = callback
-}
+  logger.listen = function(callback) {
+    if (typeof callback !== 'function') {
+      throw new TypeError('Callback must be a function.')
+    }
 
-export default logger
+    logger._callback = callback
+  }
+
+  return logger
+}

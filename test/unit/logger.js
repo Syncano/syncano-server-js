@@ -20,15 +20,11 @@ describe('Logger', () => {
   })
 
   it('has _start property set to Date', () => {
-    should(log)
-      .have.property('_start')
-      .which.is.null()
+    should(log).have.property('_start', null)
   })
 
   it('has _callback property set to undefined', () => {
-    should(log)
-      .have.property('_callback')
-      .which.is.an('undefined')
+    should(log).have.property('_callback', undefined)
   })
 
   describe('#listen()', () => {

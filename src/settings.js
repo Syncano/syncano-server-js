@@ -10,12 +10,12 @@ export default ({
   ...props
 }) => ({
   token:
-    process.env.SYNCANO_API_KEY || global.META.token || meta.token || token,
+    token || process.env.SYNCANO_API_KEY || global.META.token || meta.token,
   instanceName:
+    instanceName ||
     process.env.SYNCANO_INSTANCE_NAME ||
     global.META.instance ||
-    meta.instance ||
-    instanceName,
+    meta.instance,
   host:
     process.env.SYNCANO_HOST ||
     global.META.api_host ||
@@ -27,7 +27,7 @@ export default ({
     meta.space_host ||
     'syncano.space',
   apiVersion: 'v2',
-  socket: global.META.socket || meta.socket || socket,
+  socket: socket || global.META.socket || meta.socket,
   meta,
   setResponse,
   HttpResponse,

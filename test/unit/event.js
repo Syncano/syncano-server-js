@@ -14,7 +14,7 @@ describe('Event', () => {
 
   it('_splitSignal properly spliting signalString without socket', () => {
     const {socket, signal} = Event._splitSignal(`${signalName}`)
-    should(socket).be.an('undefined')
+    should(socket).be.undefined()
     should(signal).be.equal(signalName)
   })
 })
