@@ -3,12 +3,10 @@
  * @property {Function}
  */
 
-/* global ARGS */
-
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
 class Logger {
-  constructor ({scope, callback, levels, config}) {
+  constructor({scope, callback, levels, config}) {
     this._start = null
     this._scope = scope
     this._callback = callback
@@ -20,7 +18,7 @@ class Logger {
     })
   }
 
-  _makePrinter (...args) {
+  _makePrinter(...args) {
     this._start = this._start || this._getNow()
     this._level = args.shift()
 
@@ -33,13 +31,13 @@ class Logger {
     this._level = null
   }
 
-  _pad (width, string, padding) {
+  _pad(width, string, padding) {
     return width <= string.length
       ? string
       : this._pad(width, padding + string, padding)
   }
 
-  _print (...args) {
+  _print(...args) {
     // Time
     const now = this._getNow()
     const diff = `+${this._calculateDiff(this._start, now)}`
@@ -57,7 +55,7 @@ class Logger {
   }
 
   // TODO: this is not used anyhow right now
-  _shouldLog (scope) {
+  _shouldLog(scope) {
     if (this.config) {
       if (typeof this.config === 'boolean') {
         return this.config
@@ -78,7 +76,7 @@ class Logger {
     return false
   }
 
-  _parseArg (arg) {
+  _parseArg(arg) {
     const isObject = arg !== null && typeof arg === 'object'
 
     if (isObject) {
@@ -90,23 +88,23 @@ class Logger {
     return arg
   }
 
-  _getNow () {
+  _getNow() {
     return new Date()
   }
 
-  _getNowString (date) {
+  _getNowString(date) {
     return date
       .toISOString()
       .replace(/T/, ' ') // Replace T with a space
       .replace(/\..+/, '') // Delete the dot and everything after
   }
 
-  _calculateDiff (t1, t2) {
+  _calculateDiff(t1, t2) {
     return (t2.getTime() - t1.getTime()) / 1000
   }
 }
 
-const logger = function (scope) {
+const logger = function(scope) {
   return new Logger({
     scope,
     config: logger.config,
@@ -115,7 +113,7 @@ const logger = function (scope) {
   })
 }
 
-logger.levels = function (levels) {
+logger.levels = function(levels) {
   if (!Array.isArray(levels)) {
     throw new TypeError('Levels must be array of strings.')
   }
@@ -123,7 +121,7 @@ logger.levels = function (levels) {
   logger._levels = levels
 }
 
-logger.listen = function (callback) {
+logger.listen = function(callback) {
   if (typeof callback !== 'function') {
     throw new TypeError('Callback must be a function.')
   }
