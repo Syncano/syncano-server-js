@@ -11,9 +11,11 @@ import {NotFoundError} from './errors'
  * @property {Function} query Instance of syncano DataObject
  */
 class Data extends QueryBuilder {
-  url (id) {
+  url(id) {
     const {instanceName, className} = this.instance
-    let url = `${this._getInstanceURL(instanceName)}/classes/${className}/objects/${id ? id + '/' : ''}`
+    let url = `${this._getInstanceURL(
+      instanceName
+    )}/classes/${className}/objects/${id ? id + '/' : ''}`
 
     if (this._url !== undefined) {
       url = this._url
@@ -24,7 +26,7 @@ class Data extends QueryBuilder {
     return query ? `${url}?${query}` : url
   }
 
-  _batchBodyBuilder (body) {
+  _batchBodyBuilder(body) {
     const {instanceName, className, apiVersion} = this.instance
     const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
 
@@ -54,7 +56,7 @@ class Data extends QueryBuilder {
     )
   }
 
-  _batchFetchObject (body) {
+  _batchFetchObject(body) {
     const {instanceName} = this.instance
 
     return {
@@ -76,7 +78,7 @@ class Data extends QueryBuilder {
    * // Get 10 posts
    * const posts = await data.posts.take(10).list()
    */
-  list () {
+  list() {
     let result = []
     const self = this
     const {baseUrl, relationships, instance, mappedFields, _mapFields} = this
@@ -86,7 +88,7 @@ class Data extends QueryBuilder {
     return new Promise((resolve, reject) => {
       request(this.url())
 
-      function request (url) {
+      function request(url) {
         fetch(url)
           .then(saveToResult)
           .then(loadNextPage)
@@ -97,13 +99,13 @@ class Data extends QueryBuilder {
           .catch(err => reject(err))
       }
 
-      function saveToResult (response) {
+      function saveToResult(response) {
         result = result.concat(response.objects)
 
         return response
       }
 
-      function loadNextPage (response) {
+      function loadNextPage(response) {
         const hasNextPageMeta = response.next
         const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
 
@@ -114,7 +116,7 @@ class Data extends QueryBuilder {
         }
       }
 
-      function resolveRelatedModels (shouldResolve) {
+      function resolveRelatedModels(shouldResolve) {
         if (shouldResolve === false) {
           return
         }
@@ -158,7 +160,9 @@ class Data extends QueryBuilder {
               ids = Array.isArray(ids[0]) ? ids[0] : ids
 
               if (target === 'user') {
-                load._url = `${self._getInstanceURL(instance.instanceName)}/users/`
+                load._url = `${self._getInstanceURL(
+                  instance.instanceName
+                )}/users/`
               }
 
               load.instance = self.instance
@@ -192,7 +196,7 @@ class Data extends QueryBuilder {
         })
       }
 
-      function replaceCustomTypesWithValue (shouldResolve) {
+      function replaceCustomTypesWithValue(shouldResolve) {
         if (shouldResolve === false) {
           return
         }
@@ -216,7 +220,7 @@ class Data extends QueryBuilder {
         return true
       }
 
-      function mapResultFields (shouldResolve) {
+      function mapResultFields(shouldResolve) {
         if (shouldResolve === false) {
           return
         }
@@ -226,7 +230,7 @@ class Data extends QueryBuilder {
         return true
       }
 
-      function resolveIfFinished (shouldResolve) {
+      function resolveIfFinished(shouldResolve) {
         if (shouldResolve) {
           if (pageSize !== 0) {
             result = result.slice(0, pageSize)
@@ -238,7 +242,7 @@ class Data extends QueryBuilder {
     })
   }
 
-  _mapFields (items, fields) {
+  _mapFields(items, fields) {
     return fields.length === 0
       ? items
       : items.map(item =>
@@ -249,7 +253,7 @@ class Data extends QueryBuilder {
         )
   }
 
-  _getRelatedObjects (reference, items) {
+  _getRelatedObjects(reference, items) {
     if (!reference) {
       return null
     }
@@ -269,8 +273,10 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'published').first()
    */
-  first () {
-    return this.take(1).list().then(response => response[0] || null)
+  first() {
+    return this.take(1)
+      .list()
+      .then(response => response[0] || null)
   }
 
   /**
@@ -279,7 +285,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.where('status', 'published').firstOrFail()
    */
-  firstOrFail () {
+  firstOrFail() {
     return new Promise((resolve, reject) => {
       this.first()
         .then(
@@ -298,7 +304,7 @@ class Data extends QueryBuilder {
    * const post = await data.posts
    *   .updateOrCreate({name: 'value to match'}, {content: 'value to update'})
    */
-  firstOrCreate (attributes, values = {}) {
+  firstOrCreate(attributes, values = {}) {
     const query = this._toWhereArray(attributes)
 
     return this.where(query)
@@ -313,7 +319,7 @@ class Data extends QueryBuilder {
    * const post = await data.posts
    *   .updateOrCreate({name: 'value to match'}, {content: 'value to update'})
    */
-  updateOrCreate (attributes, values = {}) {
+  updateOrCreate(attributes, values = {}) {
     const query = this._toWhereArray(attributes)
 
     return this.where(query)
@@ -322,7 +328,7 @@ class Data extends QueryBuilder {
       .catch(() => this.create(merge(attributes, values)))
   }
 
-  _toWhereArray (attributes) {
+  _toWhereArray(attributes) {
     return Object.keys(attributes).map(key => [key, 'eq', attributes[key]])
   }
 
@@ -336,7 +342,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.find([20, 99, 125])
    */
-  find (ids) {
+  find(ids) {
     if (Array.isArray(ids)) {
       return this.where('id', 'in', ids).list()
     }
@@ -357,7 +363,7 @@ class Data extends QueryBuilder {
    * // Will throw error if at lest one of records was not found
    * const posts = await data.posts.findOrFail([20, 99, 125], true)
    */
-  findOrFail (ids) {
+  findOrFail(ids) {
     return new Promise((resolve, reject) => {
       this.find(ids)
         .then(response => {
@@ -381,7 +387,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.take(500).list()
    */
-  take (count) {
+  take(count) {
     return this.withQuery({page_size: count}) // eslint-disable-line camelcase
   }
 
@@ -393,7 +399,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.orderBy('created_at', 'DESC').list()
    */
-  orderBy (column, direction = 'asc') {
+  orderBy(column, direction = 'asc') {
     direction = direction.toLowerCase()
     direction = direction === 'desc' ? '-' : ''
 
@@ -418,7 +424,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.posts.where('user.full_name', 'contains', 'John').list()
    */
-  where (column, operator, value) {
+  where(column, operator, value) {
     if (Array.isArray(column)) {
       column.map(([itemColumn, itemOperator, itemValue]) =>
         this.where(itemColumn, itemOperator, itemValue)
@@ -433,25 +439,29 @@ class Data extends QueryBuilder {
 
     const currentQuery = JSON.parse(this.query.query || '{}')
 
-    const nextQuery = column.split('.').reverse().reduce(
-      (child, item) => ({
-        [item]: child === null
-          ? {
-            [whereOperator]: whereValue
-          }
-          : {
-            _is: child
-          }
-      }),
-      null
-    )
+    const nextQuery = column
+      .split('.')
+      .reverse()
+      .reduce(
+        (child, item) => ({
+          [item]:
+            child === null
+              ? {
+                  [whereOperator]: whereValue
+                }
+              : {
+                  _is: child
+                }
+        }),
+        null
+      )
 
     const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
   }
 
-  _normalizeWhereOperator (operator) {
+  _normalizeWhereOperator(operator) {
     const operators = {
       '<': 'lt',
       '<=': 'lte',
@@ -473,7 +483,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * const posts = await data.users.fields('name', 'email as username')->list()
    */
-  fields (...fields) {
+  fields(...fields) {
     if (Array.isArray(fields[0])) {
       fields = fields[0]
     }
@@ -499,7 +509,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * data.posts.with(['author', 'last_editor']).list()
    */
-  with (...models) {
+  with(...models) {
     const relationships = Array.isArray(models[0]) ? models[0] : models
 
     return this.withRelationships(relationships)
@@ -513,7 +523,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * data.posts.where('id', 10).pluck('title')
    */
-  pluck (column) {
+  pluck(column) {
     return this.list().then(items => items.map(item => item[column]))
   }
 
@@ -525,7 +535,7 @@ class Data extends QueryBuilder {
    * @example {@lang javascript}
    * data.posts.where('id', 10).value('title')
    */
-  value (column) {
+  value(column) {
     return this.first().then(item => item[column])
   }
 
@@ -544,7 +554,7 @@ class Data extends QueryBuilder {
    *  { content: 'More lorem ipsum!' }
    * ])
    */
-  create (body) {
+  create(body) {
     let headers = null
     let fetchObject = {
       url: this.url(),
@@ -579,7 +589,7 @@ class Data extends QueryBuilder {
    *   .where('destination', 'Warsaw')
    *   .update({delayed: 1})
    */
-  update (id, body) {
+  update(id, body) {
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)
     let fetchObject = {
@@ -616,7 +626,7 @@ class Data extends QueryBuilder {
    * data.posts.delete()
    * data.posts.where('draft', 1).delete()
    */
-  delete (id) {
+  delete(id) {
     const isQueryDelete = id === undefined
     let fetchObject = {
       url: this.url(id),
