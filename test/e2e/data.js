@@ -94,7 +94,7 @@ describe('Data object', function () {
       .where('field_string', dummyStringFieldValue)
       .first()
       .then(dataObj => {
-        expect(dataObj).to.not.be.empty
+        expect(dataObj).to.not.be.undefined
         done()
       })
       .catch(err => {

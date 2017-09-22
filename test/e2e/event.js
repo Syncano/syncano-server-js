@@ -44,7 +44,7 @@ describe('Event', function () {
   it('can emit event with socket name', function (done) {
     event.emit(`${testSocketName}.${testEventName}`, {dummyKey: 'dummy_value'})
       .then(event => {
-        expect(event).to.be.empty
+        expect(event).to.be.undefined
         done()
       })
       .catch(err => {
@@ -56,7 +56,7 @@ describe('Event', function () {
   it('can emit event without socket', function (done) {
     event.emit(testEventName, {dummyKey: 'dummy_value'})
       .then(event => {
-        expect(event).to.be.empty
+        expect(event).to.be.undefined
         done()
       })
       .catch(err => {

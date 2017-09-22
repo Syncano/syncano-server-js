@@ -29,7 +29,7 @@ describe('Instance', function () {
   it('can delete instance', function (done) {
     instance.delete(testInstanceName)
       .then(res => {
-        expect(res).to.be.empty
+        expect(res).to.be.undefined
         done()
       })
       .catch(err => {

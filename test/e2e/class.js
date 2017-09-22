@@ -56,7 +56,7 @@ describe('Class', function () {
     _class
       .delete(testClassName)
       .then(classObj => {
-        expect(classObj).to.be.empty
+        expect(classObj).to.be.undefined
         done()
       })
       .catch(err => {
