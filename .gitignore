@@ -13,3 +13,4 @@ coverage.lcov
 .envrc
 e2e-tests
 .envrc
+.vscode
