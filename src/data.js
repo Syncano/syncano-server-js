@@ -624,6 +624,7 @@ class Data extends QueryBuilder {
    *   .update({delayed: 1})
    */
   update(id, body) {
+    let headers = null
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)
     const fetchObject = {
@@ -647,7 +648,7 @@ class Data extends QueryBuilder {
       return this._batch(id)
     }
 
-    return this.fetch(fetchObject.url, fetchObject)
+    return this.fetch(fetchObject.url, fetchObject, headers)
   }
 
   /**
