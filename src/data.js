@@ -640,7 +640,10 @@ class Data extends QueryBuilder {
       })
     }
 
-    if (Array.isArray(id)) {
+    if (body instanceof FormData) {
+      fetchObject.body = body
+      headers = body.getHeaders()
+    } else if (Array.isArray(id)) {
       return this._batch(id)
     }
 
