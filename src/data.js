@@ -5,12 +5,9 @@ import get from 'lodash.get'
 import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
-<<<<<<< HEAD
-=======
 import {buildInstanceURL} from './utils'
 
 const MAX_BATCH_SIZE = 50
->>>>>>> devel
 
 /**
  * Syncano server
@@ -245,17 +242,10 @@ class Data extends QueryBuilder {
     })
   }
 
-<<<<<<< HEAD
-  _mapFields (items, fields) {
-    return fields.length === 0
-      ? items
-      : items.map(item =>
-=======
   _mapFields(items, fields) {
     return fields.length === 0 ?
       items :
       items.map(item =>
->>>>>>> devel
           Object.keys(fields).reduce(
             (all, key) => set(all, fields[key] || key, get(item, key)),
             {}
@@ -375,15 +365,9 @@ class Data extends QueryBuilder {
     return new Promise((resolve, reject) => {
       this.find(ids)
         .then(response => {
-<<<<<<< HEAD
-          const shouldThrow = Array.isArray(ids)
-            ? response.length !== ids.length
-            : response === null
-=======
           const shouldThrow = Array.isArray(ids) ?
             response.length !== ids.length :
             response === null
->>>>>>> devel
 
           return shouldThrow ? reject(new NotFoundError()) : resolve(response)
         })
@@ -455,15 +439,6 @@ class Data extends QueryBuilder {
 
     const nextQuery = column.split('.').reverse().reduce(
       (child, item) => ({
-<<<<<<< HEAD
-        [item]: child === null
-          ? {
-            [whereOperator]: whereValue
-          }
-          : {
-            _is: child
-          }
-=======
         [item]: child === null ?
         {
           [whereOperator]: whereValue
@@ -471,7 +446,6 @@ class Data extends QueryBuilder {
         {
           _is: child
         }
->>>>>>> devel
       }),
       null
     )
