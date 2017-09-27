@@ -5,6 +5,12 @@ import get from 'lodash.get'
 import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
+<<<<<<< HEAD
+=======
+import {buildInstanceURL} from './utils'
+
+const MAX_BATCH_SIZE = 50
+>>>>>>> devel
 
 /**
  * Syncano server
@@ -109,14 +115,15 @@ class Data extends QueryBuilder {
 
         if (hasNextPageMeta && hasNotEnoughResults) {
           request(`${baseUrl}${response.next}`)
-        } else {
-          return true
+          return false
         }
+
+        return true
       }
 
       function resolveRelatedModels (shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         return new Promise((resolve, reject) => {
@@ -194,7 +201,7 @@ class Data extends QueryBuilder {
 
       function replaceCustomTypesWithValue (shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         result = result.map(item => {
@@ -218,7 +225,7 @@ class Data extends QueryBuilder {
 
       function mapResultFields (shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         result = _mapFields(result, mappedFields)
@@ -238,10 +245,17 @@ class Data extends QueryBuilder {
     })
   }
 
+<<<<<<< HEAD
   _mapFields (items, fields) {
     return fields.length === 0
       ? items
       : items.map(item =>
+=======
+  _mapFields(items, fields) {
+    return fields.length === 0 ?
+      items :
+      items.map(item =>
+>>>>>>> devel
           Object.keys(fields).reduce(
             (all, key) => set(all, fields[key] || key, get(item, key)),
             {}
@@ -361,9 +375,15 @@ class Data extends QueryBuilder {
     return new Promise((resolve, reject) => {
       this.find(ids)
         .then(response => {
+<<<<<<< HEAD
           const shouldThrow = Array.isArray(ids)
             ? response.length !== ids.length
             : response === null
+=======
+          const shouldThrow = Array.isArray(ids) ?
+            response.length !== ids.length :
+            response === null
+>>>>>>> devel
 
           return shouldThrow ? reject(new NotFoundError()) : resolve(response)
         })
@@ -435,6 +455,7 @@ class Data extends QueryBuilder {
 
     const nextQuery = column.split('.').reverse().reduce(
       (child, item) => ({
+<<<<<<< HEAD
         [item]: child === null
           ? {
             [whereOperator]: whereValue
@@ -442,6 +463,15 @@ class Data extends QueryBuilder {
           : {
             _is: child
           }
+=======
+        [item]: child === null ?
+        {
+          [whereOperator]: whereValue
+        } :
+        {
+          _is: child
+        }
+>>>>>>> devel
       }),
       null
     )
@@ -529,6 +559,46 @@ class Data extends QueryBuilder {
     return this.first().then(item => item[column])
   }
 
+  _chunk(items, size) {
+    const chunks = []
+
+    while (items.length > 0) {
+      chunks.push(items.splice(0, size))
+    }
+
+    return chunks
+  }
+
+  _batch(body, headers) {
+    const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
+      const fetchObject = this._batchFetchObject(chunk)
+
+      return this.fetch(fetchObject.url, fetchObject, headers)
+    })
+
+    return new Promise((resolve, reject) => {
+      const resolves = []
+      let i = 0
+      ;(function next() {
+        const request = requests[i++]
+
+        if (request) {
+          request()
+            .then(data => {
+              resolves.push(data)
+
+              next() // eslint-disable-line promise/no-callback-in-promise
+            })
+            .catch(err => {
+              reject(err)
+            })
+        } else {
+          resolve(resolves)
+        }
+      })()
+    })
+  }
+
   /**
    * Create new object.
    *
@@ -546,7 +616,7 @@ class Data extends QueryBuilder {
    */
   create (body) {
     let headers = null
-    let fetchObject = {
+    const fetchObject = {
       url: this.url(),
       method: 'POST',
       body: JSON.stringify(body)
@@ -556,7 +626,7 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
-      fetchObject = this._batchFetchObject(body)
+      return this._batch(body, headers)
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers)
@@ -579,10 +649,11 @@ class Data extends QueryBuilder {
    *   .where('destination', 'Warsaw')
    *   .update({delayed: 1})
    */
-  update (id, body) {
+  update(id, body) {
+    let headers = null
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)
-    let fetchObject = {
+    const fetchObject = {
       url: this.url(id),
       method: 'PATCH',
       body: JSON.stringify(body)
@@ -592,17 +663,18 @@ class Data extends QueryBuilder {
       return this.list().then(items => {
         const ids = items.map(item => [item.id, id])
 
-        fetchObject = this._batchFetchObject(ids)
-
-        return this.fetch(fetchObject.url, fetchObject)
+        return this._batch(ids)
       })
     }
 
-    if (Array.isArray(id)) {
-      fetchObject = this._batchFetchObject(id)
+    if (body instanceof FormData) {
+      fetchObject.body = body
+      headers = body.getHeaders()
+    } else if (Array.isArray(id)) {
+      return this._batch(id)
     }
 
-    return this.fetch(fetchObject.url, fetchObject)
+    return this.fetch(fetchObject.url, fetchObject, headers)
   }
 
   /**
@@ -618,7 +690,7 @@ class Data extends QueryBuilder {
    */
   delete (id) {
     const isQueryDelete = id === undefined
-    let fetchObject = {
+    const fetchObject = {
       url: this.url(id),
       method: 'DELETE'
     }
@@ -627,14 +699,12 @@ class Data extends QueryBuilder {
       return this.list().then(items => {
         const ids = items.map(item => item.id)
 
-        fetchObject = this._batchFetchObject(ids)
-
-        return this.fetch(fetchObject.url, fetchObject)
+        return this._batch(ids)
       })
     }
 
     if (Array.isArray(id)) {
-      fetchObject = this._batchFetchObject(id)
+      return this._batch(id)
     }
 
     return this.fetch(fetchObject.url, fetchObject)
