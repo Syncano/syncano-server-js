@@ -20,16 +20,18 @@ describe('Logger', () => {
   })
 
   it('has _start property set to Date', () => {
-    should(log).have.property('_start').which.is.null()
+    should(log).have.property('_start', null)
   })
 
   it('has _callback property set to undefined', () => {
-    should(log).have.property('_callback').which.is.undefined()
+    should(log).have.property('_callback', undefined)
   })
 
   describe('#listen()', () => {
     it('should be a method of the model', () => {
-      should(logger).have.property('listen').which.is.Function()
+      should(logger)
+        .have.property('listen')
+        .which.is.Function()
     })
 
     it('should throw when callback was not passed', () => {
@@ -39,13 +41,17 @@ describe('Logger', () => {
     it('should save callback', () => {
       logger.listen(() => {})
 
-      should(logger).have.property('_callback').which.is.Function()
+      should(logger)
+        .have.property('_callback')
+        .which.is.Function()
     })
   })
 
   describe('#levels()', () => {
     it('should be a method of the model', () => {
-      should(logger).have.property('levels').which.is.Function()
+      should(logger)
+        .have.property('levels')
+        .which.is.Function()
     })
 
     it('should throw when array was not passed', () => {
@@ -55,25 +61,33 @@ describe('Logger', () => {
 
   describe('#debug()', () => {
     it('should be a method of the model', () => {
-      should(log).have.property('debug').which.is.Function()
+      should(log)
+        .have.property('debug')
+        .which.is.Function()
     })
   })
 
   describe('#error()', () => {
     it('should be a method of the model', () => {
-      should(log).have.property('error').which.is.Function()
+      should(log)
+        .have.property('error')
+        .which.is.Function()
     })
   })
 
   describe('#info()', () => {
     it('should be a method of the model', () => {
-      should(log).have.property('info').which.is.Function()
+      should(log)
+        .have.property('info')
+        .which.is.Function()
     })
   })
 
   describe('#warn()', () => {
     it('should be a method of the model', () => {
-      should(log).have.property('warn').which.is.Function()
+      should(log)
+        .have.property('warn')
+        .which.is.Function()
     })
   })
 })

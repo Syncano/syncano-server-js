@@ -1,9 +1,6 @@
 node_modules
 example
 coverage
-docs
-tutorials
-manual
 test
 .DS_Store
 .idea

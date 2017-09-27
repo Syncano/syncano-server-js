@@ -4,7 +4,7 @@
  */
 
 class Response {
-  constructor (
+  constructor(
     instance,
     content = null,
     status = 200,

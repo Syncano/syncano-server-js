@@ -1,8 +1,3 @@
-/* eslint-disable no-unused-expressions */
-global.META = {
-  socket: 'test-socket'
-}
-
 import fs from 'fs'
 import {join} from 'path'
 import FormData from 'form-data'
@@ -10,18 +5,20 @@ import {expect} from 'chai'
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
-describe('Data object', function () {
+describe('Data object', function() {
   let data = null
   let dummyStringFieldValue = getRandomString()
   const testClassName = getRandomString()
   const instanceName = getRandomString()
 
-  before(function (done) {
+  before(function(done) {
     createTestInstance(instanceName)
       .then(instanceObj => {
         process.env.SYNCANO_INSTANCE_NAME = instanceObj.name
         process.env.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        return new Server()._class.create({
+        return new Server({
+          socket: 'test-socket'
+        })._class.create({
           name: testClassName,
           schema: [
             {
@@ -51,7 +48,7 @@ describe('Data object', function () {
       })
   })
 
-  after(function (done) {
+  after(function(done) {
     deleteTestInstance(instanceName)
       .then(() => {
         done()
@@ -61,7 +58,7 @@ describe('Data object', function () {
       })
   })
 
-  it('can create single object', function (done) {
+  it('can create single object', function(done) {
     data[testClassName]
       .create({
         test: 'single',
@@ -75,7 +72,7 @@ describe('Data object', function () {
       })
   })
 
-  it('can create multiple objects', function (done) {
+  it('can create multiple objects', function(done) {
     data[testClassName]
       .create([
         {test: 'batch1', test2: 'secret'},
@@ -89,12 +86,12 @@ describe('Data object', function () {
       })
   })
 
-  it('can be listed', function (done) {
+  it('can be listed', function(done) {
     data[testClassName]
       .where('field_string', dummyStringFieldValue)
       .first()
       .then(dataObj => {
-        expect(dataObj).to.not.be.empty
+        expect(dataObj).to.not.be.an('undefined')
         done()
       })
       .catch(err => {
@@ -102,7 +99,7 @@ describe('Data object', function () {
       })
   })
 
-  it('can update single object', function (done) {
+  it('can update single object', function(done) {
     data[testClassName]
       .update(1, {test: 'Updated', test2: 'secret'})
       .then(() => done())
@@ -112,7 +109,7 @@ describe('Data object', function () {
       })
   })
 
-  it('can update multiple objects', function (done) {
+  it('can update multiple objects', function(done) {
     data[testClassName]
       .update([
         [2, {test: 'Updated1', test2: 'secret'}],
@@ -127,7 +124,7 @@ describe('Data object', function () {
       })
   })
 
-  it('can update multiple objects by query', function (done) {
+  it('can update multiple objects by query', function(done) {
     data[testClassName]
       .where('id', 'gte', 4)
       .update({test: 'Query update', test2: 'secret query update'})
@@ -138,21 +135,27 @@ describe('Data object', function () {
       })
   })
 
-  it('can delete single object', function (done) {
-    data[testClassName].delete(1).then(() => done()).catch(err => {
-      console.log('ERROR: ', err)
-      done(err)
-    })
+  it('can delete single object', function(done) {
+    data[testClassName]
+      .delete(1)
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
+      })
   })
 
-  it('can delete multiple objects', function (done) {
-    data[testClassName].delete([2, 3]).then(() => done()).catch(err => {
-      console.log('ERROR: ', err)
-      done(err)
-    })
+  it('can delete multiple objects', function(done) {
+    data[testClassName]
+      .delete([2, 3])
+      .then(() => done())
+      .catch(err => {
+        console.log('ERROR: ', err)
+        done(err)
+      })
   })
 
-  it('can delete multiple objects by query', function (done) {
+  it('can delete multiple objects by query', function(done) {
     data[testClassName]
       .where('id', 'gte', 4)
       .delete()
@@ -163,7 +166,7 @@ describe('Data object', function () {
       })
   })
 
-  it('can be sorted', function (done) {
+  it('can be sorted', function(done) {
     // Create objects
     Promise.all([
       data[testClassName].create({field_string: 'abcdef'}),
@@ -182,14 +185,14 @@ describe('Data object', function () {
       })
   })
 
-  it.skip('can be updated', function (done) {})
-  it.skip('can be deleted', function (done) {})
-  it.skip('can be updated by adding to array field', function (done) {})
-  it.skip('can be updated by deleting from array field', function (done) {})
-  it.skip('can be created with relation', function (done) {})
-  it.skip('can be created with reference', function (done) {})
-  it.skip('can be created with reference', function (done) {})
-  it('can be created with file field', function (done) {
+  it.skip('can be updated', function(done) {})
+  it.skip('can be deleted', function(done) {})
+  it.skip('can be updated by adding to array field', function(done) {})
+  it.skip('can be updated by deleting from array field', function(done) {})
+  it.skip('can be created with relation', function(done) {})
+  it.skip('can be created with reference', function(done) {})
+  it.skip('can be created with reference', function(done) {})
+  it('can be created with file field', function(done) {
     const form = new FormData()
     form.append(
       'field_file',
@@ -211,7 +214,7 @@ describe('Data object', function () {
       })
   })
 
-  it.skip('can be listed with one filter', function (done) {})
-  it.skip('can be listed with two filters', function (done) {})
-  it.skip('can be listed with order', function (done) {})
+  it.skip('can be listed with one filter', function(done) {})
+  it.skip('can be listed with two filters', function(done) {})
+  it.skip('can be listed with order', function(done) {})
 })
