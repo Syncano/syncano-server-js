@@ -1,5 +1,4 @@
 import QueryBuilder from './query-builder'
-import {buildInstanceURL} from './utils'
 
 /**
  * Syncano account query builder
@@ -8,7 +7,8 @@ import {buildInstanceURL} from './utils'
 class Event extends QueryBuilder {
   url() {
     const {instanceName} = this.instance
-    return `${buildInstanceURL(instanceName)}/triggers/emit/`
+
+    return `${this._getInstanceURL(instanceName)}/triggers/emit/`
   }
 
   /**
@@ -28,7 +28,7 @@ class Event extends QueryBuilder {
     if (socket) {
       signalParams.push(socket)
     } else {
-      signalParams.push(META.socket)
+      signalParams.push(this.instance.socket)
     }
 
     signalParams.push('.')
@@ -59,7 +59,6 @@ class Event extends QueryBuilder {
       signal: splited[1]
     }
   }
-
 }
 
 export default Event

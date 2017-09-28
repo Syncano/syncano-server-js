@@ -18,20 +18,24 @@ dependencies:
     - yarn install
 
 general:
-  branches:
-    ignore:
-      - gh-pages
   artifacts:
     - "coverage/"
 
 test:
   override:
-    - yarn run lint
-    - yarn run test
-  post:
+    - yarn run test:unit
+    - yarn run test:coverage
+    - yarn run test:e2e
     - yarn run test:coverage
 
 deployment:
+  gamma:
+    branch: gamma
+    commands:
+      - yarn run release:git-config
+      - yarn run release:npm-token
+      - yarn run release:beta
+      - npm publish --tag gamma
   staging:
     branch: devel
     commands:
@@ -53,3 +57,4 @@ experimental:
       only:
         - master
         - devel
+        - gamma

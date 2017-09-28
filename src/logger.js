@@ -3,15 +3,14 @@
  * @property {Function}
  */
 
-/* global ARGS */
-
 const LEVELS = ['error', 'warn', 'info', 'debug']
 
 class Logger {
-  constructor({scope, callback, levels}) {
+  constructor(instance, {scope, callback, levels, config}) {
     this._start = null
     this._scope = scope
     this._callback = callback
+    this.config = instance.meta.debug
 
     levels.forEach(level => {
       this[level] = this._makePrinter.bind(this, level)
@@ -32,7 +31,9 @@ class Logger {
   }
 
   _pad(width, string, padding) {
-    return (width <= string.length) ? string : this._pad(width, padding + string, padding)
+    return width <= string.length
+      ? string
+      : this._pad(width, padding + string, padding)
   }
 
   _print(...args) {
@@ -45,37 +46,20 @@ class Logger {
     const level = this._pad(5, `${this._level}`, ' ')
     args = args.map(this._parseArg).join(' ')
 
-    console.log(`${level}:`, time, this._scope, args, diff, 'ms')
+    if (this.config !== false) {
+      console.log(`${level}:`, time, this._scope, args, diff, 'ms')
+    }
 
     return now
   }
 
-  _shouldLog(scope) {
-    if (ARGS && ARGS.DEBUG) {
-      if (typeof ARGS.DEBUG === 'boolean') {
-        return ARGS.DEBUG
-      }
-
-      const vars = ARGS.DEBUG.split(',')
-      const excluded = vars
-        .filter(item => item.startsWith('-'))
-        .map(item => item.replace(/^-/, ''))
-
-      const matchAll = vars.filter(item => item === '*').length
-      const isWhitelisted = vars.indexOf(scope) >= 0
-      const isExcluded = excluded.indexOf(scope) >= 0
-
-      return (matchAll || isWhitelisted) && !isExcluded
-    }
-
-    return false
-  }
-
   _parseArg(arg) {
-    const isObject = arg !== null && typeof (arg) === 'object'
+    const isObject = arg !== null && typeof arg === 'object'
 
     if (isObject) {
-      return `\n\n  ${JSON.stringify(arg, null, 2).split('\n').join('\n  ')}\n\n`
+      return `\n\n  ${JSON.stringify(arg, null, 2)
+        .split('\n')
+        .join('\n  ')}\n\n`
     }
 
     return arg
@@ -86,9 +70,10 @@ class Logger {
   }
 
   _getNowString(date) {
-    return date.toISOString()
-      .replace(/T/, ' ')      // Replace T with a space
-      .replace(/\..+/, '')    // Delete the dot and everything after
+    return date
+      .toISOString()
+      .replace(/T/, ' ') // Replace T with a space
+      .replace(/\..+/, '') // Delete the dot and everything after
   }
 
   _calculateDiff(t1, t2) {
@@ -96,28 +81,30 @@ class Logger {
   }
 }
 
-const logger = function (scope) {
-  return new Logger({
-    scope,
-    callback: logger._callback,
-    levels: logger._levels || LEVELS
-  })
-}
-
-logger.levels = function (levels) {
-  if (!Array.isArray(levels)) {
-    throw new TypeError('Levels must be array of strings.')
+export default instance => {
+  const logger = function(scope) {
+    return new Logger(instance, {
+      scope,
+      callback: logger._callback,
+      levels: logger._levels || LEVELS
+    })
   }
 
-  logger._levels = levels
-}
+  logger.levels = function(levels) {
+    if (!Array.isArray(levels)) {
+      throw new TypeError('Levels must be array of strings.')
+    }
 
-logger.listen = function (callback) {
-  if (typeof callback !== 'function') {
-    throw new TypeError('Callback must be a function.')
+    logger._levels = levels
   }
 
-  logger._callback = callback
-}
+  logger.listen = function(callback) {
+    if (typeof callback !== 'function') {
+      throw new TypeError('Callback must be a function.')
+    }
 
-export default logger
+    logger._callback = callback
+  }
+
+  return logger
+}

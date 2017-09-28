@@ -1,17 +1,30 @@
 import nodeFetch from 'node-fetch'
 import {checkStatus, parseJSON} from './utils'
-import {getHost} from './settings'
 
 export default class QueryBuilder {
-  constructor() {
-    this.baseUrl = `https://${getHost()}`
+  constructor(instance) {
+    this.instance = instance
+    this.baseUrl = `https://${instance.host}`
+  }
+
+  _getSyncanoURL() {
+    const {apiVersion, host} = this.instance
+
+    return `https://${host}/${apiVersion}`
+  }
+
+  _getInstanceURL(instanceName) {
+    return `${this._getSyncanoURL()}/instances/${instanceName}`
   }
 
   fetch(url, options, headers = {}) {
-    const headersToSend = Object.assign({
-      'content-type': 'application/json',
-      'x-api-key': this.instance.token
-    }, headers)
+    const headersToSend = Object.assign(
+      {
+        'content-type': 'application/json',
+        'x-api-key': this.instance.token
+      },
+      headers
+    )
 
     return nodeFetch(url, {
       headers: headersToSend,

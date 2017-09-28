@@ -1,24 +1,23 @@
-/* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
-
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
-global.META = {
-  socket: 'test-socket'
-}
-
-describe('Class', function () {
+describe('Class', function() {
   let _class = null
   const testClassName = getRandomString()
   const instanceName = getRandomString()
 
   before(function (done) {
+    const ctx = {
+      meta: {
+        socket: 'test-socket',
+        token: process.env.E2E_ACCOUNT_KEY
+      }
+    }
     createTestInstance(instanceName)
       .then(instanceObj => {
-        process.env.SYNCANO_INSTANCE_NAME = instanceObj.name
-        process.env.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        _class = new Server()._class
+        ctx.meta.instance = instanceObj.name
+        _class = new Server(ctx)._class
         done()
       })
       .catch(err => {
@@ -27,7 +26,7 @@ describe('Class', function () {
       })
   })
 
-  after(function (done) {
+  after(function(done) {
     deleteTestInstance(instanceName)
       .then(() => {
         done()
@@ -37,8 +36,12 @@ describe('Class', function () {
       })
   })
 
-  it('can create a class', function (done) {
-    _class.create({name: testClassName, schema: [{"type": "string", "name": "parameter_name"}]})
+  it('can create a class', function(done) {
+    _class
+      .create({
+        name: testClassName,
+        schema: [{type: 'string', name: 'parameter_name'}]
+      })
       .then(res => {
         expect(res.name).to.be.equal(testClassName)
         done()
@@ -49,10 +52,11 @@ describe('Class', function () {
       })
   })
 
-  it('can delete a class', function (done) {
-    _class.delete(testClassName)
+  it('can delete a class', function(done) {
+    _class
+      .delete(testClassName)
       .then(classObj => {
-        expect(classObj).to.be.empty
+        expect(classObj).to.be.an('undefined')
         done()
       })
       .catch(err => {

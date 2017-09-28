@@ -5,7 +5,6 @@ import get from 'lodash.get'
 import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
-import {buildInstanceURL} from './utils'
 
 const MAX_BATCH_SIZE = 50
 
@@ -16,7 +15,9 @@ const MAX_BATCH_SIZE = 50
 class Data extends QueryBuilder {
   url(id) {
     const {instanceName, className} = this.instance
-    let url = `${buildInstanceURL(instanceName)}/classes/${className}/objects/${id ? id + '/' : ''}`
+    let url = `${this._getInstanceURL(
+      instanceName
+    )}/classes/${className}/objects/${id ? id + '/' : ''}`
 
     if (this._url !== undefined) {
       url = this._url
@@ -61,7 +62,7 @@ class Data extends QueryBuilder {
     const {instanceName} = this.instance
 
     return {
-      url: `${buildInstanceURL(instanceName)}/batch/`,
+      url: `${this._getInstanceURL(instanceName)}/batch/`,
       method: 'POST',
       body: JSON.stringify(this._batchBodyBuilder(body))
     }
@@ -156,13 +157,15 @@ class Data extends QueryBuilder {
               }
 
               const {target} = references[0]
-              const load = new Data()
+              const load = new Data(self.instance)
               let ids = references.map(item => item.value)
 
               ids = Array.isArray(ids[0]) ? ids[0] : ids
 
               if (target === 'user') {
-                load._url = `${buildInstanceURL(instance.instanceName)}/users/`
+                load._url = `${self._getInstanceURL(
+                  instance.instanceName
+                )}/users/`
               }
 
               load.instance = self.instance
@@ -243,9 +246,9 @@ class Data extends QueryBuilder {
   }
 
   _mapFields(items, fields) {
-    return fields.length === 0 ?
-      items :
-      items.map(item =>
+    return fields.length === 0
+      ? items
+      : items.map(item =>
           Object.keys(fields).reduce(
             (all, key) => set(all, fields[key] || key, get(item, key)),
             {}
@@ -274,7 +277,9 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.where('status', 'published').first()
    */
   first() {
-    return this.take(1).list().then(response => response[0] || null)
+    return this.take(1)
+      .list()
+      .then(response => response[0] || null)
   }
 
   /**
@@ -365,9 +370,9 @@ class Data extends QueryBuilder {
     return new Promise((resolve, reject) => {
       this.find(ids)
         .then(response => {
-          const shouldThrow = Array.isArray(ids) ?
-            response.length !== ids.length :
-            response === null
+          const shouldThrow = Array.isArray(ids)
+            ? response.length !== ids.length
+            : response === null
 
           return shouldThrow ? reject(new NotFoundError()) : resolve(response)
         })
@@ -437,19 +442,22 @@ class Data extends QueryBuilder {
 
     const currentQuery = JSON.parse(this.query.query || '{}')
 
-    const nextQuery = column.split('.').reverse().reduce(
-      (child, item) => ({
-        [item]: child === null ?
-        {
-          [whereOperator]: whereValue
-        } :
-        {
-          _is: child
-        }
-      }),
-      null
-    )
-
+    const nextQuery = column
+      .split('.')
+      .reverse()
+      .reduce(
+        (child, item) => ({
+          [item]:
+            child === null
+              ? {
+                  [whereOperator]: whereValue
+                }
+              : {
+                  _is: child
+                }
+        }),
+        null
+      )
     const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
@@ -533,7 +541,7 @@ class Data extends QueryBuilder {
     return this.first().then(item => item[column])
   }
 
-  _chunk(items, size) {
+  _chunk (items, size) {
     const chunks = []
 
     while (items.length > 0) {
@@ -543,7 +551,7 @@ class Data extends QueryBuilder {
     return chunks
   }
 
-  _batch(body, headers) {
+  _batch (body, headers) {
     const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
       const fetchObject = this._batchFetchObject(chunk)
 
@@ -553,7 +561,7 @@ class Data extends QueryBuilder {
     return new Promise((resolve, reject) => {
       const resolves = []
       let i = 0
-      ;(function next() {
+      ;(function next () {
         const request = requests[i++]
 
         if (request) {
@@ -623,7 +631,7 @@ class Data extends QueryBuilder {
    *   .where('destination', 'Warsaw')
    *   .update({delayed: 1})
    */
-  update(id, body) {
+  update (id, body) {
     let headers = null
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)

@@ -1,5 +1,4 @@
 import QueryBuilder from './query-builder'
-import {buildInstanceURL} from './utils'
 
 /**
  * Syncano account query builder
@@ -8,7 +7,7 @@ import {buildInstanceURL} from './utils'
 class Class extends QueryBuilder {
   url(className) {
     const {instanceName} = this.instance
-    const baseUrl = `${buildInstanceURL(instanceName)}/classes/`
+    const baseUrl = `${this._getInstanceURL(instanceName)}/classes/`
 
     return className ? `${baseUrl}${className}/` : baseUrl
   }
@@ -29,6 +28,7 @@ class Class extends QueryBuilder {
         method: 'POST',
         body: JSON.stringify(params)
       }
+
       fetch(this.url(), options)
         .then(resolve)
         .catch(reject)
@@ -50,6 +50,7 @@ class Class extends QueryBuilder {
       const options = {
         method: 'DELETE'
       }
+
       fetch(this.url(className), options)
         .then(resolve)
         .catch(reject)
