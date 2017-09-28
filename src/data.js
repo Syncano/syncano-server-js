@@ -6,6 +6,9 @@ import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
 import {buildInstanceURL} from './utils'
+
+const MAX_BATCH_SIZE = 50
+
 /**
  * Syncano server
  * @property {Function} query Instance of syncano DataObject
@@ -28,27 +31,30 @@ class Data extends QueryBuilder {
     const {instanceName, className, apiVersion} = this.instance
     const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
 
-    return body.reduce((data, item) => {
-      const singleRequest = {
-        method: 'POST',
-        path
-      }
+    return body.reduce(
+      (data, item) => {
+        const singleRequest = {
+          method: 'POST',
+          path
+        }
 
-      if (Array.isArray(item)) {
-        singleRequest.method = 'PATCH'
-        singleRequest.path = `${path}${item[0]}/`
-        singleRequest.body = JSON.stringify(item[1])
-      } else if (isNaN(item) === false) {
-        singleRequest.method = 'DELETE'
-        singleRequest.path = `${path}${item}/`
-      } else {
-        singleRequest.body = JSON.stringify(item)
-      }
+        if (Array.isArray(item)) {
+          singleRequest.method = 'PATCH'
+          singleRequest.path = `${path}${item[0]}/`
+          singleRequest.body = JSON.stringify(item[1])
+        } else if (isNaN(item) === false) {
+          singleRequest.method = 'DELETE'
+          singleRequest.path = `${path}${item}/`
+        } else {
+          singleRequest.body = JSON.stringify(item)
+        }
 
-      data.requests.push(singleRequest)
+        data.requests.push(singleRequest)
 
-      return data
-    }, {requests: []})
+        return data
+      },
+      {requests: []}
+    )
   }
 
   _batchFetchObject(body) {
@@ -106,14 +112,15 @@ class Data extends QueryBuilder {
 
         if (hasNextPageMeta && hasNotEnoughResults) {
           request(`${baseUrl}${response.next}`)
-        } else {
-          return true
+          return false
         }
+
+        return true
       }
 
       function resolveRelatedModels(shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         return new Promise((resolve, reject) => {
@@ -161,9 +168,13 @@ class Data extends QueryBuilder {
               load.instance = self.instance
               load.instance.className = target
 
-              load.where('id', 'in', ids).list().then(items => {
-                resolve({target: reference, items})
-              }).catch(reject)
+              load
+                .where('id', 'in', ids)
+                .list()
+                .then(items => {
+                  resolve({target: reference, items})
+                })
+                .catch(reject)
             })
           })
 
@@ -187,7 +198,7 @@ class Data extends QueryBuilder {
 
       function replaceCustomTypesWithValue(shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         result = result.map(item => {
@@ -211,7 +222,7 @@ class Data extends QueryBuilder {
 
       function mapResultFields(shouldResolve) {
         if (shouldResolve === false) {
-          return
+          return false
         }
 
         result = _mapFields(result, mappedFields)
@@ -232,11 +243,14 @@ class Data extends QueryBuilder {
   }
 
   _mapFields(items, fields) {
-    return fields.length === 0 ? items : items.map(item =>
-      Object.keys(fields).reduce((all, key) =>
-        set(all, fields[key] || key, get(item, key))
-      , {})
-    )
+    return fields.length === 0 ?
+      items :
+      items.map(item =>
+          Object.keys(fields).reduce(
+            (all, key) => set(all, fields[key] || key, get(item, key)),
+            {}
+          )
+        )
   }
 
   _getRelatedObjects(reference, items) {
@@ -271,9 +285,10 @@ class Data extends QueryBuilder {
    */
   firstOrFail() {
     return new Promise((resolve, reject) => {
-      this
-        .first()
-        .then(object => object ? resolve(object) : reject(new NotFoundError()))
+      this.first()
+        .then(
+          object => (object ? resolve(object) : reject(new NotFoundError()))
+        )
         .catch(() => {
           reject(new NotFoundError())
         })
@@ -290,8 +305,7 @@ class Data extends QueryBuilder {
   firstOrCreate(attributes, values = {}) {
     const query = this._toWhereArray(attributes)
 
-    return this
-      .where(query)
+    return this.where(query)
       .firstOrFail()
       .catch(() => this.create(merge(attributes, values)))
   }
@@ -306,8 +320,7 @@ class Data extends QueryBuilder {
   updateOrCreate(attributes, values = {}) {
     const query = this._toWhereArray(attributes)
 
-    return this
-      .where(query)
+    return this.where(query)
       .firstOrFail()
       .then(res => this.update(res.id, values))
       .catch(() => this.create(merge(attributes, values)))
@@ -350,10 +363,11 @@ class Data extends QueryBuilder {
    */
   findOrFail(ids) {
     return new Promise((resolve, reject) => {
-      this
-        .find(ids)
+      this.find(ids)
         .then(response => {
-          const shouldThrow = Array.isArray(ids) ? response.length !== ids.length : response === null
+          const shouldThrow = Array.isArray(ids) ?
+            response.length !== ids.length :
+            response === null
 
           return shouldThrow ? reject(new NotFoundError()) : resolve(response)
         })
@@ -423,14 +437,18 @@ class Data extends QueryBuilder {
 
     const currentQuery = JSON.parse(this.query.query || '{}')
 
-    const nextQuery = column.split('.').reverse()
-      .reduce((child, item) => ({
-        [item]: child === null ? {
+    const nextQuery = column.split('.').reverse().reduce(
+      (child, item) => ({
+        [item]: child === null ?
+        {
           [whereOperator]: whereValue
-        } : {
+        } :
+        {
           _is: child
         }
-      }), null)
+      }),
+      null
+    )
 
     const query = merge({}, currentQuery, nextQuery)
 
@@ -464,12 +482,11 @@ class Data extends QueryBuilder {
       fields = fields[0]
     }
 
-    const fieldsToMap = fields
-      .map(field => {
-        const [, from,, to] = field.match(/([\w_\-.]*)(\sas\s)?(.*)?/)
+    const fieldsToMap = fields.map(field => {
+      const [, from, , to] = field.match(/([\w_\-.]*)(\sas\s)?(.*)?/)
 
-        return {[from]: to}
-      })
+      return {[from]: to}
+    })
 
     this.withMappedFields(fieldsToMap)
 
@@ -516,6 +533,46 @@ class Data extends QueryBuilder {
     return this.first().then(item => item[column])
   }
 
+  _chunk(items, size) {
+    const chunks = []
+
+    while (items.length > 0) {
+      chunks.push(items.splice(0, size))
+    }
+
+    return chunks
+  }
+
+  _batch(body, headers) {
+    const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
+      const fetchObject = this._batchFetchObject(chunk)
+
+      return this.fetch(fetchObject.url, fetchObject, headers)
+    })
+
+    return new Promise((resolve, reject) => {
+      const resolves = []
+      let i = 0
+      ;(function next() {
+        const request = requests[i++]
+
+        if (request) {
+          request()
+            .then(data => {
+              resolves.push(data)
+
+              next() // eslint-disable-line promise/no-callback-in-promise
+            })
+            .catch(err => {
+              reject(err)
+            })
+        } else {
+          resolve(resolves)
+        }
+      })()
+    })
+  }
+
   /**
    * Create new object.
    *
@@ -533,7 +590,7 @@ class Data extends QueryBuilder {
    */
   create(body) {
     let headers = null
-    let fetchObject = {
+    const fetchObject = {
       url: this.url(),
       method: 'POST',
       body: JSON.stringify(body)
@@ -543,7 +600,7 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
-      fetchObject = this._batchFetchObject(body)
+      return this._batch(body, headers)
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers)
@@ -567,30 +624,31 @@ class Data extends QueryBuilder {
    *   .update({delayed: 1})
    */
   update(id, body) {
-    const isQueryUpdate = typeof id === 'object' && id !== null && !Array.isArray(id)
-    let fetchObject = {
+    let headers = null
+    const isQueryUpdate =
+      typeof id === 'object' && id !== null && !Array.isArray(id)
+    const fetchObject = {
       url: this.url(id),
       method: 'PATCH',
       body: JSON.stringify(body)
     }
 
     if (isQueryUpdate) {
-      return this
-        .list()
-        .then(items => {
-          const ids = items.map(item => [item.id, id])
+      return this.list().then(items => {
+        const ids = items.map(item => [item.id, id])
 
-          fetchObject = this._batchFetchObject(ids)
-
-          return this.fetch(fetchObject.url, fetchObject)
-        })
+        return this._batch(ids)
+      })
     }
 
-    if (Array.isArray(id)) {
-      fetchObject = this._batchFetchObject(id)
+    if (body instanceof FormData) {
+      fetchObject.body = body
+      headers = body.getHeaders()
+    } else if (Array.isArray(id)) {
+      return this._batch(id)
     }
 
-    return this.fetch(fetchObject.url, fetchObject)
+    return this.fetch(fetchObject.url, fetchObject, headers)
   }
 
   /**
@@ -606,25 +664,21 @@ class Data extends QueryBuilder {
    */
   delete(id) {
     const isQueryDelete = id === undefined
-    let fetchObject = {
+    const fetchObject = {
       url: this.url(id),
       method: 'DELETE'
     }
 
     if (isQueryDelete) {
-      return this
-        .list()
-        .then(items => {
-          const ids = items.map(item => item.id)
+      return this.list().then(items => {
+        const ids = items.map(item => item.id)
 
-          fetchObject = this._batchFetchObject(ids)
-
-          return this.fetch(fetchObject.url, fetchObject)
-        })
+        return this._batch(ids)
+      })
     }
 
     if (Array.isArray(id)) {
-      fetchObject = this._batchFetchObject(id)
+      return this._batch(id)
     }
 
     return this.fetch(fetchObject.url, fetchObject)
