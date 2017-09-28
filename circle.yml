@@ -29,13 +29,6 @@ test:
     - yarn run test:coverage
 
 deployment:
-  gamma:
-    branch: gamma
-    commands:
-      - yarn run release:git-config
-      - yarn run release:npm-token
-      - yarn run release:beta
-      - npm publish --tag gamma
   staging:
     branch: devel
     commands:
@@ -57,4 +50,3 @@ experimental:
       only:
         - master
         - devel
-        - gamma
