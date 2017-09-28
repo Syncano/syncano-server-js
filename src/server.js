@@ -23,8 +23,7 @@ const server = (ctx = {}) => {
   const response = new Response(config)
   const account = new Account(config)
   const instance = new Instance(config)
-
-  Logger.config = ctx.meta ? ctx.meta.debug : ''
+  const logger = new Logger(config)
 
   return {
     _class,
@@ -35,9 +34,9 @@ const server = (ctx = {}) => {
     channel,
     socket,
     response,
-    logger: Logger,
+    logger,
     data: new Proxy(new Data(settings), {
-      get (target, className) {
+      get(target, className) {
         return new Data(getConfig(className))
       }
     })

@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-expressions */
 import {expect} from 'chai'
 import Server from '../../src'
 import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 
-describe('Class', function () {
+describe('Class', function() {
   let _class = null
   const testClassName = getRandomString()
   const instanceName = getRandomString()
@@ -27,7 +26,7 @@ describe('Class', function () {
       })
   })
 
-  after(function (done) {
+  after(function(done) {
     deleteTestInstance(instanceName)
       .then(() => {
         done()
@@ -37,7 +36,7 @@ describe('Class', function () {
       })
   })
 
-  it('can create a class', function (done) {
+  it('can create a class', function(done) {
     _class
       .create({
         name: testClassName,
@@ -53,11 +52,11 @@ describe('Class', function () {
       })
   })
 
-  it('can delete a class', function (done) {
+  it('can delete a class', function(done) {
     _class
       .delete(testClassName)
       .then(classObj => {
-        expect(classObj).to.be.empty
+        expect(classObj).to.be.an('undefined')
         done()
       })
       .catch(err => {
