@@ -8,14 +8,18 @@ describe('Event', function() {
   const testSocketName = getRandomString()
   const instanceName = getRandomString()
 
-  before(function(done) {
+  const ctx = {
+    meta: {
+      socket: 'test-socket',
+      token: process.env.E2E_ACCOUNT_KEY
+    }
+  }
+
+  before(function (done) {
     createTestInstance(instanceName)
       .then(instanceObj => {
-        process.env.SYNCANO_INSTANCE_NAME = instanceObj.name
-        process.env.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        event = new Server({
-          socket: 'test-socket'
-        }).event
+        ctx.meta.instance = instanceObj.name
+        event = new Server(ctx).event
         done()
       })
       .catch(err => {

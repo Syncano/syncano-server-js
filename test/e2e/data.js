@@ -11,14 +11,18 @@ describe('Data object', function() {
   const testClassName = getRandomString()
   const instanceName = getRandomString()
 
-  before(function(done) {
+  before(function (done) {
+    const ctx = {
+      meta: {
+        socket: 'test-socket',
+        token: process.env.E2E_ACCOUNT_KEY
+      }
+    }
     createTestInstance(instanceName)
       .then(instanceObj => {
-        process.env.SYNCANO_INSTANCE_NAME = instanceObj.name
-        process.env.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
-        return new Server({
-          socket: 'test-socket'
-        })._class.create({
+        ctx.meta.instance = instanceObj.name
+
+        return new Server(ctx)._class.create({
           name: testClassName,
           schema: [
             {
@@ -36,7 +40,7 @@ describe('Data object', function() {
         })
       })
       .then(classObj => {
-        data = new Server().data
+        data = new Server(ctx).data
         done()
       })
       .catch(err => {

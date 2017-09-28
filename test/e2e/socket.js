@@ -6,11 +6,6 @@ describe('Socket', function() {
   before(function(done) {
     createTestInstance(instanceName)
       .then(instanceObj => {
-        if (!global.CONFIG) {
-          global.CONFIG = {}
-        }
-        global.CONFIG.SYNCANO_INSTANCE_NAME = instanceObj.name
-        global.CONFIG.SYNCANO_API_KEY = process.env.E2E_ACCOUNT_KEY
         done()
       })
       .catch(err => {
@@ -28,15 +23,5 @@ describe('Socket', function() {
     })
   })
 
-  // it('can call event', function (done) {
-  //   socket.post('openweathermap/get-three-hours-forecast', {city: 'bergen'})
-  //     .then(resp => resp.json())
-  //     .then(data => {
-  //       done()
-  //     })
-  //     .catch(err => {
-  //       console.log(err)
-  //       done(err)
-  //     })
-  // })
+  // TODO: add tests!
 })
