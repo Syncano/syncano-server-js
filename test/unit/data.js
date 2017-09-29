@@ -440,6 +440,40 @@ describe('Data', () => {
         ])
     })
 
+    it('should extend relation with array of objects', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              title: 'Awesome post',
+              comments: {
+                value: [1, 2],
+                type: 'relation',
+                target: 'comment'
+              }
+            }
+          ]
+        })
+        .get(`/v2/instances/${instanceName}/classes/comment/objects/`)
+        .query({
+          query: JSON.stringify({id: {_in: [1, 2]}})
+        })
+        .reply(200, {
+          objects: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
+        })
+
+      return data.posts
+        .with('comments')
+        .list()
+        .should.become([
+          {
+            title: 'Awesome post',
+            comments: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
+          }
+        ])
+    })
+
     it('should throw error when extended field has no target', () => {
       api
         .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
