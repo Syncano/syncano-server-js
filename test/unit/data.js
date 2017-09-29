@@ -476,6 +476,24 @@ describe('Data', () => {
 
       return data.users.create(user).should.become({name: 'John'})
     })
+
+    it('should throw on batch request failure', () => {
+      const users = [{name: 'John'}]
+
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/users/objects/`,
+              body: JSON.stringify({name: 'John'})
+            }
+          ]
+        })
+        .reply(404)
+
+      return data.users.create(users).should.rejectedWith(Error)
+    })
   })
 
   describe('#update()', () => {
