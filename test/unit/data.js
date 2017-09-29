@@ -97,6 +97,24 @@ describe('Data', () => {
 
       return data.users.list().should.become([{created_at: date}])
     })
+
+    it('should load next page', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 2}) // eslint-disable-line camelcase
+        .reply(200, {
+          objects: [{id: 1}],
+          next: `/v2/instances/${instanceName}/classes/users/objects/?page_size=2&last_pk=100`
+        })
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 2, last_pk: 100}) // eslint-disable-line camelcase
+        .reply(200, {objects: [{id: 2}], next: null})
+
+      return data.users
+        .take(2)
+        .list()
+        .should.become([{id: 1}, {id: 2}])
+    })
   })
 
   describe('#first()', () => {
