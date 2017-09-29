@@ -78,6 +78,25 @@ describe('Data', () => {
             .empty()
         })
     })
+
+    it('should resolve custom types', () => {
+      const date = new Date().toISOString()
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              created_at: {
+                value: date,
+                type: 'datetime'
+              }
+            }
+          ]
+        })
+
+      return data.users.list().should.become([{created_at: date}])
+    })
   })
 
   describe('#first()', () => {
