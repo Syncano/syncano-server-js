@@ -157,6 +157,11 @@ class Data extends QueryBuilder {
               }
 
               const {target} = references[0]
+
+              if (target === undefined) {
+                reject(new Error(`Column "${reference}" has no target`))
+              }
+
               const load = new Data(self.instance)
               let ids = references.map(item => item.value)
 
@@ -212,7 +217,7 @@ class Data extends QueryBuilder {
             const hasTarget = isObject && value.target !== undefined
             const hasValue = isObject && value.value !== undefined
 
-            if (isObject && hasType && hasTarget && hasValue) {
+            if (isObject && (hasType || hasTarget) && hasValue) {
               item[key] = value.value
             }
           })
