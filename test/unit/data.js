@@ -385,6 +385,40 @@ describe('Data', () => {
         .have.propertyByPath('_relationships', 0)
         .which.is.String()
     })
+
+    it('should extend reference with object', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              title: 'Awesome post',
+              author: {
+                value: 1,
+                target: 'user'
+              }
+            }
+          ]
+        })
+        .get(`/v2/instances/${instanceName}/users/`)
+        .query({
+          query: JSON.stringify({id: {_in: [1]}})
+        })
+        .reply(200, {objects: [{id: 1, name: 'John'}]})
+
+      return data.posts
+        .with('author')
+        .list()
+        .should.become([
+          {
+            title: 'Awesome post',
+            author: {
+              id: 1,
+              name: 'John'
+            }
+          }
+        ])
+    })
   })
 
   describe('#create()', () => {
