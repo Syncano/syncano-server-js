@@ -562,6 +562,20 @@ describe('Data', () => {
         .update({status: 'liked'})
         .should.become([[1]])
     })
+
+    it('should be able to create object from FormData', () => {
+      const user = new FormData()
+
+      user.append('name', 'John')
+
+      api
+        .patch('/v2/instances/testInstance/classes/users/objects/1/', body =>
+          body.includes('name')
+        )
+        .reply(200, {name: 'John'})
+
+      return data.users.update(1, user).should.become({name: 'John'})
+    })
   })
 
   describe('#delete()', () => {
