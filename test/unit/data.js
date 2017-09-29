@@ -395,6 +395,7 @@ describe('Data', () => {
               title: 'Awesome post',
               author: {
                 value: 1,
+                type: 'reference',
                 target: 'user'
               }
             }
@@ -418,6 +419,27 @@ describe('Data', () => {
             }
           }
         ])
+    })
+
+    it('should throw error when extended field has no target', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              created_at: {
+                value: new Date().toISOString(),
+                type: 'datetime'
+              }
+            }
+          ]
+        })
+
+      return data.posts
+        .with('created_at')
+        .list()
+        .then(console.log)
+        .should.be.rejectedWith(Error)
     })
   })
 
