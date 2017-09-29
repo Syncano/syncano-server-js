@@ -541,7 +541,7 @@ class Data extends QueryBuilder {
     return this.first().then(item => item[column])
   }
 
-  _chunk (items, size) {
+  _chunk(items, size) {
     const chunks = []
 
     while (items.length > 0) {
@@ -551,7 +551,7 @@ class Data extends QueryBuilder {
     return chunks
   }
 
-  _batch (body, headers) {
+  _batch(body, headers) {
     const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
       const fetchObject = this._batchFetchObject(chunk)
 
@@ -561,7 +561,7 @@ class Data extends QueryBuilder {
     return new Promise((resolve, reject) => {
       const resolves = []
       let i = 0
-      ;(function next () {
+      ;(function next() {
         const request = requests[i++]
 
         if (request) {
@@ -631,7 +631,7 @@ class Data extends QueryBuilder {
    *   .where('destination', 'Warsaw')
    *   .update({delayed: 1})
    */
-  update (id, body) {
+  update(id, body) {
     let headers = null
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)

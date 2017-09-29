@@ -15,7 +15,7 @@ describe('Event', function() {
     }
   }
 
-  before(function (done) {
+  before(function(done) {
     createTestInstance(instanceName)
       .then(instanceObj => {
         ctx.meta.instance = instanceObj.name

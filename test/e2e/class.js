@@ -7,7 +7,7 @@ describe('Class', function() {
   const testClassName = getRandomString()
   const instanceName = getRandomString()
 
-  before(function (done) {
+  before(function(done) {
     const ctx = {
       meta: {
         socket: 'test-socket',
