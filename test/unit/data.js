@@ -291,7 +291,7 @@ describe('Data', () => {
         })
         .reply(200, {objects: [{name: 'John Doe', id: 7}]})
 
-      return data.users.find(7).should.become({name: 'John Doe', id: 7})
+      return data.users.findOrFail(7).should.become({name: 'John Doe', id: 7})
     })
 
     it('should be able to fetch objects list', () => {
@@ -306,7 +306,7 @@ describe('Data', () => {
         })
 
       return data.users
-        .find([7, 8])
+        .findOrFail([7, 8])
         .should.become([{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}])
     })
 
