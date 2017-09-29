@@ -663,6 +663,17 @@ describe('Data', () => {
         .list()
         .should.become([{author: 'John'}])
     })
+
+    it('should be able to whitelist fields passed as array', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {objects: [{name: 'John', views: 100, id: 2}]})
+
+      return data.users
+        .fields(['name as author', 'views'])
+        .list()
+        .should.become([{author: 'John', views: 100}])
+    })
   })
 
   describe('#pluck()', () => {
