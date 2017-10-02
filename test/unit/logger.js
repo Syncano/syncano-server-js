@@ -12,7 +12,7 @@ describe('Logger', () => {
     })
 
     logger = server.logger
-    log = logger()
+    log = logger('scope')
   })
 
   it('init without error', () => {
@@ -25,6 +25,26 @@ describe('Logger', () => {
 
   it('has _callback property set to undefined', () => {
     should(log).have.property('_callback', undefined)
+  })
+
+  describe('#log.warn', () => {
+    it('execute without error', done => {
+      try {
+        log.warn('test')
+        done()
+      } catch (err) {
+        done(err)
+      }
+    })
+
+    it('can log object', done => {
+      try {
+        log.warn({name: 'John'})
+        done()
+      } catch (err) {
+        done(err)
+      }
+    })
   })
 
   describe('#listen()', () => {
@@ -45,6 +65,14 @@ describe('Logger', () => {
         .have.property('_callback')
         .which.is.Function()
     })
+
+    it('should execute callback', done => {
+      logger.listen(() => {
+        done()
+      })
+
+      logger('scope').info('hello')
+    })
   })
 
   describe('#levels()', () => {
@@ -56,6 +84,12 @@ describe('Logger', () => {
 
     it('should throw when array was not passed', () => {
       should(logger.levels).throw(/Levels must be array of strings\./)
+    })
+
+    it('should set levels', () => {
+      logger.levels(['info', 'custom'])
+
+      should(logger._levels).be.deepEqual(['info', 'custom'])
     })
   })
 
