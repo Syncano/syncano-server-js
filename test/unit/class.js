@@ -6,7 +6,7 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 chai.should()
 
-describe('Channel', () => {
+describe('Class', () => {
   const instanceName = 'testInstance'
   let api
   let _class
