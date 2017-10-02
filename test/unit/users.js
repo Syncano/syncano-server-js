@@ -6,7 +6,7 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 chai.should()
 
-describe.only('Users', () => {
+describe('Users', () => {
   const instanceName = 'testInstance'
   let api
   let users
