@@ -29,9 +29,9 @@ describe('Account', () => {
           detail: 'No such API Key.'
         })
 
-      return account.get('invalid_key').should.be.rejectedWith({
-        detail: 'No such API Key.'
-      })
+      return account
+        .get('invalid_key')
+        .should.be.rejectedWith(Error, 'No such API Key.')
     })
 
     it('should get account with valid account key', () => {
