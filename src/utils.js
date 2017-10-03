@@ -52,5 +52,5 @@ export function parseJSON(response) {
     }))
   }
 
-  return response.arraybuffer()
+  return response.arrayBuffer()
 }

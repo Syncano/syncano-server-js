@@ -34,6 +34,18 @@ describe('Socket', () => {
 
       return socket.get('socket/endpoint', {name: 'John'}).should.be.fulfilled
     })
+
+    it('should be able to parse plain text response', () => {
+      api
+        .post(`/socket/endpoint/`, {name: 'John', _method: 'GET'})
+        .reply(200, `Hello world`, {
+          'Content-Type': 'text/plain'
+        })
+
+      return socket.get('socket/endpoint', {name: 'John'}).should.be.fulfilled
+    })
+
+    it.skip('should be able to parse buffer response')
   })
 
   describe('#put', () => {
