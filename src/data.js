@@ -29,8 +29,10 @@ class Data extends QueryBuilder {
   }
 
   _batchBodyBuilder(body) {
-    const {instanceName, className, apiVersion} = this.instance
-    const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
+    const {apiVersion} = this.instance
+    const path = `/${apiVersion}${this.url()
+      .split(apiVersion)[1]
+      .split('?')[0]}`
 
     return body.reduce(
       (data, item) => {
@@ -564,7 +566,7 @@ class Data extends QueryBuilder {
     })
 
     return new Promise((resolve, reject) => {
-      const resolves = []
+      let resolves = []
       let i = 0
       ;(function next() {
         const request = requests[i++]
@@ -572,7 +574,7 @@ class Data extends QueryBuilder {
         if (request) {
           request()
             .then(data => {
-              resolves.push(data)
+              resolves = resolves.concat(data)
 
               next() // eslint-disable-line promise/no-callback-in-promise
             })

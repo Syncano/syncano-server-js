@@ -553,7 +553,7 @@ describe('Data', () => {
 
       return data.users
         .create(users)
-        .should.become([[{name: 'John'}, {name: 'Jane'}]])
+        .should.become([{name: 'John'}, {name: 'Jane'}])
     })
 
     it('should be able to create object from FormData', () => {
@@ -629,7 +629,7 @@ describe('Data', () => {
 
       return data.users
         .update(users)
-        .should.become([[{name: 'Jane'}, {name: 'John'}]])
+        .should.become([{name: 'Jane'}, {name: 'John'}])
     })
 
     it('should be able to update objects by query', () => {
@@ -653,7 +653,7 @@ describe('Data', () => {
       return data.users
         .where('likes', '>', 100)
         .update({status: 'liked'})
-        .should.become([[1]])
+        .should.become([1])
     })
 
     it('should be able to create object from FormData', () => {
@@ -706,7 +706,7 @@ describe('Data', () => {
         })
         .reply(200, ids)
 
-      return data.users.delete(ids).should.become([[1, 2]])
+      return data.users.delete(ids).should.become([1, 2])
     })
 
     it('should be able to delete objects by query', () => {
@@ -738,7 +738,7 @@ describe('Data', () => {
       return data.users
         .where('likes', '>', 100)
         .delete()
-        .should.become([[1, 4]])
+        .should.become([1, 4])
     })
   })
 
