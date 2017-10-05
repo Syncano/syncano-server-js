@@ -11,7 +11,7 @@ export const getRandomString = (length = 8) => {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
 
-  return text
+  return text.toLowerCase()
 }
 
 export const createTestInstance = instanceName => {

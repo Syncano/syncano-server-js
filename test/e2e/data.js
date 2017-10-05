@@ -10,7 +10,7 @@ import {getRandomString, createTestInstance, deleteTestInstance} from '../utils'
 chai.use(chaiAsPromised)
 chai.should()
 
-describe.only('Data', function() {
+describe('Data', function() {
   let data
   let users
   let run
