@@ -5,10 +5,7 @@
   "main": "lib/index.js",
   "author": "Syncano Inc.",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Syncano/syncano-server-js.git"
-  },
+  "repository": "https://github.com/Syncano/syncano-server-js.git",
   "scripts": {
     "prepublish": "npm run build",
     "prebuild": "rimraf ./lib",
@@ -40,7 +37,7 @@
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.0",
     "lodash.set": "^4.3.2",
-    "node-fetch": "2.0.0-alpha.3",
+    "node-fetch": "2.0.0-alpha.9",
     "prettier": "^1.7.2",
     "standard": "^10.0.3"
   },
