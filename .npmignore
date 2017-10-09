@@ -7,3 +7,10 @@ test
 npm-debug.log
 *.sublime-*
 circle.yml
+.babelrc
+.editorconfig
+.envrc.default
+.gitattributes
+codecov.yml
+coverage.lcov
+yarn.lock
