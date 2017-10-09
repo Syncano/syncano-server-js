@@ -14,3 +14,4 @@ circle.yml
 codecov.yml
 coverage.lcov
 yarn.lock
+.nyc_output
