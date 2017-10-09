@@ -32,14 +32,11 @@
     ]
   },
   "dependencies": {
-    "chai-as-promised": "^7.1.1",
     "form-data": "^2.3.1",
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.0",
     "lodash.set": "^4.3.2",
-    "node-fetch": "2.0.0-alpha.9",
-    "prettier": "^1.7.2",
-    "standard": "^10.0.3"
+    "node-fetch": "2.0.0-alpha.9"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -52,6 +49,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "codecov": "^2.3.0",
     "cross-env": "^5.0.5",
     "husky": "^0.14.3",
@@ -60,7 +58,9 @@
     "mocha": "^3.5.3",
     "nock": "^9.0.22",
     "nyc": "^11.2.1",
+    "prettier": "^1.7.4",
     "rimraf": "^2.6.2",
-    "should": "^13.1.0"
+    "should": "^13.1.0",
+    "standard": "^10.0.3"
   }
 }
