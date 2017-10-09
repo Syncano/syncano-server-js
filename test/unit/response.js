@@ -41,11 +41,16 @@ describe('Response', () => {
       .which.is.Object()
   })
 
-  // describe('#_make()', () => {
-  //   it('should be a method of the model', () => {
-  //     should(res).have.property('_make').which.is.Function()
-  //   })
-  // })
+  it('should use setResponse to return response', done => {
+    const {response: r} = new Server({
+      token: 'testKey',
+      instanceName: 'testInstance',
+      setResponse: () => done(),
+      HttpResponse: () => {}
+    })
+
+    r('hello')
+  })
 
   describe('#header()', () => {
     it('should be a method of the model', () => {

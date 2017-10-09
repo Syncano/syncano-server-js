@@ -29,8 +29,10 @@ class Data extends QueryBuilder {
   }
 
   _batchBodyBuilder(body) {
-    const {instanceName, className, apiVersion} = this.instance
-    const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
+    const {apiVersion} = this.instance
+    const path = `/${apiVersion}${this.url()
+      .split(apiVersion)[1]
+      .split('?')[0]}`
 
     return body.reduce(
       (data, item) => {
@@ -157,6 +159,11 @@ class Data extends QueryBuilder {
               }
 
               const {target} = references[0]
+
+              if (target === undefined) {
+                reject(new Error(`Column "${reference}" has no target`))
+              }
+
               const load = new Data(self.instance)
               let ids = references.map(item => item.value)
 
@@ -212,7 +219,7 @@ class Data extends QueryBuilder {
             const hasTarget = isObject && value.target !== undefined
             const hasValue = isObject && value.value !== undefined
 
-            if (isObject && hasType && hasTarget && hasValue) {
+            if (isObject && (hasType || hasTarget) && hasValue) {
               item[key] = value.value
             }
           })
@@ -541,7 +548,7 @@ class Data extends QueryBuilder {
     return this.first().then(item => item[column])
   }
 
-  _chunk (items, size) {
+  _chunk(items, size) {
     const chunks = []
 
     while (items.length > 0) {
@@ -551,7 +558,7 @@ class Data extends QueryBuilder {
     return chunks
   }
 
-  _batch (body, headers) {
+  _batch(body, headers) {
     const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
       const fetchObject = this._batchFetchObject(chunk)
 
@@ -559,15 +566,15 @@ class Data extends QueryBuilder {
     })
 
     return new Promise((resolve, reject) => {
-      const resolves = []
+      let resolves = []
       let i = 0
-      ;(function next () {
+      ;(function next() {
         const request = requests[i++]
 
         if (request) {
           request()
             .then(data => {
-              resolves.push(data)
+              resolves = resolves.concat(data)
 
               next() // eslint-disable-line promise/no-callback-in-promise
             })
@@ -631,7 +638,7 @@ class Data extends QueryBuilder {
    *   .where('destination', 'Warsaw')
    *   .update({delayed: 1})
    */
-  update (id, body) {
+  update(id, body) {
     let headers = null
     const isQueryUpdate =
       typeof id === 'object' && id !== null && !Array.isArray(id)

@@ -1,8 +1,14 @@
 import nock from 'nock'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
 import should from 'should/as-function'
 import Server from '../../src/server'
+import FormData from 'form-data'
 
 import {NotFoundError} from '../../src/errors'
+
+chai.use(chaiAsPromised)
+chai.should()
 
 describe('Data', () => {
   const testUrl = 'https://api.syncano.rocks'
@@ -16,7 +22,7 @@ describe('Data', () => {
       instanceName
     })
     data = server.data
-    api = nock(testUrl).filteringRequestBody(() => '*')
+    api = nock(testUrl)
   })
 
   it('has #_query property', () => {
@@ -34,14 +40,14 @@ describe('Data', () => {
 
     it('should be able to fetch objects list', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 10}) // eslint-disable-line camelcase
         .reply(200, {
           objects: [{name: 'John Doe', id: 3}],
           next: null
         })
 
-      data.users
+      return data.users
         .take(10)
         .list()
         .then(objects => {
@@ -59,11 +65,11 @@ describe('Data', () => {
 
     it('should return [] when no objects were not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 5}) // eslint-disable-line camelcase
         .reply(200, {objects: [], next: null})
 
-      data.users
+      return data.users
         .take(5)
         .list()
         .then(objects => {
@@ -71,6 +77,43 @@ describe('Data', () => {
             .be.Array()
             .empty()
         })
+    })
+
+    it('should resolve custom types', () => {
+      const date = new Date().toISOString()
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              created_at: {
+                value: date,
+                type: 'datetime'
+              }
+            }
+          ]
+        })
+
+      return data.users.list().should.become([{created_at: date}])
+    })
+
+    it('should load next page', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 2}) // eslint-disable-line camelcase
+        .reply(200, {
+          objects: [{id: 1}],
+          next: `/v2/instances/${instanceName}/classes/users/objects/?page_size=2&last_pk=100`
+        })
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 2, last_pk: 100}) // eslint-disable-line camelcase
+        .reply(200, {objects: [{id: 2}], next: null})
+
+      return data.users
+        .take(2)
+        .list()
+        .should.become([{id: 1}, {id: 2}])
     })
   })
 
@@ -83,28 +126,20 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
-      data.users.first().then(object => {
-        should(object).be.Object()
-        should(object)
-          .have.property('name')
-          .which.is.String()
-        should(object)
-          .have.property('id')
-          .which.is.Number()
-      })
+      return data.users.first().should.become({name: 'John Doe', id: 3})
     })
 
     it('should return null when object was not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: []})
 
-      data.users.first().then(object => should(object).be.null())
+      return data.users.first().should.become(null)
     })
   })
 
@@ -117,28 +152,20 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(200, {objects: [{name: 'John Doe', id: 3}]})
 
-      data.users.firstOrFail().then(object => {
-        should(object).be.Object()
-        should(object)
-          .have.property('name')
-          .which.is.String()
-        should(object)
-          .have.property('id')
-          .which.is.Number()
-      })
+      return data.users.firstOrFail().should.become({name: 'John Doe', id: 3})
     })
 
     it('should throw error when object was not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({page_size: 1}) // eslint-disable-line camelcase
         .reply(404)
 
-      should(data.users.firstOrFail()).rejectedWith(NotFoundError)
+      return data.users.firstOrFail().should.rejectedWith(NotFoundError)
     })
   })
 
@@ -149,8 +176,39 @@ describe('Data', () => {
         .which.is.Function()
     })
 
-    it.skip('should be able to fetch single existing object')
-    it.skip('should create and return object when it was not found')
+    it('should be able to fetch single existing object', () => {
+      const query = {username: 'john.doe'}
+      const user = {name: 'John'}
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          query: JSON.stringify({username: {_eq: 'john.doe'}}),
+          page_size: 1 // eslint-disable-line camelcase
+        })
+        .reply(200, {objects: [{name: 'John Doe', id: 3}], next: null})
+
+      return data.users
+        .firstOrCreate(query, user)
+        .should.become({name: 'John Doe', id: 3})
+    })
+
+    it('should create and return object when it was not found', () => {
+      const query = JSON.stringify({username: {_eq: 'john.doe'}})
+      const user = {username: 'john.doe', name: 'John'}
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({query, page_size: 1})
+        .reply(404)
+        .post('/v2/instances/testInstance/classes/users/objects/', user)
+        .query({query, page_size: 1})
+        .reply(200, user)
+
+      return data.users
+        .firstOrCreate({username: user.username}, {name: user.name})
+        .should.become({name: 'John', username: 'john.doe'})
+    })
   })
 
   describe('#updateOrCreate()', () => {
@@ -160,8 +218,39 @@ describe('Data', () => {
         .which.is.Function()
     })
 
-    it.skip('should be able to update existing object')
-    it.skip('should create object when it was not found')
+    it('should be able to update existing object', () => {
+      const query = JSON.stringify({username: {_eq: 'john.doe'}})
+      const user = {username: 'john.doe', name: 'John'}
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({query, page_size: 1})
+        .reply(200, {objects: [{name: 'John Doe', id: 3}], next: null})
+        .post('/v2/instances/testInstance/classes/users/objects/', user)
+        .query({query, page_size: 1})
+        .reply(200, user)
+
+      return data.users
+        .updateOrCreate({username: user.username}, {name: user.name})
+        .should.become({name: 'John', username: 'john.doe'})
+    })
+
+    it('should create object when it was not found', () => {
+      const query = JSON.stringify({username: {_eq: 'john.doe'}})
+      const user = {username: 'john.doe', name: 'John'}
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({query, page_size: 1})
+        .reply(404)
+        .post('/v2/instances/testInstance/classes/users/objects/', user)
+        .query({query, page_size: 1})
+        .reply(200, user)
+
+      return data.users
+        .updateOrCreate({username: user.username}, {name: user.name})
+        .should.become({name: 'John', username: 'john.doe'})
+    })
   })
 
   describe('#find()', () => {
@@ -173,27 +262,19 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
           page_size: 1 // eslint-disable-line camelcase
         })
         .reply(200, {objects: [{name: 'John Doe', id: 7}]})
 
-      data.users.find(7).then(object => {
-        should(object).be.Object()
-        should(object)
-          .have.property('name')
-          .which.is.String()
-        should(object)
-          .have.property('id')
-          .which.is.Number()
-      })
+      return data.users.find(7).should.become({name: 'John Doe', id: 7})
     })
 
     it('should be able to fetch objects list', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
@@ -202,50 +283,32 @@ describe('Data', () => {
           next: null
         })
 
-      data.users.find([7, 8]).then(objects => {
-        should(objects)
-          .be.Array()
-          .length(2)
-        should(objects)
-          .have.propertyByPath(0, 'name')
-          .which.is.String()
-        should(objects)
-          .have.propertyByPath(0, 'id')
-          .which.is.Number()
-        should(objects)
-          .have.propertyByPath(1, 'name')
-          .which.is.String()
-        should(objects)
-          .have.propertyByPath(1, 'id')
-          .which.is.Number()
-      })
+      return data.users
+        .find([7, 8])
+        .should.become([{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}])
     })
 
     it('should return null when object was not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 5}}),
           page_size: 1 // eslint-disable-line camelcase
         })
         .reply(200, {objects: [], next: null})
 
-      data.users.find(5).then(object => should(object).be.null())
+      return data.users.find(5).should.become(null)
     })
 
     it('should return [] when no objects were found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
         .reply(200, {objects: [], next: null})
 
-      data.users.find([7, 8]).then(objects =>
-        should(objects)
-          .be.Array()
-          .empty()
-      )
+      return data.users.find([7, 8]).should.become([])
     })
   })
 
@@ -258,27 +321,19 @@ describe('Data', () => {
 
     it('should be able to fetch single object', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_eq: 7}}),
           page_size: 1 // eslint-disable-line camelcase
         })
         .reply(200, {objects: [{name: 'John Doe', id: 7}]})
 
-      data.users.find(7).then(object => {
-        should(object).be.Object()
-        should(object)
-          .have.property('name')
-          .which.is.String()
-        should(object)
-          .have.property('id')
-          .which.is.Number()
-      })
+      return data.users.findOrFail(7).should.become({name: 'John Doe', id: 7})
     })
 
     it('should be able to fetch objects list', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({
           query: JSON.stringify({id: {_in: [7, 8]}})
         })
@@ -287,35 +342,21 @@ describe('Data', () => {
           next: null
         })
 
-      data.users.find([7, 8]).then(objects => {
-        should(objects)
-          .be.Array()
-          .length(2)
-        should(objects)
-          .have.propertyByPath(0, 'name')
-          .which.is.String()
-        should(objects)
-          .have.propertyByPath(0, 'id')
-          .which.is.Number()
-        should(objects)
-          .have.propertyByPath(1, 'name')
-          .which.is.String()
-        should(objects)
-          .have.propertyByPath(1, 'id')
-          .which.is.Number()
-      })
+      return data.users
+        .findOrFail([7, 8])
+        .should.become([{name: 'John Doe', id: 7}, {name: 'Jane Doe', id: 8}])
     })
 
     it('should throw error when object was not found', () => {
       api
-        .get(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
         .query({
           page_size: 1, // eslint-disable-line camelcase
           query: JSON.stringify({id: {_eq: 5}})
         })
         .reply(404)
 
-      should(data.users.findOrFail(5)).rejectedWith(NotFoundError)
+      return data.users.findOrFail(5).should.be.rejectedWith(NotFoundError)
     })
   })
 
@@ -381,6 +422,96 @@ describe('Data', () => {
         .have.propertyByPath('_relationships', 0)
         .which.is.String()
     })
+
+    it('should extend reference with object', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              title: 'Awesome post',
+              author: {
+                value: 1,
+                type: 'reference',
+                target: 'user'
+              }
+            }
+          ]
+        })
+        .get(`/v2/instances/${instanceName}/users/`)
+        .query({
+          query: JSON.stringify({id: {_in: [1]}})
+        })
+        .reply(200, {objects: [{id: 1, name: 'John'}]})
+
+      return data.posts
+        .with('author')
+        .list()
+        .should.become([
+          {
+            title: 'Awesome post',
+            author: {
+              id: 1,
+              name: 'John'
+            }
+          }
+        ])
+    })
+
+    it('should extend relation with array of objects', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              title: 'Awesome post',
+              comments: {
+                value: [1, 2],
+                type: 'relation',
+                target: 'comment'
+              }
+            }
+          ]
+        })
+        .get(`/v2/instances/${instanceName}/classes/comment/objects/`)
+        .query({
+          query: JSON.stringify({id: {_in: [1, 2]}})
+        })
+        .reply(200, {
+          objects: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
+        })
+
+      return data.posts
+        .with('comments')
+        .list()
+        .should.become([
+          {
+            title: 'Awesome post',
+            comments: [{id: 1, content: 'Hello'}, {id: 2, content: 'World'}]
+          }
+        ])
+    })
+
+    it('should throw error when extended field has no target', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {
+          objects: [
+            {
+              created_at: {
+                value: new Date().toISOString(),
+                type: 'datetime'
+              }
+            }
+          ]
+        })
+
+      return data.posts
+        .with('created_at')
+        .list()
+        .then(console.log)
+        .should.be.rejectedWith(Error)
+    })
   })
 
   describe('#create()', () => {
@@ -394,19 +525,68 @@ describe('Data', () => {
       const user = {name: 'John'}
 
       api
-        .post(`/v2/instances/${instanceName}/classes/users/objects/`, '*')
-        .query(user)
+        .post('/v2/instances/testInstance/classes/users/objects/', user)
         .reply(200, user)
 
-      data.users.create(user).then(object => {
-        should(object).be.Object()
-        should(object)
-          .have.property('name')
-          .equal('John')
-      })
+      return data.users.create(user).should.become({name: 'John'})
     })
 
-    it.skip('should be able to create multiple objects')
+    it('should be able to create multiple single objects', () => {
+      const users = [{name: 'John'}, {name: 'Jane'}]
+
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/users/objects/`,
+              body: JSON.stringify({name: 'John'})
+            },
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/users/objects/`,
+              body: JSON.stringify({name: 'Jane'})
+            }
+          ]
+        })
+        .reply(200, users)
+
+      return data.users
+        .create(users)
+        .should.become([{name: 'John'}, {name: 'Jane'}])
+    })
+
+    it('should be able to create object from FormData', () => {
+      const user = new FormData()
+
+      user.append('name', 'John')
+
+      api
+        .post('/v2/instances/testInstance/classes/users/objects/', body =>
+          body.includes('name')
+        )
+        .reply(200, {name: 'John'})
+
+      return data.users.create(user).should.become({name: 'John'})
+    })
+
+    it('should throw on batch request failure', () => {
+      const users = [{name: 'John'}]
+
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/users/objects/`,
+              body: JSON.stringify({name: 'John'})
+            }
+          ]
+        })
+        .reply(404)
+
+      return data.users.create(users).should.rejectedWith(Error)
+    })
   })
 
   describe('#update()', () => {
@@ -418,33 +598,77 @@ describe('Data', () => {
 
     it('should be able to update object by id', () => {
       const id = 9900
-      const firstName = 'Jane'
+      const user = {first_name: 'Jane'}
 
       api
-        .patch(
-          `/v2/instances/${instanceName}/classes/users/objects/${id}/`,
-          '*'
-        )
-        .query({id})
-        .reply(200, {id, first_name: firstName}) // eslint-disable-line camelcase
+        .patch(`/v2/instances/${instanceName}/classes/users/objects/${id}/`)
+        .reply(200, {id, ...user})
 
-      data.users
-        .update(id, {
-          first_name: 'Jane' // eslint-disable-line camelcase
-        })
-        .then(object => {
-          should(object).be.Object()
-          should(object)
-            .have.property('id')
-            .equal(id)
-          should(object)
-            .have.property('first_name')
-            .equal(firstName)
-        })
+      return data.users.update(id, user).should.become({id, ...user})
     })
 
-    it.skip('should be able to update multiple objects')
-    it.skip('should be able to update objects by query')
+    it('should be able to update multiple objects', () => {
+      const users = [[1, {name: 'Jane'}], [2, {name: 'John'}]]
+
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'PATCH',
+              path: `/v2/instances/${instanceName}/classes/users/objects/1/`,
+              body: JSON.stringify({name: 'Jane'})
+            },
+            {
+              method: 'PATCH',
+              path: `/v2/instances/${instanceName}/classes/users/objects/2/`,
+              body: JSON.stringify({name: 'John'})
+            }
+          ]
+        })
+        .reply(200, [{name: 'Jane'}, {name: 'John'}])
+
+      return data.users
+        .update(users)
+        .should.become([{name: 'Jane'}, {name: 'John'}])
+    })
+
+    it('should be able to update objects by query', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          query: JSON.stringify({likes: {_gt: 100}})
+        })
+        .reply(200, {objects: [{likes: 200, id: 1}], next: null})
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'PATCH',
+              path: `/v2/instances/${instanceName}/classes/users/objects/1/`,
+              body: JSON.stringify({status: 'liked'})
+            }
+          ]
+        })
+        .reply(200, [1])
+
+      return data.users
+        .where('likes', '>', 100)
+        .update({status: 'liked'})
+        .should.become([1])
+    })
+
+    it('should be able to create object from FormData', () => {
+      const user = new FormData()
+
+      user.append('name', 'John')
+
+      api
+        .patch('/v2/instances/testInstance/classes/users/objects/1/', body =>
+          body.includes('name')
+        )
+        .reply(200, {name: 'John'})
+
+      return data.users.update(1, user).should.become({name: 'John'})
+    })
   })
 
   describe('#delete()', () => {
@@ -458,23 +682,64 @@ describe('Data', () => {
       const id = 9900
 
       api
-        .delete(
-          `/v2/instances/${instanceName}/classes/users/objects/${id}/`,
-          '*'
-        )
-        .query({id})
+        .delete(`/v2/instances/${instanceName}/classes/users/objects/${id}/`)
         .reply(200, {id})
 
-      data.users.delete(id).then(object => {
-        should(object).be.Object()
-        should(object)
-          .have.property('id')
-          .equal(id)
-      })
+      return data.users.delete(id).should.become({id})
     })
 
-    it.skip('should be able to delete objects by array of ids')
-    it.skip('should be able to delete objects by query')
+    it('should be able to delete objects by array of ids', () => {
+      const ids = [1, 2]
+
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'DELETE',
+              path: `/v2/instances/${instanceName}/classes/users/objects/1/`
+            },
+            {
+              method: 'DELETE',
+              path: `/v2/instances/${instanceName}/classes/users/objects/2/`
+            }
+          ]
+        })
+        .reply(200, ids)
+
+      return data.users.delete(ids).should.become([1, 2])
+    })
+
+    it('should be able to delete objects by query', () => {
+      const ids = [1, 4]
+
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({
+          query: JSON.stringify({likes: {_gt: 100}})
+        })
+        .reply(200, {
+          objects: [{likes: 200, id: 1}, {likes: 300, id: 4}],
+          next: null
+        })
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'DELETE',
+              path: `/v2/instances/${instanceName}/classes/users/objects/1/`
+            },
+            {
+              method: 'DELETE',
+              path: `/v2/instances/${instanceName}/classes/users/objects/4/`
+            }
+          ]
+        })
+        .reply(200, ids)
+
+      return data.users
+        .where('likes', '>', 100)
+        .delete()
+        .should.become([1, 4])
+    })
   })
 
   describe('#fields()', () => {
@@ -484,8 +749,38 @@ describe('Data', () => {
         .which.is.Function()
     })
 
-    it.skip('should be able to whitelist fields')
-    it.skip('should be able to map field names')
+    it('should be able to whitelist fields', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {objects: [{name: 'John', id: 2}]})
+
+      return data.users
+        .fields('name')
+        .list()
+        .should.become([{name: 'John'}])
+    })
+
+    it('should be able to map field names', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {objects: [{name: 'John', id: 2}]})
+
+      return data.users
+        .fields('name as author')
+        .list()
+        .should.become([{author: 'John'}])
+    })
+
+    it('should be able to whitelist fields passed as array', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {objects: [{name: 'John', views: 100, id: 2}]})
+
+      return data.users
+        .fields(['name as author', 'views'])
+        .list()
+        .should.become([{author: 'John', views: 100}])
+    })
   })
 
   describe('#pluck()', () => {
@@ -495,7 +790,13 @@ describe('Data', () => {
         .which.is.Function()
     })
 
-    it.skip('should be able to take column values')
+    it('should be able to take column values', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .reply(200, {objects: [{name: 'John', id: 2}, {name: 'Jane', id: 3}]})
+
+      return data.users.pluck('name').should.become(['John', 'Jane'])
+    })
   })
 
   describe('#value()', () => {
@@ -505,6 +806,13 @@ describe('Data', () => {
         .which.is.Function()
     })
 
-    it.skip('should be able to take column value of single record')
+    it('should be able to take column value of single record', () => {
+      api
+        .get(`/v2/instances/${instanceName}/classes/users/objects/`)
+        .query({page_size: 1})
+        .reply(200, {objects: [{name: 'John', id: 2}]})
+
+      return data.users.value('name').should.become('John')
+    })
   })
 })
