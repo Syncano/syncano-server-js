@@ -55,10 +55,7 @@ describe('Data', function() {
           {field_string: 'String 2', field_number: 200},
           {field_string: 'String 3', field_number: 300}
         ])
-        .should.eventually.have.nested.property(
-          '2.content.field_string',
-          'String 3'
-        ))
+        .should.eventually.have.nested.property('2.field_string', 'String 3'))
 
     it('can create object with file field', () => {
       const form = new FormData()
@@ -223,7 +220,7 @@ describe('Data', function() {
         ])
         .then(items =>
           run.create({
-            editors: items.map(u => u.content.id)
+            editors: items.map(u => u.id)
           })
         )
         .then(field =>
@@ -241,6 +238,40 @@ describe('Data', function() {
         .with('created_at')
         .list()
         .should.be.rejectedWith(Error))
+  })
+
+  describe('#pluck()', () => {
+    it('should be able to take c#olumn values', () =>
+      run
+        .take(3)
+        .pluck('field_string')
+        .should.become([field_string, 'String 1', 'String 2'])) // eslint-disable-line camelcase
+  })
+
+  describe('#value()', () => {
+    it('should be able to take column value of single record', () =>
+      run.value('field_string').should.become(field_string))
+  })
+
+  describe('#where()', () => {
+    it('should be able to filter by column', () =>
+      run
+        .where('field_string', field_string)
+        .list()
+        .should.eventually.be.an('array')
+        .of.length(2))
+
+    it('should handle array of filters', () =>
+      run
+        .where([
+          ['field_string', '=', field_string], // eslint-disable-line camelcase
+          ['field_integer', '>=', 100]
+        ])
+        .list()
+        .should.eventually.be.an('array')
+        .of.length(2))
+
+    it('should throw error when trying to filter by non index column', () => {})
   })
 
   describe('#fields()', () => {
@@ -274,40 +305,53 @@ describe('Data', function() {
           {field_string: 'String 1'},
           {field_string: 'String 2'}
         ]))
-  })
 
-  describe('#pluck()', () => {
-    it('should be able to take column values', () =>
+    it('should work with create method', () =>
       run
-        .take(3)
-        .pluck('field_string')
-        .should.become([field_string, 'String 1', 'String 2'])) // eslint-disable-line camelcase
-  })
+        .fields('field_string')
+        .create({
+          field_string: 'test create method'
+        })
+        .should.become({field_string: 'test create method'}))
 
-  describe('#value()', () => {
-    it('should be able to take column value of single record', () =>
-      run.value('field_string').should.become(field_string))
-  })
-
-  describe('#where()', () => {
-    it('should be able to filter by column', () =>
+    it('should work with batch create', () =>
       run
-        .where('field_string', field_string)
-        .list()
-        .should.eventually.be.an('array')
-        .of.length(2))
-
-    it('should handle array of filters', () =>
-      run
-        .where([
-          ['field_string', '=', field_string], // eslint-disable-line camelcase
-          ['field_integer', '>=', 100]
+        .fields('field_string')
+        .create([
+          {field_string: 'test batch create method 1'},
+          {field_string: 'test batch create method 2'}
         ])
-        .list()
-        .should.eventually.be.an('array')
-        .of.length(2))
+        .should.become([
+          {field_string: 'test batch create method 1'},
+          {field_string: 'test batch create method 2'}
+        ]))
 
-    it.skip('should throw error when trying to filter by non index column', () => {})
+    it('should work with update method', () =>
+      run.value('id').then(id =>
+        run
+          .fields('field_string')
+          .update(id, {
+            field_string: 'test create method'
+          })
+          .should.become({field_string: 'test create method'})
+      ))
+
+    it('should work with batch update', () =>
+      run
+        .take(2)
+        .pluck('id')
+        .then(ids =>
+          run
+            .fields('field_string')
+            .update([
+              [ids[0], {field_string: 'test batch update method 1'}],
+              [ids[1], {field_string: 'test batch update method 2'}]
+            ])
+            .should.become([
+              {field_string: 'test batch update method 1'},
+              {field_string: 'test batch update method 2'}
+            ])
+        ))
   })
 
   describe('#update()', () => {
@@ -325,19 +369,13 @@ describe('Data', function() {
           [4, {field_text: 'Updated 3', field_integer: 40}],
           [5, {field_text: 'Updated 4', field_integer: 50}]
         ])
-        .should.eventually.have.nested.property(
-          '3.content.field_text',
-          'Updated 4'
-        ))
+        .should.eventually.have.nested.property('3.field_text', 'Updated 4'))
 
     it('can update multiple objects by query', () =>
       run
         .where('id', 'gte', 4)
         .update({field_text: 'Query update'})
-        .should.eventually.have.nested.property(
-          '1.content.field_text',
-          'Query update'
-        ))
+        .should.eventually.have.nested.property('1.field_text', 'Query update'))
 
     it('should be able to create object from FormData', () => {
       const record = new FormData()
@@ -355,8 +393,10 @@ describe('Data', function() {
       run
         .list()
         .should.eventually.be.an('array')
-        .of.length(10)
-        .that.have.nested.property('0.field_string', field_string))
+        .that.have.nested.property(
+          '0.field_string',
+          'test batch update method 1'
+        ))
 
     it('should return [] when no objects were not found', () =>
       run
@@ -383,7 +423,7 @@ describe('Data', function() {
         run
           .list()
           .should.eventually.be.an('array')
-          .of.length(110)
+          .of.length.above(110)
       )
     })
   })
@@ -392,34 +432,36 @@ describe('Data', function() {
     it('can delete single object', () => run.delete(1).should.become(undefined))
 
     it('can delete multiple objects', () =>
-      run.delete([2, 3]).should.eventually.have.nested.property('1.code', 204))
+      run.delete([2, 3]).should.become([2, 3]))
 
     it('can delete multiple objects by query', () =>
       run
-        .where('id', 'gte', 4)
+        .where('id', 'lte', 5)
         .delete()
-        .should.eventually.have.nested.property('1.code', 204))
+        .should.become([4, 5]))
   })
 
   describe('#orderBy()', () => {
     it('can sort records ascending', () =>
-      Promise.all([
-        run.create({field_string: 'abcdef'}),
-        run.create({field_string: 'cdefgh'}),
-        run.create({field_string: 'bcdefg'})
-      ])
-        .then(objects =>
-          run
-            .orderBy('field_string')
-            .fields('field_string')
-            .list()
-        )
-        .should.eventually.be.an('array')
-        .that.have.deep.ordered.members([
-          {field_string: 'abcdef'},
-          {field_string: 'bcdefg'},
-          {field_string: 'cdefgh'}
-        ]))
+      run.delete().then(() =>
+        Promise.all([
+          run.create({field_string: 'abcdef'}),
+          run.create({field_string: 'cdefgh'}),
+          run.create({field_string: 'bcdefg'})
+        ])
+          .then(objects =>
+            run
+              .orderBy('field_string')
+              .fields('field_string')
+              .list()
+          )
+          .should.eventually.be.an('array')
+          .that.have.deep.ordered.members([
+            {field_string: 'abcdef'},
+            {field_string: 'bcdefg'},
+            {field_string: 'cdefgh'}
+          ])
+      ))
 
     it('can sort records descending', () =>
       run

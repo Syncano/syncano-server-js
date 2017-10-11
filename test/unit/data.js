@@ -531,7 +531,7 @@ describe('Data', () => {
       return data.users.create(user).should.become({name: 'John'})
     })
 
-    it('should be able to create multiple single objects', () => {
+    it('should be able to create multiple objects', () => {
       const users = [{name: 'John'}, {name: 'Jane'}]
 
       api
@@ -549,7 +549,7 @@ describe('Data', () => {
             }
           ]
         })
-        .reply(200, users)
+        .reply(200, [{content: users[0]}, {content: users[1]}])
 
       return data.users
         .create(users)
@@ -625,7 +625,7 @@ describe('Data', () => {
             }
           ]
         })
-        .reply(200, [{name: 'Jane'}, {name: 'John'}])
+        .reply(200, [{content: {name: 'Jane'}}, {content: {name: 'John'}}])
 
       return data.users
         .update(users)
@@ -810,8 +810,8 @@ describe('Data', () => {
           ]
         })
         .reply(200, [
-          {title: 'Lorem ipsum', id: 2},
-          {title: 'Lorem ipsum 2', id: 3}
+          {content: {title: 'Lorem ipsum', id: 2}},
+          {content: {title: 'Lorem ipsum 2', id: 3}}
         ])
 
       return data.posts
@@ -848,8 +848,8 @@ describe('Data', () => {
           ]
         })
         .reply(200, [
-          {title: 'Lorem ipsum', id: 2},
-          {title: 'Lorem ipsum 2', id: 3}
+          {content: {title: 'Lorem ipsum', id: 2}},
+          {content: {title: 'Lorem ipsum 2', id: 3}}
         ])
 
       return data.posts

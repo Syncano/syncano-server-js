@@ -559,16 +559,15 @@ class Data extends QueryBuilder {
   }
 
   _chunk(items, size) {
-    const chunks = []
-
-    while (items.length > 0) {
-      chunks.push(items.splice(0, size))
-    }
-
-    return chunks
+    return items
+      .map((e, i) => (i % size === 0 ? items.slice(i, i + size) : null))
+      .filter(Boolean)
   }
 
   _batch(body, headers) {
+    const type = Array.isArray(body[0])
+      ? 'PATCH'
+      : isNaN(body[0]) === false ? 'DELETE' : 'POST'
     const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
       const fetchObject = this._batchFetchObject(chunk)
 
@@ -584,7 +583,11 @@ class Data extends QueryBuilder {
         if (request) {
           request()
             .then(data => {
-              resolves = resolves.concat(data)
+              const items = data.map(
+                item => (item.content ? item.content : item)
+              )
+
+              resolves = resolves.concat(items)
 
               next() // eslint-disable-line promise/no-callback-in-promise
             })
@@ -592,7 +595,7 @@ class Data extends QueryBuilder {
               reject(err)
             })
         } else {
-          resolve(resolves)
+          resolve(type === 'DELETE' ? body : resolves)
         }
       })()
     })
