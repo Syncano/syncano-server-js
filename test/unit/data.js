@@ -781,6 +781,82 @@ describe('Data', () => {
         .list()
         .should.become([{author: 'John', views: 100}])
     })
+
+    it('should work with create method', () => {
+      api
+        .post(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {title: 'Lorem ipsum', views: 0, id: 2})
+
+      return data.posts
+        .fields('views')
+        .create({title: 'Lorem ipsum'})
+        .should.become({views: 0})
+    })
+
+    it('should work with batch create method', () => {
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/`,
+              body: JSON.stringify({title: 'Lorem ipsum'})
+            },
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/`,
+              body: JSON.stringify({title: 'Lorem ipsum 2'})
+            }
+          ]
+        })
+        .reply(200, [
+          {title: 'Lorem ipsum', id: 2},
+          {title: 'Lorem ipsum 2', id: 3}
+        ])
+
+      return data.posts
+        .fields('id')
+        .create([{title: 'Lorem ipsum'}, {title: 'Lorem ipsum 2'}])
+        .should.become([{id: 2}, {id: 3}])
+    })
+
+    it('should work with update method', () => {
+      api
+        .patch(`/v2/instances/${instanceName}/classes/posts/objects/10/`)
+        .reply(200, {title: 'Lorem ipsum', views: 0, id: 10})
+
+      return data.posts
+        .fields('views')
+        .update(10, {title: 'Lorem ipsum'})
+        .should.become({views: 0})
+    })
+
+    it('should work with batch update method', () => {
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'PATCH',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/2/`,
+              body: JSON.stringify({title: 'Lorem ipsum'})
+            },
+            {
+              method: 'PATCH',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/3/`,
+              body: JSON.stringify({title: 'Lorem ipsum 2'})
+            }
+          ]
+        })
+        .reply(200, [
+          {title: 'Lorem ipsum', id: 2},
+          {title: 'Lorem ipsum 2', id: 3}
+        ])
+
+      return data.posts
+        .fields('id')
+        .update([[2, {title: 'Lorem ipsum'}], [3, {title: 'Lorem ipsum 2'}]])
+        .should.become([{id: 2}, {id: 3}])
+    })
   })
 
   describe('#pluck()', () => {
