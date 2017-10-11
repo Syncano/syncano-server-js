@@ -648,12 +648,12 @@ describe('Data', () => {
             }
           ]
         })
-        .reply(200, [1])
+        .reply(200, [{id: 1, likes: 200}])
 
       return data.users
         .where('likes', '>', 100)
         .update({status: 'liked'})
-        .should.become([1])
+        .should.become([{id: 1, likes: 200}])
     })
 
     it('should be able to create object from FormData', () => {
