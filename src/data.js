@@ -85,7 +85,7 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const self = this
-    const {baseUrl, relationships, instance, mappedFields, _mapFields} = this
+    const {baseUrl, relationships, instance} = this
     const fetch = this.fetch.bind(this)
     const pageSize = this.query.page_size || 0
 
@@ -235,7 +235,7 @@ class Data extends QueryBuilder {
           return false
         }
 
-        result = _mapFields(result, mappedFields)
+        result = self._mapFields(result)
 
         return true
       }
@@ -252,15 +252,25 @@ class Data extends QueryBuilder {
     })
   }
 
-  _mapFields(items, fields) {
-    return fields.length === 0
-      ? items
-      : items.map(item =>
-          Object.keys(fields).reduce(
-            (all, key) => set(all, fields[key] || key, get(item, key)),
-            {}
-          )
-        )
+  _mapFields(items) {
+    const fields = this.mappedFields
+
+    if (fields.length === 0) {
+      return items
+    }
+
+    if (Array.isArray(items)) {
+      return items.map(item => this._mapFieldsForSingleItem(item, fields))
+    }
+
+    return this._mapFieldsForSingleItem(items, fields)
+  }
+
+  _mapFieldsForSingleItem(item, fields) {
+    return Object.keys(fields).reduce(
+      (all, key) => set(all, fields[key] || key, get(item, key)),
+      {}
+    )
   }
 
   _getRelatedObjects(reference, items) {
@@ -549,16 +559,15 @@ class Data extends QueryBuilder {
   }
 
   _chunk(items, size) {
-    const chunks = []
-
-    while (items.length > 0) {
-      chunks.push(items.splice(0, size))
-    }
-
-    return chunks
+    return items
+      .map((e, i) => (i % size === 0 ? items.slice(i, i + size) : null))
+      .filter(Boolean)
   }
 
   _batch(body, headers) {
+    const type = Array.isArray(body[0])
+      ? 'PATCH'
+      : isNaN(body[0]) === false ? 'DELETE' : 'POST'
     const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
       const fetchObject = this._batchFetchObject(chunk)
 
@@ -574,7 +583,11 @@ class Data extends QueryBuilder {
         if (request) {
           request()
             .then(data => {
-              resolves = resolves.concat(data)
+              const items = data.map(
+                item => (item.content ? item.content : item)
+              )
+
+              resolves = resolves.concat(items)
 
               next() // eslint-disable-line promise/no-callback-in-promise
             })
@@ -582,7 +595,7 @@ class Data extends QueryBuilder {
               reject(err)
             })
         } else {
-          resolve(resolves)
+          resolve(type === 'DELETE' ? body : resolves)
         }
       })()
     })
@@ -615,10 +628,12 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
-      return this._batch(body, headers)
+      return this._batch(body, headers).then(this._mapFields.bind(this))
     }
 
-    return this.fetch(fetchObject.url, fetchObject, headers)
+    return this.fetch(fetchObject.url, fetchObject, headers).then(
+      this._mapFields.bind(this)
+    )
   }
 
   /**
@@ -652,7 +667,7 @@ class Data extends QueryBuilder {
       return this.list().then(items => {
         const ids = items.map(item => [item.id, id])
 
-        return this._batch(ids)
+        return this._batch(ids).then(this._mapFields.bind(this))
       })
     }
 
@@ -660,10 +675,12 @@ class Data extends QueryBuilder {
       fetchObject.body = body
       headers = body.getHeaders()
     } else if (Array.isArray(id)) {
-      return this._batch(id)
+      return this._batch(id).then(this._mapFields.bind(this))
     }
 
-    return this.fetch(fetchObject.url, fetchObject, headers)
+    return this.fetch(fetchObject.url, fetchObject, headers).then(
+      this._mapFields.bind(this)
+    )
   }
 
   /**

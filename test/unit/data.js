@@ -531,7 +531,7 @@ describe('Data', () => {
       return data.users.create(user).should.become({name: 'John'})
     })
 
-    it('should be able to create multiple single objects', () => {
+    it('should be able to create multiple objects', () => {
       const users = [{name: 'John'}, {name: 'Jane'}]
 
       api
@@ -549,7 +549,7 @@ describe('Data', () => {
             }
           ]
         })
-        .reply(200, users)
+        .reply(200, [{content: users[0]}, {content: users[1]}])
 
       return data.users
         .create(users)
@@ -625,7 +625,7 @@ describe('Data', () => {
             }
           ]
         })
-        .reply(200, [{name: 'Jane'}, {name: 'John'}])
+        .reply(200, [{content: {name: 'Jane'}}, {content: {name: 'John'}}])
 
       return data.users
         .update(users)
@@ -648,12 +648,12 @@ describe('Data', () => {
             }
           ]
         })
-        .reply(200, [1])
+        .reply(200, [{id: 1, likes: 200}])
 
       return data.users
         .where('likes', '>', 100)
         .update({status: 'liked'})
-        .should.become([1])
+        .should.become([{id: 1, likes: 200}])
     })
 
     it('should be able to create object from FormData', () => {
@@ -780,6 +780,82 @@ describe('Data', () => {
         .fields(['name as author', 'views'])
         .list()
         .should.become([{author: 'John', views: 100}])
+    })
+
+    it('should work with create method', () => {
+      api
+        .post(`/v2/instances/${instanceName}/classes/posts/objects/`)
+        .reply(200, {title: 'Lorem ipsum', views: 0, id: 2})
+
+      return data.posts
+        .fields('views')
+        .create({title: 'Lorem ipsum'})
+        .should.become({views: 0})
+    })
+
+    it('should work with batch create method', () => {
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/`,
+              body: JSON.stringify({title: 'Lorem ipsum'})
+            },
+            {
+              method: 'POST',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/`,
+              body: JSON.stringify({title: 'Lorem ipsum 2'})
+            }
+          ]
+        })
+        .reply(200, [
+          {content: {title: 'Lorem ipsum', id: 2}},
+          {content: {title: 'Lorem ipsum 2', id: 3}}
+        ])
+
+      return data.posts
+        .fields('id')
+        .create([{title: 'Lorem ipsum'}, {title: 'Lorem ipsum 2'}])
+        .should.become([{id: 2}, {id: 3}])
+    })
+
+    it('should work with update method', () => {
+      api
+        .patch(`/v2/instances/${instanceName}/classes/posts/objects/10/`)
+        .reply(200, {title: 'Lorem ipsum', views: 0, id: 10})
+
+      return data.posts
+        .fields('views')
+        .update(10, {title: 'Lorem ipsum'})
+        .should.become({views: 0})
+    })
+
+    it('should work with batch update method', () => {
+      api
+        .post(`/v2/instances/${instanceName}/batch/`, {
+          requests: [
+            {
+              method: 'PATCH',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/2/`,
+              body: JSON.stringify({title: 'Lorem ipsum'})
+            },
+            {
+              method: 'PATCH',
+              path: `/v2/instances/${instanceName}/classes/posts/objects/3/`,
+              body: JSON.stringify({title: 'Lorem ipsum 2'})
+            }
+          ]
+        })
+        .reply(200, [
+          {content: {title: 'Lorem ipsum', id: 2}},
+          {content: {title: 'Lorem ipsum 2', id: 3}}
+        ])
+
+      return data.posts
+        .fields('id')
+        .update([[2, {title: 'Lorem ipsum'}], [3, {title: 'Lorem ipsum 2'}]])
+        .should.become([{id: 2}, {id: 3}])
     })
   })
 
