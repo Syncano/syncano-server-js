@@ -4,7 +4,20 @@ import Server from '../../src/server'
 describe('Response', () => {
   const {response} = new Server({
     token: 'testKey',
-    instanceName: 'testInstance'
+    instanceName: 'testInstance',
+    meta: {
+      metadata: {
+        response: {
+          success: {
+            exit_code: 200
+          },
+          fail: {
+            exit_code: 400,
+            mimetype: 'plain/text'
+          }
+        }
+      }
+    }
   })
 
   let res = null
@@ -67,6 +80,20 @@ describe('Response', () => {
         .which.is.deepEqual({
           'X-TEST': 'Hello World'
         })
+    })
+
+    it('should handle methods defined in yaml', () => {
+      should(response.success({hello: 'World'})).properties({
+        _status: 200,
+        _mimetype: 'application/json',
+        _content: '{"hello":"World"}'
+      })
+
+      should(response.fail('Bad request')).properties({
+        _status: 400,
+        _mimetype: 'plain/text',
+        _content: 'Bad request'
+      })
     })
   })
 

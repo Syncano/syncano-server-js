@@ -1,3 +1,5 @@
+import get from 'lodash.get'
+
 /**
  * Unified response helper
  * @property {Function}
@@ -35,6 +37,10 @@ export default config => {
   const response = (content, status, mimetype, headers) =>
     new Response(config, content, status, mimetype, headers)
 
+  const responses = get(config, 'meta.metadata.response', {})
+
+  mapYamlResponsesToMethods(response, responses, config)
+
   response.header = (key, value) => {
     response._headers = {
       ...response._headers,
@@ -44,15 +50,32 @@ export default config => {
     return response
   }
 
-  response.json = (content, status = 200) => {
-    return new Response(
+  response.json = (content, status = 200) =>
+    new Response(
       config,
       JSON.stringify(content),
       status,
       'application/json',
       response._headers
     )
-  }
 
   return response
+}
+
+function mapYamlResponsesToMethods(response, responses, config) {
+  Object.keys(responses).forEach(name => {
+    const {mimetype = 'application/json', exit_code: status = 200} = responses[
+      name
+    ]
+    const isJSON = mimetype === 'application/json'
+
+    response[name] = content =>
+      new Response(
+        config,
+        isJSON ? JSON.stringify(content) : content,
+        status,
+        mimetype,
+        response._headers
+      )
+  })
 }
