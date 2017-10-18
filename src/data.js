@@ -620,8 +620,7 @@ class Data extends QueryBuilder {
     let headers = null
     const fetchObject = {
       url: this.url(),
-      method: 'POST',
-      body: JSON.stringify(body)
+      method: 'POST'
     }
 
     if (body instanceof FormData) {
@@ -629,6 +628,8 @@ class Data extends QueryBuilder {
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
       return this._batch(body, headers).then(this._mapFields.bind(this))
+    } else {
+      fetchObject.body = JSON.stringify(body)
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers).then(
