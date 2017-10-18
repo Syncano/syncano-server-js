@@ -22,7 +22,9 @@ const server = (ctx = {}) => {
 
   const response = new Response(config)
 
-  validateParameters(ctx, response)
+  if (ctx.meta.metadata.validate !== false) {
+    validateParameters(ctx, response)
+  }
 
   return {
     _class: new Class(config),
@@ -45,12 +47,7 @@ const server = (ctx = {}) => {
     const validator = new Validator(ctx)
 
     validator.validateRequest().catch(err => {
-      response.json(
-        {
-          message: err
-        },
-        400
-      )
+      response.json({message: err}, 400)
 
       process.exit(0)
     })
