@@ -9,36 +9,50 @@ import Logger from './logger'
 import Channel from './channel'
 import Class from './class'
 import Settings from './settings'
+import Validator from 'syncano-validator'
 
 const server = (ctx = {}) => {
+  ctx.args = ctx.args || {}
+  ctx.meta = ctx.meta || {}
+  ctx.meta.metadata = ctx.meta.metadata || {}
+
   const settings = new Settings(ctx)
   const getConfig = className => Object.assign({className}, settings)
   const config = getConfig()
 
-  const _class = new Class(config)
-  const users = new Users(config)
-  const event = new Event(config)
-  const channel = new Channel(config)
-  const socket = new Socket(config)
   const response = new Response(config)
-  const account = new Account(config)
-  const instance = new Instance(config)
-  const logger = new Logger(config)
+
+  validateParameters(ctx, response)
 
   return {
-    _class,
-    users,
-    account,
-    instance,
-    event,
-    channel,
-    socket,
+    _class: new Class(config),
+    users: new Users(config),
+    event: new Event(config),
+    channel: new Channel(config),
+    socket: new Socket(config),
     response,
-    logger,
+    account: new Account(config),
+    instance: new Instance(config),
+    logger: new Logger(config),
     data: new Proxy(new Data(settings), {
       get(target, className) {
         return new Data(getConfig(className))
       }
+    })
+  }
+
+  function validateParameters(ctx, response) {
+    const validator = new Validator(ctx)
+
+    validator.validateRequest().catch(err => {
+      response.json(
+        {
+          message: err
+        },
+        400
+      )
+
+      process.exit(0)
     })
   }
 }
