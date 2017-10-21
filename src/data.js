@@ -412,6 +412,18 @@ class Data extends QueryBuilder {
   }
 
   /**
+   * Number of objects to skip from the start.
+   *
+   * @return {Promise}
+   *
+   * @example {@lang javascript}
+   * const posts = await data.posts.skip(5).list()
+   */
+  skip(count) {
+    return this.withQuery({last_pk: count, direction: 1}) // eslint-disable-line camelcase
+  }
+
+  /**
    * Set order of fetched objects.
    *
    * @returns {Promise}
