@@ -454,7 +454,7 @@ class Data extends QueryBuilder {
     }
     operator = this._normalizeWhereOperator(operator)
 
-    const whereOperator = value ? `_${operator}` : '_eq'
+    const whereOperator = value !== undefined ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
     const currentQuery = JSON.parse(this.query.query || '{}')
