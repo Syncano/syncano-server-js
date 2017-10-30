@@ -13,11 +13,11 @@ const {response} = new Server(ctx)
 
 ## Methods
 
-Name | Description
-- |-|
-[response](#response) | Set response
-[response.header](#response.header) | Manage response headers
-[response.json](#response.json) | Set json response 
+| Name | Description |
+|------|-------------|
+| [response](#response) | Set response |
+| [response.header](#response.header) | Manage response headers |
+| [response.json](#response.json) | Set json response |
 
 ## Details
 
