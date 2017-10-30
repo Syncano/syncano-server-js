@@ -16,8 +16,8 @@ const {response} = new Server(ctx)
 | Name | Description |
 |------|-------------|
 | [response](#response) | Set response |
-| [response.header](#response.header) | Manage response headers |
-| [response.json](#response.json) | Set json response |
+| [response.header](#responseheader) | Manage response headers |
+| [response.json](#responsejson) | Set json response |
 
 ## Details
 
