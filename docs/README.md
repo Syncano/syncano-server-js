@@ -9,7 +9,7 @@
   - [Socket Context](/docs/socket-context.md)*
 - The Basics
   - [Data](/docs/data.md)*
-  - [Users](/docs/users.md)*
+  - [Users](/docs/users.md)
   - [Responses](/docs/responses.md)*
   - [Endpoints](/docs/endpoints.md)*
   - [Channels](/docs/channels.md)*
