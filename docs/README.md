@@ -44,7 +44,7 @@ export default async ctx => {
   }
 
   // Get user id from Socket Context
-  const {id: author} = ctx.meta.user.id
+  const {id: author} = ctx.meta.user
   const {title} = ctx.args
 
   // Create post
