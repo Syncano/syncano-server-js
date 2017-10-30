@@ -1,5 +1,10 @@
 # Users
 
+With `users` you're able to:
+- Get single user data
+- List and filter users
+- Create, update, delete users
+
 ## Import
 
 ```js
