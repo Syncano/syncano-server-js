@@ -24,26 +24,26 @@ const {response} = new Server(ctx)
 #### response
 
 ```
-response(content = null, status = 200, mimetype = 'text/plain', headers = {})
+response(content, status, mimetype, headers)
 ```
 
 **Parameters**
 
-Name | Default
-- |-|
-content | null
-status | 200
-mimetype | 'text/plain'
-headers | {}
+| Name | Default |
+|------|---------|
+| content | null |
+| status | 200 |
+| mimetype | 'text/plain' |
+| headers | {} |
 
-**Return Value**
+#### response.header
 
-undefined
-
-
-**response.header**
-
+```
 response.header(key, value)
+```
 
-**response.json**
+#### response.json
+
+```
 response.json(content, status?)
+```
