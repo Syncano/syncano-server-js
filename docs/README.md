@@ -57,7 +57,7 @@ export default async ctx => {
 
 ## Installation
 
-To install Syncano Server Library, install it via npm or yarn in your [socket][socket].
+To install Syncano Server Library, use npm or yarn in your [socket][socket].
 <pre>
 npm i <a href="https://www.npmjs.com/package/syncano-server">syncano-server</a> --save
 </pre>
