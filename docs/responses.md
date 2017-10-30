@@ -21,7 +21,7 @@ const {response} = new Server(ctx)
 
 ## Details
 
-#### response
+### response
 
 ```
 response(content, status, mimetype, headers)
@@ -36,13 +36,13 @@ response(content, status, mimetype, headers)
 | mimetype | 'text/plain' |
 | headers | {} |
 
-#### response.header
+### response.header
 
 ```
 response.header(key, value)
 ```
 
-#### response.json
+### response.json
 
 ```
 response.json(content, status?)
