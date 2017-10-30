@@ -23,8 +23,8 @@ const {response} = new Server(ctx)
 
 ### response
 
-```
-response(content, status, mimetype, headers)
+```js
+response(content, status?, mimetype?, headers?)
 ```
 
 **Parameters**
@@ -38,12 +38,30 @@ response(content, status, mimetype, headers)
 
 ### response.header
 
-```
+```js
 response.header(key, value)
 ```
 
+**Parameters**
+
+| Name | Default |
+|------|---------|
+| key |  |
+| value |  |
+
 ### response.json
 
-```
+```js
 response.json(content, status?)
 ```
+
+```js
+response.json({message: 'Unauthorized'}, 401)
+```
+
+**Parameters**
+
+| Name | Default |
+|------|---------|
+| content | null |
+| status | 200 |
