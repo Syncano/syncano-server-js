@@ -14,7 +14,7 @@ const {channel} = new Server(ctx)
 
 | Name                               | Description                |
 | ---------------------------------- | -------------------------- |
-| [channel.publish](#channelpublish) | Publish message to channel |
+| [channel.publish](#channelpublishchannel-payload) | Publish message to channel |
 
 
 ## `channel.publish(channel, payload?)`
@@ -24,7 +24,7 @@ const {channel} = new Server(ctx)
 | channel | null    | Name of the channel               |
 | payload | null    | Additional data passed to channel |
 
-#### Publishing to channel
+#### Publishing to public channel
 
 ```yaml
 endpoints:
@@ -36,7 +36,7 @@ endpoints:
 channel.publish('messages', {content: 'hello'})
 ```
 
-#### Publishing to channel
+#### Publishing to channel room
 
 ```yaml
 endpoints:
@@ -48,7 +48,7 @@ endpoints:
 channel.publish(`messages.${room}`, {content: 'hello'})
 ```
 
-#### Publishing to channel
+#### Publishing to user private channel
 
 ```yaml
 endpoints:
