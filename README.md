@@ -1,4 +1,4 @@
-![](https://i.imgur.com/uajDsmh.png)
+![](https://i.imgur.com/nlkBCbQ.png)
 
 [![npm](https://img.shields.io/npm/v/syncano-server.svg)](https://www.npmjs.org/package/syncano-server)   [![CircleCI](https://circleci.com/gh/Syncano/syncano-server-js/tree/devel.svg?style=shield&circle-token=0340c11444db6f3dc227cf310f4d8ff1bd90dee8)](https://circleci.com/gh/Syncano/syncano-server-js/tree/devel)
 [![codecov](https://codecov.io/gh/Syncano/syncano-server-js/branch/devel/graph/badge.svg)](https://codecov.io/gh/Syncano/syncano-server-js)
