@@ -3,7 +3,6 @@
 With `data` method you're able to:
 
 - Create, update, delete and list records from Syncano Classes
-- 
 
 # Import
 

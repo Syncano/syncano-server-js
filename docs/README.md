@@ -8,7 +8,7 @@
   - [Socket](/docs/architecture/socket.md)*
   - [Socket Context](/docs/architecture/socket-context.md)*
 - The Basics
-  - [Data](/docs/basics/data.md)*
+  - [Data](/docs/basics/data.md)
   - [Users](/docs/basics/users.md)
   - [Responses](/docs/basics/responses.md)
   - [Endpoints](/docs/basics/endpoints.md)
