@@ -48,17 +48,17 @@ socket.get('posts/latest')
 ## `socket.patch(endpoint, data?, options?)`
 
 ```js
-socket.get('posts/update', {id: 10, title: 'Dolor sit amet'})
+socket.patch('posts/update', {id: 10, title: 'Dolor sit amet'})
 
 ```
 ## `socket.put(endpoint, data?, options?)`
 
 ```js
-socket.get('posts/update', {id: 23, title: 'Dolor sit amet'})
+socket.put('posts/update', {id: 23, title: 'Dolor sit amet'})
 ```
 
 ## `socket.delete(endpoint, data?, options?)`
 
 ```js
-socket.get('posts/delete', {id: 23})
+socket.delete('posts/delete', {id: 23})
 ```
