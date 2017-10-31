@@ -5,13 +5,13 @@ With `users` you're able to:
 - List and filter users
 - Create, update, delete users
 
-## Import
+# Import
 
 ```js
 const {users} = new Server(ctx)
 ```
 
-## API
+# Methods
 
 `users` api is the same as `data`. The only difference is that you don't need to pass class name after `users`:
 
@@ -27,7 +27,7 @@ data.<class_name>.method()
 
 [Read data docs](/docs/data.md) for full API reference.
 
-## Examples
+# Examples
 
 **Get all users**
 
