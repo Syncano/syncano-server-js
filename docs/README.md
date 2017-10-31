@@ -12,7 +12,7 @@
   - [Users](/docs/users.md)
   - [Responses](/docs/responses.md)
   - [Endpoints](/docs/endpoints.md)*
-  - [Channels](/docs/channels.md)*
+  - [Channels](/docs/channels.md)
   - [Events](/docs/events.md)*
   - [Logger](/docs/logger.md)*
 - Syncano Core
