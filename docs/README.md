@@ -14,7 +14,7 @@
   - [Endpoints](/docs/basics/endpoints.md)
   - [Channels](/docs/basics/channels.md)
   - [Events](/docs/basics/events.md)
-  - [Logger](/docs/basics/logger.md)*
+  - [Logger](/docs/basics/logger.md)
 - Syncano Core
   - [Syncano Account](/docs/core/syncano-account.md)*
   - [Syncano Backups](/docs/core/syncano-backups.md)*
