@@ -7,7 +7,7 @@
 
 This library supposed to be used in **Syncano Sockets** (inside scripts)
 to communicate with **Syncano Core Services**. Syncano provides various Core Services:
-- **Database (db)** - NoSQL database to store your application data
+- **Database (data)** - NoSQL database to store your application data
 - **Users Management (users)** - service to store and manage users and groups of your application
 - **Event Loop (events)** - service to emit events which can be caught by any Socket
 - **Realtime Channels (channels)** - implement publish/subscribe model for realtime communication
