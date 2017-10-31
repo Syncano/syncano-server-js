@@ -4,9 +4,6 @@
 - Getting Started
   - [Usage in Syncano Socket](#usage-in-syncano-socket)
   - [Installation](#installation)
-- Architecture Concepts
-  - [Socket](/docs/architecture/socket.md)*
-  - [Socket Context](/docs/architecture/socket-context.md)*
 - The Basics
   - [Data](/docs/basics/data.md)
   - [Users](/docs/basics/users.md)
@@ -15,7 +12,17 @@
   - [Channels](/docs/basics/channels.md)
   - [Events](/docs/basics/events.md)
   - [Logger](/docs/basics/logger.md)
-- Syncano Core
+
+- <details>
+  <summary>Architecture Concepts</summary>
+  
+  - [Socket](/docs/architecture/socket.md)*
+  - [Socket Context](/docs/architecture/socket-context.md)*
+</details>
+
+- <details>
+  <summary>Syncano Core</summary>
+
   - [Syncano Account](/docs/core/syncano-account.md)*
   - [Syncano Backups](/docs/core/syncano-backups.md)*
   - [Syncano Classes](/docs/core/syncano-classes.md)*
@@ -23,6 +30,7 @@
   - [Syncano Instances](/docs/core/syncano-instances.md)*
   - [Syncano Sockets](/docs/core/syncano-sockets.md)*
   - [Syncano Traces](/docs/core/syncano-traces.md)*
+</details>
 
 `*` - TODO
 
