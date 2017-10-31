@@ -149,7 +149,7 @@ data.post.where('status', 'draft').firstOrFail()
 ```js
 // Get first tag with name 'ship' or create it
 // Second param holds additional data assigned to object
-data.tag.updateOrCreate({name: 'ship'}, {created_by: 1})
+data.tag.firstOrCreate({name: 'ship'}, {created_by: 1})
 ```
 
 ## `find(id)`
