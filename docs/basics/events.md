@@ -19,10 +19,10 @@ const {event} = new Server(ctx)
 
 ## `event.emit(name, payload?)`
 
-| Name    | Default | Description                       |
-| ------- | ------- | --------------------------------- |
-| name    | null    | Event name                        |
-| payload | null    | Additional data passed with event |
+| Type   | Name    | Default | Description                       |
+| ------ | ------- | ------- | --------------------------------- |
+| string | name    | null    | Event name                        |
+| object | payload | null    | Additional data passed with event |
 
 #### Emiting event
 

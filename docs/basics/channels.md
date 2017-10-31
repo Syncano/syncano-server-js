@@ -12,17 +12,17 @@ const {channel} = new Server(ctx)
 
 # Methods
 
-| Name                               | Description                |
-| ---------------------------------- | -------------------------- |
+| Name                                              | Description                |
+| ------------------------------------------------- | -------------------------- |
 | [channel.publish](#channelpublishchannel-payload) | Publish message to channel |
 
 
 ## `channel.publish(channel, payload?)`
 
-| Name    | Default | Description                       |
-| ------- | ------- | --------------------------------- |
-| channel | null    | Name of the channel               |
-| payload | null    | Additional data passed to channel |
+| Type   | Name    | Default | Description                       |
+| ------ | ------- | ------- | --------------------------------- |
+| string | channel | null    | Name of the channel               |
+| object | payload | null    | Additional data passed to channel |
 
 #### Publishing to public channel
 

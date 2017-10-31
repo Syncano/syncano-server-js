@@ -22,9 +22,9 @@ const {logger} = new Server(ctx)
 
 Initialize log methods.
 
-| Name  | Default | Description                                                         |
-| ----- | ------- | ------------------------------------------------------------------- |
-| scope | null    | Name of logger scope. Usualy in format `socket-name@endpoint-name:` |
+| Type   | Name  | Default | Description                                                         |
+| ------ | ----- | ------- | ------------------------------------------------------------------- |
+| string | scope | null    | Name of logger scope. Usualy in format `socket-name@endpoint-name:` |
 
 ```js
 const {debug, error, warn, info} = logger('socket-name@endpoint-name:')
@@ -37,9 +37,9 @@ info('This is info message!', {hello: "world"})
 
 ## `logger.listen(callback)`
 
-| Name     | Default | Description                                                                                        |
-| -------- | ------- | -------------------------------------------------------------------------------------------------- |
-| callback | null    | Function which is called each time one of log methods is used. `event` is passed to this function. |
+| Name     | Name     | Default | Description                                                                                        |
+| -------- | -------- | ------- | -------------------------------------------------------------------------------------------------- |
+| function | callback | null    | Function which is called each time one of log methods is used. `event` is passed to this function. |
 
 ```js
 logger.listen(event => {

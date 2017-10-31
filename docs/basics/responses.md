@@ -22,12 +22,12 @@ const {response} = new Server(ctx)
 
 ## `response(content, status?, mimetype?, headers?)`
 
-| Name     | Default      | Description                 |
-| -------- | ------------ | --------------------------- |
-| content  | null         | Response content            |
-| status   | 200          | Response status code        |
-| mimetype | 'text/plain' | Response media type         |
-| headers  | {}           | Additional response headers |
+| Type   | Name     | Default      | Description                 |
+| ------ | -------- | ------------ | --------------------------- |
+| any    | content  | null         | Response content            |
+| number | status   | 200          | Response status code        |
+| string | mimetype | 'text/plain' | Response media type         |
+| object | headers  | {}           | Additional response headers |
 
 
 ```js
@@ -40,10 +40,10 @@ response('Hello world', 200, 'text/plain', {
 
 ## `response.header(key, value)`
 
-| Name  | Default | Description     |
-| ----- | ------- | --------------- |
-| key   | null    | Name of header  |
-| value | null    | Value of header |
+| Type   | Name  | Default | Description     |
+| ------ | ----- | ------- | --------------- |
+| string | key   | null    | Name of header  |
+| string | value | null    | Value of header |
 
 ```js
 response
@@ -56,10 +56,10 @@ response
 
 **Parameters**
 
-| Name    | Default | Description          |
-| ------- | ------- | -------------------- |
-| content | null    | Response content     |
-| status  | 200     | Response status code |
+| Type   | Name    | Default | Description          |
+| ------ | ------- | ------- | -------------------- |
+| object | content | null    | Response content     |
+| number | status  | 200     | Response status code |
 
 ```js
 response.json({message: 'Unauthorized'}, 401)

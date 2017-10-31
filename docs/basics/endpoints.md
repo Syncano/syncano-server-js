@@ -12,22 +12,22 @@ const {socket} = new Server(ctx)
 
 # Methods
 
-| Name                                          | Description         |
-| --------------------------------------------- | ------------------- |
-| [socket](#socketendpoint-data-options)        | Send POST request   |
-| [socket.post](#socketpostendpoint-data-options)   | Send POST request   |
-| [socket.get](#socketgetendpoint-data-options)    | Send GET request    |
-| [socket.patch](#socketpatchendpoint-data-options)  | Send PATCH request  |
-| [socket.put](#socketputendpoint-data-options)    | Send PUT request    |
+| Name                                                | Description         |
+| --------------------------------------------------- | ------------------- |
+| [socket](#socketendpoint-data-options)              | Send POST request   |
+| [socket.post](#socketpostendpoint-data-options)     | Send POST request   |
+| [socket.get](#socketgetendpoint-data-options)       | Send GET request    |
+| [socket.patch](#socketpatchendpoint-data-options)   | Send PATCH request  |
+| [socket.put](#socketputendpoint-data-options)       | Send PUT request    |
 | [socket.delete](#socketdeleteendpoint-data-options) | Send DELETE request |
 
 ## `socket(endpoint, data?, options?)`
 
-| Name     | Default | Description                                         |
-| -------- | ------- | --------------------------------------------------- |
-| endpoint | null    | Endpoint name in format `socket-name/endpoint-name` |
-| data     | {}      | Additional data send to endpoint                    |
-| options  | {}      | Options passed to `node-fetch`                      |
+| Type   | Name     | Default | Description                                         |
+| ------ | -------- | ------- | --------------------------------------------------- |
+| string | endpoint | null    | Endpoint name in format `socket-name/endpoint-name` |
+| object | data     | {}      | Additional data send to endpoint                    |
+| object | options  | {}      | Options passed to `node-fetch`                      |
 
 ```js
 socket('posts/create', {title: 'Lorem ipsum'})
