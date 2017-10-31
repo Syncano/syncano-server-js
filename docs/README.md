@@ -11,7 +11,7 @@
   - [Data](/docs/basics/data.md)*
   - [Users](/docs/basics/users.md)
   - [Responses](/docs/basics/responses.md)
-  - [Endpoints](/docs/basics/endpoints.md)*
+  - [Endpoints](/docs/basics/endpoints.md)
   - [Channels](/docs/basics/channels.md)
   - [Events](/docs/basics/events.md)
   - [Logger](/docs/basics/logger.md)*
