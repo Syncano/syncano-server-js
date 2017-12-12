@@ -85,9 +85,10 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const self = this
-    const {baseUrl, relationships, instance} = this
+    const {baseUrl, relationships, instance, query} = this
+    const q = querystring.stringify(query)
     const fetch = this.fetch.bind(this)
-    const pageSize = this.query.page_size || 0
+    const pageSize = query.page_size || 0
 
     return new Promise((resolve, reject) => {
       request(this.url())
@@ -114,7 +115,7 @@ class Data extends QueryBuilder {
         const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
 
         if (hasNextPageMeta && hasNotEnoughResults) {
-          request(`${baseUrl}${response.next}`)
+          request(`${baseUrl}${response.next}${q ? `&${q}` : ''}`)
           return false
         }
 
@@ -241,17 +242,23 @@ class Data extends QueryBuilder {
   _replaceCustomTypesWithValue(items) {
     if (Array.isArray(items)) {
       return items.map(item =>
-        Object.keys(item).reduce((all, key) => ({
-          ...all,
-          [key]: this._replaceCustomType(key, item)
-        }), {})
+        Object.keys(item).reduce(
+          (all, key) => ({
+            ...all,
+            [key]: this._replaceCustomType(key, item)
+          }),
+          {}
+        )
       )
     }
 
-    return Object.keys(items).reduce((all, key) => ({
-      ...all,
-      [key]: this._replaceCustomType(key, items)
-    }), {})
+    return Object.keys(items).reduce(
+      (all, key) => ({
+        ...all,
+        [key]: this._replaceCustomType(key, items)
+      }),
+      {}
+    )
   }
 
   _replaceCustomType(key, item) {
