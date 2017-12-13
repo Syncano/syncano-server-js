@@ -86,7 +86,6 @@ class Data extends QueryBuilder {
     let result = []
     const self = this
     const {baseUrl, relationships, instance, query} = this
-    const q = querystring.stringify(query)
     const fetch = this.fetch.bind(this)
     const pageSize = query.page_size || 0
 
@@ -115,7 +114,12 @@ class Data extends QueryBuilder {
         const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
 
         if (hasNextPageMeta && hasNotEnoughResults) {
-          request(`${baseUrl}${response.next}${q ? `&${q}` : ''}`)
+          const next = response.next.replace(/\?.*/, '')
+          const nextParams = querystring.parse(
+            response.next.replace(/.*\?/, '')
+          )
+          const q = querystring.stringify({...query, ...nextParams})
+          request(`${baseUrl}${next}?${q}`)
           return false
         }
 
