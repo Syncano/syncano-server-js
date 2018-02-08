@@ -8,59 +8,36 @@ import Response from './response'
 import Logger from './logger'
 import Channel from './channel'
 import Class from './class'
-import {
-  getToken,
-  getInstanceName,
-  getHost,
-  getSpaceHost,
-  SYNCANO_API_VERSION
-} from './settings'
+import Settings from './settings'
 
-const server = (options = {}) => {
-  const genInstanceConfig = className => {
-    const config = Object.assign({}, {
-      token: getToken(),
-      instanceName: getInstanceName(),
-      host: getHost(),
-      spaceHost: getSpaceHost(),
-      apiVersion: SYNCANO_API_VERSION,
-      className
-    }, options)
+const server = (ctx = {}) => {
+  const settings = new Settings(ctx)
+  const getConfig = className => Object.assign({className}, settings)
+  const config = getConfig()
 
-    return config
-  }
-
-  const instanceConfig = genInstanceConfig()
-
-  const users = new Users()
-  users.instance = instanceConfig
-  const event = new Event()
-  event.instance = instanceConfig
-  const channel = new Channel()
-  channel.instance = instanceConfig
-  const socket = new Socket()
-  socket.instance = instanceConfig
-  const _class = new Class()
-  _class.instance = instanceConfig
-
-  const account = new Account({accountKey: options.accountKey})
-  const instance = new Instance({accountKey: options.accountKey})
+  const _class = new Class(config)
+  const users = new Users(config)
+  const event = new Event(config)
+  const channel = new Channel(config)
+  const socket = new Socket(config)
+  const response = new Response(config)
+  const account = new Account(config)
+  const instance = new Instance(config)
+  const logger = new Logger(config)
 
   return {
+    _class,
     users,
     account,
     instance,
     event,
     channel,
     socket,
-    _class,
-    logger: Logger,
-    response: Response,
-    data: new Proxy(new Data(), {
+    response,
+    logger,
+    data: new Proxy(new Data(settings), {
       get(target, className) {
-        const data = new Data()
-        data.instance = genInstanceConfig(className)
-        return data
+        return new Data(getConfig(className))
       }
     })
   }

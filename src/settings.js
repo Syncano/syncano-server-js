@@ -1,25 +1,35 @@
-function getMeta(envVar, metaVar, fallback = null) {
-  if (process.env[envVar]) {
-    return process.env[envVar]
-  }
+global.META = global.META || {}
 
-  try {
-    return META[metaVar] || fallback
-  } catch (err) {
-    return fallback
-  }
-}
-
-export const getHost = () =>
-  getMeta('SYNCANO_HOST', 'api_host', 'api.syncano.io')
-
-export const getSpaceHost = () =>
-  getMeta('SYNCANO_SPACE_HOST', 'space_host', 'syncano.space')
-
-export const getInstanceName = () =>
-  getMeta('SYNCANO_INSTANCE_NAME', 'instance')
-
-export const getToken = () =>
-  getMeta('SYNCANO_API_KEY', 'token')
-
-export const SYNCANO_API_VERSION = 'v2'
+export default ({
+  meta = {},
+  token,
+  socket,
+  instanceName,
+  setResponse,
+  HttpResponse,
+  ...props
+}) => ({
+  token:
+    token || process.env.SYNCANO_API_KEY || global.META.token || meta.token,
+  instanceName:
+    instanceName ||
+    process.env.SYNCANO_INSTANCE_NAME ||
+    global.META.instance ||
+    meta.instance,
+  host:
+    process.env.SYNCANO_HOST ||
+    global.META.api_host ||
+    meta.api_host ||
+    'api.syncano.io',
+  spaceHost:
+    process.env.SPACE_HOST ||
+    global.META.space_host ||
+    meta.space_host ||
+    'syncano.space',
+  apiVersion: 'v2',
+  socket: socket || global.META.socket || meta.socket,
+  meta,
+  setResponse,
+  HttpResponse,
+  ...props
+})

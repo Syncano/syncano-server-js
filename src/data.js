@@ -5,7 +5,6 @@ import get from 'lodash.get'
 import merge from 'lodash.merge'
 import QueryBuilder from './query-builder'
 import {NotFoundError} from './errors'
-import {buildInstanceURL} from './utils'
 
 const MAX_BATCH_SIZE = 50
 
@@ -16,7 +15,9 @@ const MAX_BATCH_SIZE = 50
 class Data extends QueryBuilder {
   url(id) {
     const {instanceName, className} = this.instance
-    let url = `${buildInstanceURL(instanceName)}/classes/${className}/objects/${id ? id + '/' : ''}`
+    let url = `${this._getInstanceURL(
+      instanceName
+    )}/classes/${className}/objects/${id ? id + '/' : ''}`
 
     if (this._url !== undefined) {
       url = this._url
@@ -28,8 +29,10 @@ class Data extends QueryBuilder {
   }
 
   _batchBodyBuilder(body) {
-    const {instanceName, className, apiVersion} = this.instance
-    const path = `/${apiVersion}/instances/${instanceName}/classes/${className}/objects/`
+    const {apiVersion} = this.instance
+    const path = `/${apiVersion}${this.url()
+      .split(apiVersion)[1]
+      .split('?')[0]}`
 
     return body.reduce(
       (data, item) => {
@@ -61,7 +64,7 @@ class Data extends QueryBuilder {
     const {instanceName} = this.instance
 
     return {
-      url: `${buildInstanceURL(instanceName)}/batch/`,
+      url: `${this._getInstanceURL(instanceName)}/batch/`,
       method: 'POST',
       body: JSON.stringify(this._batchBodyBuilder(body))
     }
@@ -82,9 +85,9 @@ class Data extends QueryBuilder {
   list() {
     let result = []
     const self = this
-    const {baseUrl, relationships, instance, mappedFields, _mapFields} = this
+    const {baseUrl, relationships, instance, query} = this
     const fetch = this.fetch.bind(this)
-    const pageSize = this.query.page_size || 0
+    const pageSize = query.page_size || 0
 
     return new Promise((resolve, reject) => {
       request(this.url())
@@ -111,7 +114,12 @@ class Data extends QueryBuilder {
         const hasNotEnoughResults = pageSize === 0 || pageSize > result.length
 
         if (hasNextPageMeta && hasNotEnoughResults) {
-          request(`${baseUrl}${response.next}`)
+          const next = response.next.replace(/\?.*/, '')
+          const nextParams = querystring.parse(
+            response.next.replace(/.*\?/, '')
+          )
+          const q = querystring.stringify({...query, ...nextParams})
+          request(`${baseUrl}${next}?${q}`)
           return false
         }
 
@@ -156,13 +164,20 @@ class Data extends QueryBuilder {
               }
 
               const {target} = references[0]
-              const load = new Data()
+
+              if (target === undefined) {
+                reject(new Error(`Column "${reference}" has no target`))
+              }
+
+              const load = new Data(self.instance)
               let ids = references.map(item => item.value)
 
               ids = Array.isArray(ids[0]) ? ids[0] : ids
 
               if (target === 'user') {
-                load._url = `${buildInstanceURL(instance.instanceName)}/users/`
+                load._url = `${self._getInstanceURL(
+                  instance.instanceName
+                )}/users/`
               }
 
               load.instance = self.instance
@@ -201,21 +216,7 @@ class Data extends QueryBuilder {
           return false
         }
 
-        result = result.map(item => {
-          Object.keys(item).forEach(key => {
-            const value = item[key]
-            const isObject = value instanceof Object && !Array.isArray(value)
-            const hasType = isObject && value.type !== undefined
-            const hasTarget = isObject && value.target !== undefined
-            const hasValue = isObject && value.value !== undefined
-
-            if (isObject && hasType && hasTarget && hasValue) {
-              item[key] = value.value
-            }
-          })
-
-          return item
-        })
+        result = self._replaceCustomTypesWithValue(result)
 
         return true
       }
@@ -225,7 +226,7 @@ class Data extends QueryBuilder {
           return false
         }
 
-        result = _mapFields(result, mappedFields)
+        result = self._mapFields(result)
 
         return true
       }
@@ -242,15 +243,61 @@ class Data extends QueryBuilder {
     })
   }
 
-  _mapFields(items, fields) {
-    return fields.length === 0 ?
-      items :
-      items.map(item =>
-          Object.keys(fields).reduce(
-            (all, key) => set(all, fields[key] || key, get(item, key)),
-            {}
-          )
+  _replaceCustomTypesWithValue(items) {
+    if (Array.isArray(items)) {
+      return items.map(item =>
+        Object.keys(item).reduce(
+          (all, key) => ({
+            ...all,
+            [key]: this._replaceCustomType(key, item)
+          }),
+          {}
         )
+      )
+    }
+
+    return Object.keys(items).reduce(
+      (all, key) => ({
+        ...all,
+        [key]: this._replaceCustomType(key, items)
+      }),
+      {}
+    )
+  }
+
+  _replaceCustomType(key, item) {
+    const value = item[key]
+    const isObject = value instanceof Object && !Array.isArray(value)
+    const hasType = isObject && value.type !== undefined
+    const hasTarget = isObject && value.target !== undefined
+    const hasValue = isObject && value.value !== undefined
+
+    if (isObject && (hasType || hasTarget) && hasValue) {
+      return value.value
+    }
+
+    return value
+  }
+
+  _mapFields(items) {
+    const fields = this.mappedFields
+
+    if (fields.length === 0) {
+      return items
+    }
+
+    if (Array.isArray(items)) {
+      return items.map(item => this._mapFieldsForSingleItem(item, fields))
+    }
+
+    return this._mapFieldsForSingleItem(items, fields)
+  }
+
+  _mapFieldsForSingleItem(item, fields) {
+    return Object.keys(fields).reduce(
+      (all, key) => set(all, fields[key] || key, get(item, key)),
+      {}
+    )
   }
 
   _getRelatedObjects(reference, items) {
@@ -274,7 +321,9 @@ class Data extends QueryBuilder {
    * const posts = await data.posts.where('status', 'published').first()
    */
   first() {
-    return this.take(1).list().then(response => response[0] || null)
+    return this.take(1)
+      .list()
+      .then(response => response[0] || null)
   }
 
   /**
@@ -365,9 +414,9 @@ class Data extends QueryBuilder {
     return new Promise((resolve, reject) => {
       this.find(ids)
         .then(response => {
-          const shouldThrow = Array.isArray(ids) ?
-            response.length !== ids.length :
-            response === null
+          const shouldThrow = Array.isArray(ids)
+            ? response.length !== ids.length
+            : response === null
 
           return shouldThrow ? reject(new NotFoundError()) : resolve(response)
         })
@@ -432,24 +481,27 @@ class Data extends QueryBuilder {
     }
     operator = this._normalizeWhereOperator(operator)
 
-    const whereOperator = value ? `_${operator}` : '_eq'
+    const whereOperator = value !== undefined ? `_${operator}` : '_eq'
     const whereValue = value === undefined ? operator : value
 
     const currentQuery = JSON.parse(this.query.query || '{}')
 
-    const nextQuery = column.split('.').reverse().reduce(
-      (child, item) => ({
-        [item]: child === null ?
-        {
-          [whereOperator]: whereValue
-        } :
-        {
-          _is: child
-        }
-      }),
-      null
-    )
-
+    const nextQuery = column
+      .split('.')
+      .reverse()
+      .reduce(
+        (child, item) => ({
+          [item]:
+            child === null
+              ? {
+                  [whereOperator]: whereValue
+                }
+              : {
+                  _is: child
+                }
+        }),
+        null
+      )
     const query = merge({}, currentQuery, nextQuery)
 
     return this.withQuery({query: JSON.stringify(query)})
@@ -534,16 +586,15 @@ class Data extends QueryBuilder {
   }
 
   _chunk(items, size) {
-    const chunks = []
-
-    while (items.length > 0) {
-      chunks.push(items.splice(0, size))
-    }
-
-    return chunks
+    return items
+      .map((e, i) => (i % size === 0 ? items.slice(i, i + size) : null))
+      .filter(Boolean)
   }
 
   _batch(body, headers) {
+    const type = Array.isArray(body[0])
+      ? 'PATCH'
+      : isNaN(body[0]) === false ? 'DELETE' : 'POST'
     const requests = this._chunk(body, MAX_BATCH_SIZE).map(chunk => () => {
       const fetchObject = this._batchFetchObject(chunk)
 
@@ -551,7 +602,7 @@ class Data extends QueryBuilder {
     })
 
     return new Promise((resolve, reject) => {
-      const resolves = []
+      let resolves = []
       let i = 0
       ;(function next() {
         const request = requests[i++]
@@ -559,7 +610,11 @@ class Data extends QueryBuilder {
         if (request) {
           request()
             .then(data => {
-              resolves.push(data)
+              const items = data.map(
+                item => (item.content ? item.content : item)
+              )
+
+              resolves = resolves.concat(items)
 
               next() // eslint-disable-line promise/no-callback-in-promise
             })
@@ -567,7 +622,7 @@ class Data extends QueryBuilder {
               reject(err)
             })
         } else {
-          resolve(resolves)
+          resolve(type === 'DELETE' ? body : resolves)
         }
       })()
     })
@@ -592,8 +647,7 @@ class Data extends QueryBuilder {
     let headers = null
     const fetchObject = {
       url: this.url(),
-      method: 'POST',
-      body: JSON.stringify(body)
+      method: 'POST'
     }
 
     if (body instanceof FormData) {
@@ -601,9 +655,15 @@ class Data extends QueryBuilder {
       headers = body.getHeaders()
     } else if (Array.isArray(body)) {
       return this._batch(body, headers)
+        .then(this._replaceCustomTypesWithValue.bind(this))
+        .then(this._mapFields.bind(this))
+    } else {
+      fetchObject.body = JSON.stringify(body)
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers)
+      .then(this._replaceCustomTypesWithValue.bind(this))
+      .then(this._mapFields.bind(this))
   }
 
   /**
@@ -638,6 +698,8 @@ class Data extends QueryBuilder {
         const ids = items.map(item => [item.id, id])
 
         return this._batch(ids)
+          .then(this._replaceCustomTypesWithValue.bind(this))
+          .then(this._mapFields.bind(this))
       })
     }
 
@@ -646,9 +708,13 @@ class Data extends QueryBuilder {
       headers = body.getHeaders()
     } else if (Array.isArray(id)) {
       return this._batch(id)
+        .then(this._replaceCustomTypesWithValue.bind(this))
+        .then(this._mapFields.bind(this))
     }
 
     return this.fetch(fetchObject.url, fetchObject, headers)
+      .then(this._replaceCustomTypesWithValue.bind(this))
+      .then(this._mapFields.bind(this))
   }
 
   /**

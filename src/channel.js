@@ -1,5 +1,4 @@
 import QueryBuilder from './query-builder'
-import {buildInstanceURL} from './utils'
 
 /**
  * Syncano account query builder
@@ -8,7 +7,8 @@ import {buildInstanceURL} from './utils'
 class Channel extends QueryBuilder {
   url() {
     const {instanceName} = this.instance
-    return `${buildInstanceURL(instanceName)}/channels/default/publish/`
+
+    return `${this._getInstanceURL(instanceName)}/channels/default/publish/`
   }
 
   /**

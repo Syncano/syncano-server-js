@@ -1,5 +1,3 @@
-import {getHost, SYNCANO_API_VERSION} from './settings'
-
 export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response.data
@@ -35,10 +33,7 @@ export function parseJSON(response) {
   }
 
   // Parse JSON
-  if (
-    /^.*\/.*\+json/.test(mimetype) ||
-    /^application\/json/.test(mimetype)
-  ) {
+  if (/^.*\/.*\+json/.test(mimetype) || /^application\/json/.test(mimetype)) {
     return response.json().then(res => ({
       data: res,
       ...response
@@ -57,13 +52,5 @@ export function parseJSON(response) {
     }))
   }
 
-  return response.arraybuffer()
-}
-
-export function buildSyncanoURL() {
-  return `https://${getHost()}/${SYNCANO_API_VERSION}`
-}
-
-export function buildInstanceURL(instanceName) {
-  return `${buildSyncanoURL()}/instances/${instanceName}`
+  return response.arrayBuffer()
 }

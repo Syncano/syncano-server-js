@@ -1,5 +1,4 @@
 import QueryBuilder from './query-builder'
-import {buildSyncanoURL} from './utils'
 
 /**
  * Syncano account query builder
@@ -7,7 +6,7 @@ import {buildSyncanoURL} from './utils'
  */
 class Account extends QueryBuilder {
   url() {
-    return `${buildSyncanoURL()}/account/`
+    return `${this._getSyncanoURL()}/account/`
   }
 
   /**
@@ -24,6 +23,7 @@ class Account extends QueryBuilder {
       const headers = {
         'X-API-KEY': authKey
       }
+
       fetch(this.url(), {}, headers)
         .then(res => resolve(res))
         .catch(err => reject(err))

@@ -1,106 +1,66 @@
 {
   "name": "syncano-server",
-  "version": "0.8.5",
-  "description": "A library to intereact with the Syncano API on a server side",
+  "version": "1.0.1-14",
+  "description": "A library to intereact with the Syncano API on a server side.",
   "main": "lib/index.js",
   "author": "Syncano Inc.",
-  "contributors": [],
   "license": "MIT",
+  "repository": "https://github.com/Syncano/syncano-server-js.git",
   "scripts": {
-    "build": "npm-run-all build:*",
-    "build:lib": "babel src --out-dir lib",
-    "build:docs": "jsdoc -c ./conf.json -t ./node_modules/ink-docstrap/template -R README.md -d ./docs -r ./src -u ./tutorials",
-    "clean": "npm-run-all clean:*",
-    "clean:lib": "rimraf ./lib",
-    "clean:docs": "rimraf ./docs",
-    "clean:gh-pages": "rimraf ./node_modules/gh-pages/.cache",
-    "commit": "git-cz",
     "prepublish": "npm run build",
-    "prebuild": "npm run clean",
-    "unit": "cross-env NODE_ENV=test mocha tests/unit/**/*.js --reporter spec --require babel-register",
-    "test": "npm-run-all --parallel test:unit test:e2e",
-    "test:unit": "cross-env NODE_ENV=test nyc yarn run unit",
-    "test:e2e": "cross-env NODE_ENV=test nyc yarn run e2e",
+    "prebuild": "rimraf ./lib",
+    "precommit": "lint-staged",
+    "build": "babel src --out-dir lib",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:base": "cross-env NODE_ENV=test nyc mocha --reporter spec --require babel-register",
+    "test:unit": "npm run test:base -- test/unit/**/*.js",
+    "test:e2e": "npm run test:base -- --timeout 30000 --slow 8000 test/e2e/*.js",
     "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "lint": "xo src/**/*.js test/**/*.js",
-    "lint:fix": "xo --fix src/**/*.js test/**/*.js",
-    "e2e": "mkdir e2e-tests || true && cross-env NODE_ENV=test mocha tests/e2e/*.js --reporter spec --require babel-register --timeout 30000 --slow 8000",
-    "e2e:single": "mkdir e2e-tests || true && cross-env NODE_ENV=test mocha --reporter spec --require babel-register --timeout 30000 --slow 8000",
-    "watch": "npm-run-all --parallel watch:*",
-    "watch:lib": "npm run build:lib -- --watch",
-    "watch:lib:test": "mocha --watch tests/unit/**/*.js --compilers js:babel-register",
-    "release:docs": "gh-pages -d docs -m \"Docs v${npm_package_version} [ci skip]\"",
-    "release:reset": "git reset --hard $CIRCLE_SHA1",
+    "test:watch": "mocha --watch test/**/*.js --compilers js:babel-register",
+    "lint": "standard --fix --env mocha --parser babel-eslint",
+    "format": "prettier --write --single-quote --no-semi --no-bracket-spacing *.js {src,test}/**/*.js",
     "release:git-config": "git config --global user.email $GITHUB_EMAIL && git config --global user.name $GITHUB_NAME",
-    "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nprogress=false\" > ~/.npmrc",
+    "release:npm-token": "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nscope=syncano\n@syncano:registry=https://registry.npmjs.org/\" > ~/.npmrc",
     "release:beta": "npm version prerelease -m \"chore(package.json): bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH",
     "release": "npm version patch -m \"chore(package.json): bump to %s [ci skip]\" && git push origin $CIRCLE_BRANCH"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Syncano/syncano-server-js.git"
-  },
-  "dependencies": {
-    "form-data": "^2.1.4",
-    "lodash.get": "^4.4.2",
-    "lodash.set": "^4.3.2",
-    "lodash.merge": "^4.6.0",
-    "node-fetch": "2.0.0-alpha.3"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.5.1",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-class-properties": "^6.22.0",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-plugin-transform-inline-environment-variables": "^6.5.0",
-    "babel-plugin-transform-object-rest-spread": "^6.22.0",
-    "babel-plugin-transform-strict-mode": "^6.5.0",
-    "babel-preset-env": "^1.1.4",
-    "babel-register": "^6.5.1",
-    "chai": "^3.5.0",
-    "codecov": "^1.0.1",
-    "cross-env": "^3.1.4",
-    "cz-conventional-changelog": "^2.0.0",
-    "eslint": "^3.18.0",
-    "eslint-plugin-react": "^6.10.3",
-    "gh-pages": "^0.11.0",
-    "ink-docstrap": "^1.1.1",
-    "isparta": "^4.0.0",
-    "jsdoc": "^3.4.0",
-    "mocha": "^2.4.5",
-    "nock": "^8.0.0",
-    "npm-run-all": "^2.0.0",
-    "nyc": "^10.1.2",
-    "rimraf": "^2.5.1",
-    "should": "^8.2.2",
-    "xo": "^0.18.0"
-  },
-  "xo": {
-    "semicolon": false,
-    "space": true,
-    "esnext": true,
-    "envs": [
-      "node",
-      "mocha"
-    ],
-    "globals": [
-      "CONFIG",
-      "META"
-    ],
-    "overrides": [
-      {
-        "files": "tests/**/*.js",
-        "rules": {
-          "prefer-arrow-callback": [
-            "off"
-          ]
-        }
-      }
+  "lint-staged": {
+    "*.js": [
+      "npm run lint",
+      "npm run format",
+      "git add"
     ]
   },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+  "dependencies": {
+    "form-data": "^2.3.1",
+    "lodash.get": "^4.4.2",
+    "lodash.merge": "^4.6.0",
+    "lodash.set": "^4.3.2",
+    "node-fetch": "2.0.0-alpha.9"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-strict-mode": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "codecov": "^2.3.0",
+    "cross-env": "^5.0.5",
+    "husky": "^0.14.3",
+    "isparta": "^4.0.0",
+    "lint-staged": "^4.2.3",
+    "mocha": "^3.5.3",
+    "nock": "^9.0.22",
+    "nyc": "^11.2.1",
+    "prettier": "^1.7.4",
+    "rimraf": "^2.6.2",
+    "should": "^13.1.0",
+    "standard": "^10.0.3"
   }
 }

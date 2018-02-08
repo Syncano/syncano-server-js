@@ -1,18 +1,12 @@
 import QueryBuilder from './query-builder'
-import {buildSyncanoURL} from './utils'
 
 /**
  * Syncano account query builder
  * @property {Function}
  */
 class Instance extends QueryBuilder {
-  constructor(options) {
-    super()
-    this.accountKey = options.accountKey
-  }
-
   url(instanceName) {
-    const baseUrl = `${buildSyncanoURL()}/instances/`
+    const baseUrl = `${this._getSyncanoURL()}/instances/`
 
     return instanceName ? `${baseUrl}${instanceName}/` : baseUrl
   }
@@ -30,7 +24,7 @@ class Instance extends QueryBuilder {
 
     return new Promise((resolve, reject) => {
       const headers = {
-        'X-API-KEY': this.accountKey
+        'X-API-KEY': this.instance.accountKey
       }
       const options = {
         method: 'POST',
@@ -55,7 +49,7 @@ class Instance extends QueryBuilder {
 
     return new Promise((resolve, reject) => {
       const headers = {
-        'X-API-KEY': this.accountKey
+        'X-API-KEY': this.instance.accountKey
       }
       const options = {
         method: 'DELETE'
