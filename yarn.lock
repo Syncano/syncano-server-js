@@ -35,6 +35,15 @@ ajv@^4.7.0, ajv@^4.9.1:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
 
+ajv@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.2.3.tgz#c06f598778c44c6b161abafe3466b81ad1814ed2"
+  dependencies:
+    co "^4.6.0"
+    fast-deep-equal "^1.0.0"
+    json-schema-traverse "^0.3.0"
+    json-stable-stringify "^1.0.1"
+
 align-text@^0.1.1, align-text@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/align-text/-/align-text-0.1.4.tgz#0cd90a561093f35d0a99256c22b7069433fad117"
@@ -1588,6 +1597,14 @@ extsprintf@1.3.0, extsprintf@^1.2.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.3.0.tgz#96918440e3041a7a414f8c52e3c574eb3c3e1e05"
 
+faker@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
+
+fast-deep-equal@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.0.0.tgz#96256a3bc975595eb36d82e9929d060d893439ff"
+
 fast-levenshtein@~2.0.4:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
@@ -2324,6 +2341,10 @@ jsesc@^1.3.0:
 jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
+
+json-schema-traverse@^0.3.0:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.3.1.tgz#349a6d44c53a51de89b40805c5d5e59b417d3340"
 
 json-schema@0.2.3:
   version "0.2.3"
@@ -3652,6 +3673,13 @@ supports-color@^4.0.0:
 symbol-observable@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
+
+syncano-validator@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/syncano-validator/-/syncano-validator-0.0.1.tgz#0aa76508f81ce3a479868b31c7eecc91011355f9"
+  dependencies:
+    ajv "^5.2.3"
+    faker "^4.1.0"
 
 table@^3.7.8:
   version "3.8.3"
